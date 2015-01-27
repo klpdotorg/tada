@@ -18,7 +18,7 @@ newrelic==2.32.0.28
 yolk3k
 
 #pygments, markdown and django-filter are optional dependencies for djangorestfamework
-djangorestframework==2.3.14
+djangorestframework==3.0
 pygments==1.6
 markdown==2.4.1
 django-filter==0.7
