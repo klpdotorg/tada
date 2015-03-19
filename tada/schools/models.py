@@ -571,9 +571,8 @@ class StudentGroup(models.Model):
 
 #register_model(StudentGroup)  # Register model for to store information in fullhistory
 
-
-class Academic_Year(models.Model):
-
+##FIXME Hipchat #4 Add start and end year in the table and model
+class AcademicYear(models.Model):
     ''' Its stores the academic years information'''
 
     name = models.CharField(max_length=20, unique=True)
@@ -581,19 +580,15 @@ class Academic_Year(models.Model):
     def __unicode__(self):
         return self.name
 
-
 #register_model(Academic_Year)  # Register model for to store information in fullhistory
-
 
 def current_academic():
     ''' To select current academic year'''
     try:
-        academicObj = Academic_Year.objects.get(active=1)
+        academicObj = AcademicYear.objects.get(active=1)
         return academicObj
-    except Academic_Year.DoesNotExist:
+    except AcademicYear.DoesNotExist:
         return 1
-
-
 
 def default_end_date():
     ''' To select academic year end date'''
@@ -610,7 +605,6 @@ def default_end_date():
     return academic_end_date
 
 class Staff(models.Model):
-
     '''This Class stores the Institution Worker(Staff) Information'''
 
     institution = models.ForeignKey(Institution, blank=True, null=True)
@@ -669,7 +663,7 @@ class Student(models.Model):
         return False
 
     def get_all_academic_years(self):
-        return Academic_Year.objects.all()
+        return AcademicYear.objects.all()
 
     def get_all_languages(self):
         return Moi_Type.objects.all()
@@ -726,7 +720,7 @@ class Student_StudentGroupRelation(models.Model):
 
     student = models.ForeignKey(Student)
     student_group = models.ForeignKey(StudentGroup)
-    academic = models.ForeignKey(Academic_Year,
+    academic = models.ForeignKey(AcademicYear,
                                  default=current_academic)
     active = models.IntegerField(blank=True, null=True, default=2)
 
@@ -754,7 +748,7 @@ class Staff_StudentGroupRelation(models.Model):
 
     staff = models.ForeignKey(Staff)
     student_group = models.ForeignKey(StudentGroup)
-    academic = models.ForeignKey(Academic_Year,
+    academic = models.ForeignKey(AcademicYear,
                                  default=current_academic)
     active = models.IntegerField(blank=True, null=True, default=2)
 
