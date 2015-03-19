@@ -6,11 +6,6 @@ from django.contrib.contenttypes.models import ContentType
 from django.contrib.contenttypes import generic
 from django.contrib.auth.models import User
 from object_permissions import register
-#from fullhistory import register_model
-
-# Table Structure For Klp
-
-#register_model(User)
 
 primary_field_type = [(0, 'Default'),(1, 'Integer'), (2, 'Char'), (3, 'Date'), (4,
                       'Lookup')]
@@ -49,7 +44,6 @@ for typ in range(ord('a'), ord('z') + 1):
 
 
 class Institution_Category(models.Model):
-
     '''This Class stores the Institution Category Information'''
 
     name = models.CharField(max_length=50)
@@ -59,11 +53,7 @@ class Institution_Category(models.Model):
         return '%s' % self.name
 
 
-#register_model(Institution_Category)
-
-
 class Moi_Type(models.Model):
-
     '''This Class stores the Mother Toungue (Languages) Information'''
 
     name = models.CharField(max_length=50)
@@ -71,12 +61,7 @@ class Moi_Type(models.Model):
     def __unicode__(self):
         return '%s' % self.name
 
-
-#register_model(Moi_Type)
-
-
 class Institution_Management(models.Model):
-
     '''This Class stores the Institution Management Information'''
 
     name = models.CharField(max_length=50)
@@ -84,12 +69,7 @@ class Institution_Management(models.Model):
     def __unicode__(self):
         return '%s' % self.name
 
-
-#register_model(Institution_Management)  # Register model for to store information in fullhistory
-
-
 class Institution_address(models.Model):
-
     ''' This class stores information about institution address '''
 
     address = models.CharField(max_length=1000)
@@ -104,12 +84,7 @@ class Institution_address(models.Model):
     route_information = models.CharField(max_length=500, blank=True,
             null=True, help_text='Can be comma separated')
 
-
-#register_model(Institution_address)  # Register model for to store information in fullhistory
-
-
 class Boundary_Category(models.Model):
-
     '''This Class stores the Boundary Category Information'''
 
     boundary_category = models.CharField(max_length=100)
@@ -117,12 +92,7 @@ class Boundary_Category(models.Model):
     def __unicode__(self):
         return '%s' % self.boundary_category
 
-
-#register_model(Boundary_Category)  # Register model for to store information in fullhistory
-
-
 class Boundary_Type(models.Model):
-
     '''This Class stores the Boundary Type Information'''
 
     boundary_type = models.CharField(max_length=100)
@@ -130,12 +100,7 @@ class Boundary_Type(models.Model):
     def __unicode__(self):
         return '%s' % self.boundary_type
 
-
-#register_model(Boundary_Type)  # Register model for to store information in fullhistory
-
-
 class Staff_Type(models.Model):
-
     '''This Class stores information about Staff Type'''
 
     staff_type = models.CharField(max_length=100)
@@ -145,11 +110,7 @@ class Staff_Type(models.Model):
         return '%s' % self.staff_type
 
 
-#register_model(Staff_Type)  # Register model for to store information in fullhistory
-
-
 class Staff_Qualifications(models.Model):
-
     ''' This Class Stores Information about staff qualification '''
 
     qualification = models.CharField(max_length=100)
@@ -157,12 +118,7 @@ class Staff_Qualifications(models.Model):
     def __unicode__(self):
         return '%s' % self.qualification
 
-
-#register_model(Staff_Qualifications)  # Register model for to store information in fullhistory
-
-
 class Boundary(models.Model):
-
     '''This class specifies the longitude and latitute of the area'''
 
     parent = models.ForeignKey('self', blank=True, null=True)
@@ -174,7 +130,6 @@ class Boundary(models.Model):
     active = models.IntegerField(blank=True, null=True, default=2)
 
     class Meta:
-
         """ Used For ordering """
 
         ordering = ['name']
@@ -236,11 +191,7 @@ class Boundary(models.Model):
                 % (self.id, userSel, self.name, self.name)
 
 
-#register_model(Boundary)
-
-
 class Institution(models.Model):
-
     ''' It stores the all data regarding Institutions'''
 
     boundary = models.ForeignKey(Boundary)
@@ -355,15 +306,8 @@ class Institution(models.Model):
         super(Institution, self).save(*args, **kwargs)
 
 register(['Acess'], Institution)  # Register model for Object permissions
-#register_model(Institution)  # Register model for to store information in fullhistory
 
 from django.db.models.signals import post_save, pre_save
-#from schools.receivers import KLP_NewInst_Permission
-
-# Call KLP_NewInst_Permission method on Institution save
-
-#post_save.connect(KLP_NewInst_Permission, sender=Institution)
-
 
 class TaggedItem(models.Model):
 
@@ -378,7 +322,6 @@ class TaggedItem(models.Model):
 
 
 class Child(models.Model):
-
     ''' This class stores the personnel information of the childrens'''
 
     first_name = models.CharField(max_length=50)
@@ -429,11 +372,8 @@ class Child(models.Model):
         self.full_clean()
         super(Child, self).save(*args, **kwargs)
 
-#register_model(Child)  # Register model for to store information in fullhistory
-
 
 class Relations(models.Model):
-
     ''' This class stores relation information of the childrens'''
 
     relation_type = models.CharField(max_length=10,
@@ -450,11 +390,7 @@ class Relations(models.Model):
         return ''
 
 
-#register_model(Relations)  # Register model for to store information in fullhistory
-
-
 class StudentGroup(models.Model):
-
     ''' Here it holds the informaion of the class and section of the Institutions'''
 
     institution = models.ForeignKey(Institution)
@@ -569,8 +505,6 @@ class StudentGroup(models.Model):
         self.full_clean()
         super(StudentGroup, self).save(*args, **kwargs)
 
-#register_model(StudentGroup)  # Register model for to store information in fullhistory
-
 ##FIXME Hipchat #4 Add start and end year in the table and model
 class AcademicYear(models.Model):
     ''' Its stores the academic years information'''
@@ -579,8 +513,6 @@ class AcademicYear(models.Model):
     active = models.IntegerField(blank=True, null=True, default=0)
     def __unicode__(self):
         return self.name
-
-#register_model(Academic_Year)  # Register model for to store information in fullhistory
 
 def current_academic():
     ''' To select current academic year'''
@@ -637,11 +569,7 @@ class Staff(models.Model):
                 staff_studentgrouprelation__active=2)
 
 
-#register_model(Staff)  # Register model for to store information in fullhistory
-
-
 class Student(models.Model):
-
     ''' This class gives information regarding the students class , academic year and personnel details'''
 
     child = models.ForeignKey(Child)
@@ -711,11 +639,7 @@ class Student(models.Model):
         self.full_clean()
         super(Student, self).save(*args, **kwargs)
 
-#register_model(Student)  # Register model for to store information in fullhistory
-
-
 class Student_StudentGroupRelation(models.Model):
-
     '''This Class stores the Student and Student Group Realation Information'''
 
     student = models.ForeignKey(Student)
@@ -739,11 +663,7 @@ class Student_StudentGroupRelation(models.Model):
         self.full_clean()
         super(Student_StudentGroupRelation, self).save(*args, **kwargs)
 
-#register_model(Student_StudentGroupRelation)  # Register model for to store information in fullhistory
-
-
 class Staff_StudentGroupRelation(models.Model):
-
     '''This Class stores the Staff and Student Group Realation Information'''
 
     staff = models.ForeignKey(Staff)
@@ -757,14 +677,7 @@ class Staff_StudentGroupRelation(models.Model):
         unique_together = (('staff', 'student_group', 'academic'), )
 
 
-#register_model(Staff_StudentGroupRelation)  # Register model for to store information in fullhistory
-
-
-
-
-
 class Programme(models.Model):
-
     """ This class Stores information about Programme """
 
     name = models.CharField(max_length=100)
@@ -828,11 +741,7 @@ class Programme(models.Model):
             )
 
 
-#register_model(Programme)  # Register model for to store information in fullhistory
-
-
 class Assessment(models.Model):
-
     """ This class stores information about Assessment """
 
     programme = models.ForeignKey(Programme)
@@ -896,11 +805,7 @@ class Assessment(models.Model):
             % (self.id, self.id, self.name, self.id, self.name)
 
 
-#register_model(Assessment)  # Register model for to store information in fullhistory
-
-
 class Assessment_Lookup(models.Model):
-
     """ This class stores information about Assessment """
 
     assessment = models.ForeignKey(Assessment)
@@ -916,11 +821,7 @@ class Assessment_Lookup(models.Model):
         return '%s' % self.name
 
 
-#register_model(Assessment_Lookup)
-
-
 class Assessment_StudentGroup_Association(models.Model):
-
     '''This Class stores the Assessment and Student Group Association Information'''
 
     assessment = models.ForeignKey(Assessment)
@@ -944,11 +845,7 @@ class Assessment_StudentGroup_Association(models.Model):
         unique_together = (('assessment', 'student_group'), )
 
 
-#register_model(Assessment_StudentGroup_Association)  # Register model for to store information in fullhistory
-
-
 class Assessment_Class_Association(models.Model):
-
     '''This Class stores the Assessment and Student Group Association Information'''
 
     assessment = models.ForeignKey(Assessment)
@@ -960,11 +857,7 @@ class Assessment_Class_Association(models.Model):
         unique_together = (('assessment', 'student_group'), )
 
 
-#register_model(Assessment_Class_Association)  # Register model for to store information in fullhistory
-
-
 class Assessment_Institution_Association(models.Model):
-
     '''This Class stores the Assessment and Student Group Association Information'''
 
     assessment = models.ForeignKey(Assessment)
@@ -977,7 +870,6 @@ class Assessment_Institution_Association(models.Model):
 
 
 class Question(models.Model):
-
     """ This class stores Assessment detail information """
 
     assessment = models.ForeignKey(Assessment)
@@ -1030,11 +922,8 @@ class Question(models.Model):
             % (self.id, self.name, self.id, self.name)
 
 
-#register_model(Question)  # Register model for to store information in fullhistory
-
 
 class Answer(models.Model):
-
     """ This class stores information about student marks and grade """
     
     question = models.ForeignKey(Question)
@@ -1078,11 +967,8 @@ class Answer(models.Model):
         self.full_clean()
         super(Answer, self).save(*args, **kwargs)
 
-#register_model(Answer)  # Register model for to store information in fullhistory
-
 
 class UserAssessmentPermissions(models.Model):
-
     """ This class stores information about user, instituion and assessment permissions"""
 
     user = models.ForeignKey(User)
