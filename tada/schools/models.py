@@ -5,7 +5,6 @@ import datetime
 from django.contrib.contenttypes.models import ContentType
 from django.contrib.contenttypes import generic
 from django.contrib.auth.models import User
-from object_permissions import register
 
 primary_field_type = [(0, 'Default'),(1, 'Integer'), (2, 'Char'), (3, 'Date'), (4,
                       'Lookup')]
@@ -304,8 +303,6 @@ class Institution(models.Model):
         #print "name is",self.name, "=================== active is", self.active
         self.full_clean()
         super(Institution, self).save(*args, **kwargs)
-
-register(['Acess'], Institution)  # Register model for Object permissions
 
 from django.db.models.signals import post_save, pre_save
 
@@ -791,15 +788,6 @@ class Assessment(models.Model):
     def getModuleName(self):
         return 'assessment'
 
-    def getAssessmentStatus(self):
-        QuesObj = Question.objects.filter(assessment__id=self.id,
-                active=2)
-        AnsObj = Answer.objects.filter(question__in=QuesObj)
-        if AnsObj:
-            return True
-        else:
-            return False
-
     def CreateNewFolder(self):
         return '<span><a id="assessment_%s_view" href="/assessment/%s/view/" onclick="return KLP_View(this)" class="KLP_treetxt" title="%s"> <img src="/static_media/tree-images/reicons/assessment.gif" title="Assessment" /> &nbsp; <span id="assessment_%s_text">%s</span></a></span>' \
             % (self.id, self.id, self.name, self.id, self.name)
@@ -922,7 +910,7 @@ class Question(models.Model):
             % (self.id, self.name, self.id, self.name)
 
 
-class Answer_student(models.Model):
+class AnswerStudent(models.Model):
     """ This class stores information about student marks and grade """
     
     question = models.ForeignKey(Question)
@@ -943,7 +931,7 @@ class Answer_student(models.Model):
     last_modified_date = models.DateField(auto_now=True,
             blank=True, null=True)
     last_modified_by = models.ForeignKey(User, blank=True, null=True,
-            related_name='last_modified_by')
+            related_name='last_modified_answer_student')
     flexi_data = models.CharField(max_length=30, blank=True, null=True)
 
     class Meta:
@@ -960,9 +948,9 @@ class Answer_student(models.Model):
 
         #print "=================== status is", self.status
         self.full_clean()
-        super(Answer, self).save(*args, **kwargs)
+        super(AnswerStudent, self).save(*args, **kwargs)
 
-class Answer_institution(models.Model):
+class AnswerInstitution(models.Model):
     """ This class stores information about student marks and grade """
     
     question = models.ForeignKey(Question)
@@ -975,15 +963,15 @@ class Answer_institution(models.Model):
     double_entry = models.IntegerField(blank=True, null=True, default=0)
     status = models.IntegerField(blank=True, null=True)
     user1 = models.ForeignKey(User, blank=True, null=True,
-                              related_name='user1')
+                              related_name='user1_answer_institution')
     user2 = models.ForeignKey(User, blank=True, null=True,
-                              related_name='user2')
+                              related_name='user2_answer_institution')
     creation_date = models.DateField(auto_now_add=True,
                                     blank=True, null=True)
     last_modified_date = models.DateField(auto_now=True,
             blank=True, null=True)
     last_modified_by = models.ForeignKey(User, blank=True, null=True,
-            related_name='last_modified_by')
+            related_name='last_modified_answer_institution')
     flexi_data = models.CharField(max_length=30, blank=True, null=True)
 
     class Meta:
@@ -1000,7 +988,7 @@ class Answer_institution(models.Model):
 
         #print "=================== status is", self.status
         self.full_clean()
-        super(Answer, self).save(*args, **kwargs)
+        super(AnswerInstitution, self).save(*args, **kwargs)
 
 
 class UserAssessmentPermissions(models.Model):
