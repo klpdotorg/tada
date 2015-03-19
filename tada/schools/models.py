@@ -177,10 +177,6 @@ class Boundary(models.Model):
         return '<a href="/boundary/%s/permissions/" onclick="return KLP_View(this)" class="KLP_treetxt" title="%s"> <img src="/static_media/tree-images/reicons/boundary.gif" title="boundary" />  %s </a>' \
             % (self.id, self.name, self.name)
 
-    def getAssessmentPermissionViewUrl(self, assessment_id):
-        return '<a href="/boundary/%s/assessmentpermissions/%s/" onclick="return KLP_View(this)" class="KLP_treetxt" title="%s"> <img src="/static_media/tree-images/reicons/boundary.gif" title="boundary" />  %s </a>' \
-            % (self.id, assessment_id, self.name, self.name)
-
     def showPermissionViewUrl(self, userSel):
         if self.boundary_category.id in [9, 10, 13, 14]:
             return '<a href="/show/%s/user/%s/permissions/" onclick="return KLP_View(this)" class="KLP_treetxt" title="%s"> <img src="/static_media/tree-images/reicons/boundary.gif" title="boundary" />  %s </a>' \
@@ -274,24 +270,6 @@ class Institution(models.Model):
                     )
             retStr = retStr + '</ul>'
         return retStr
-
-    def getStudentProgrammeUrl(self, filter_id, secfilter_id):
-        assname = \
-            Assessment.objects.filter(id=secfilter_id).values_list('name'
-                , flat=True)[0]
-        InstName = self.name
-
-        return '<a href="/studentgroup/%s/programme/%s/assessment/%s/view" onclick="return KLP_View(this)" class="KLP_treetxt" title="%s"> <img src="/static_media/tree-images/reicons/institution.gif" title="%s" /> &nbsp; <span id="institution_%s_text">%s </span> <span style="color:green;font-size:12px">%s</span></a>' \
-            % (
-            self.id,
-            filter_id,
-            secfilter_id,
-            InstName,
-            InstName,
-            self.id,
-            InstName,
-            assname,
-            )
 
     def save(self, *args, **kwargs):
         # custom save method
@@ -435,38 +413,6 @@ class StudentGroup(models.Model):
             self.id,
             groupName,
             sec,
-            )
-
-    def getStudentProgrammeUrl(self, filter_id, secfilter_id):
-        assname1 = Assessment.objects.filter(id=secfilter_id)
-        assname = assname1.values_list('name', flat=True)[0]
-        groupName = self.name
-        if groupName == '0':
-            groupName = 'Anganwadi Class'
-        sec = self.section
-        if sec == None:
-            sec = ''
-        if assname1[0].typ in [2, 3]:
-            objid = self.id
-            assicon = 'studentgroup_%s' % self.group_type
-            displayname = groupName + ' ' + sec
-        else:
-            objid = self.institution.id
-            assicon = 'institution'
-            displayname = self.institution.name
-        return '<a href="/studentgroup/%s/programme/%s/assessment/%s/view" onclick="return KLP_View(this)" class="KLP_treetxt" title="%s %s"> <img src="/static_media/tree-images/reicons/%s.gif" title="%s" /> &nbsp; <span id="studentgroup_%s_%s_text">%s </span> <span style="color:green;font-size:12px">%s</span></a>' \
-            % (
-            objid,
-            filter_id,
-            secfilter_id,
-            groupName,
-            sec,
-            assicon,
-            self.group_type,
-            secfilter_id,
-            objid,
-            displayname,
-            assname,
             )
 
     def get_view_url(self):
@@ -701,13 +647,6 @@ class Programme(models.Model):
     def get_edit_url(self):
         return '/programme/%s/update/' % self.id
 
-    def getChild(self):
-        if Assessment.objects.filter(programme__id=self.id,
-                active__in=[1, 2]).count():
-            return True
-        else:
-            return False
-
     def getModuleName(self):
         return 'programme'
 
@@ -738,7 +677,7 @@ class Programme(models.Model):
             )
 
 
-class Assessment(models.Model):
+class AssessmentInstitution(models.Model):
     """ This class stores information about Assessment """
 
     programme = models.ForeignKey(Programme)
@@ -748,7 +687,6 @@ class Assessment(models.Model):
     end_date = models.DateField(max_length=20, default=default_end_date)
     query = models.CharField(max_length=500, blank=True, null=True)
     active = models.IntegerField(blank=True, null=True, default=2)
-    typ = models.IntegerField(choices=Assessment_type, default=3)
     double_entry = models.BooleanField('Requires double entry',
             default=True)
     flexi_assessment = \
@@ -781,38 +719,58 @@ class Assessment(models.Model):
         else:
             return False
 
-    def getViewUrl(self):
-        return '<a id="assessment_%s_view" href="/assessment/%s/view/" onclick="return KLP_View(this)" class="KLP_treetxt" title="%s"> <img src="/static_media/tree-images/reicons/assessment.gif" title="Assessment" /> &nbsp; <span id="assessment_%s_text">%s</span> </a>' \
-            % (self.id, self.id, self.name, self.id, self.name)
-
     def getModuleName(self):
         return 'assessment'
 
-    def CreateNewFolder(self):
-        return '<span><a id="assessment_%s_view" href="/assessment/%s/view/" onclick="return KLP_View(this)" class="KLP_treetxt" title="%s"> <img src="/static_media/tree-images/reicons/assessment.gif" title="Assessment" /> &nbsp; <span id="assessment_%s_text">%s</span></a></span>' \
-            % (self.id, self.id, self.name, self.id, self.name)
-
-
-class Assessment_Lookup(models.Model):
+class AssessmentStudent(models.Model):
     """ This class stores information about Assessment """
 
-    assessment = models.ForeignKey(Assessment)
+    programme = models.ForeignKey(Programme)
     name = models.CharField(max_length=100)
-    description = models.CharField(max_length=100)
-    rank=models.IntegerField(blank=True, null=True, default=1)
+    start_date = models.DateField(max_length=20,
+                                 default=datetime.date.today)
+    end_date = models.DateField(max_length=20, default=default_end_date)
+    query = models.CharField(max_length=500, blank=True, null=True)
+    active = models.IntegerField(blank=True, null=True, default=2)
+    double_entry = models.BooleanField('Requires double entry',
+            default=True)
+    flexi_assessment = \
+        models.BooleanField('Allows multiple sets of answer per assessment'
+                            , default=False)
+    primary_field_name = models.CharField(max_length=500, blank=True,
+            null=True)
+    primary_field_type = \
+        models.IntegerField(choices=primary_field_type, default=3,
+                            null=True)
+
     class Meta:
 
-        ordering = ['name']
-        unique_together = (('assessment', 'name'), )
+        unique_together = (('programme', 'name'), )
+        ordering = ['start_date']
 
     def __unicode__(self):
         return '%s' % self.name
 
+    def get_view_url(self):
+        return '/assessment/%s/view/' % self.id
+
+    def get_edit_url(self):
+        return '/assessment/%s/update/' % self.id
+
+    def getChild(self):
+        if Question.objects.filter(assessment__id=self.id,
+                                   active=2).count():
+            return True
+        else:
+            return False
+
+    def getModuleName(self):
+        return 'assessment'
 
 class Assessment_StudentGroup_Association(models.Model):
     '''This Class stores the Assessment and Student Group Association Information'''
 
-    assessment = models.ForeignKey(Assessment)
+    assessment = models.ForeignKey(AssessmentStudent)
     student_group = models.ForeignKey(StudentGroup)
     active = models.IntegerField(blank=True, null=True, default=2)
 
@@ -832,23 +790,10 @@ class Assessment_StudentGroup_Association(models.Model):
 
         unique_together = (('assessment', 'student_group'), )
 
-
-class Assessment_Class_Association(models.Model):
-    '''This Class stores the Assessment and Student Group Association Information'''
-
-    assessment = models.ForeignKey(Assessment)
-    student_group = models.ForeignKey(StudentGroup)
-    active = models.IntegerField(blank=True, null=True, default=2)
-
-    class Meta:
-
-        unique_together = (('assessment', 'student_group'), )
-
-
 class Assessment_Institution_Association(models.Model):
     '''This Class stores the Assessment and Student Group Association Information'''
 
-    assessment = models.ForeignKey(Assessment)
+    assessment = models.ForeignKey(AssessmentStudent)
     institution = models.ForeignKey(Institution)
     active = models.IntegerField(blank=True, null=True, default=2)
 
@@ -860,7 +805,7 @@ class Assessment_Institution_Association(models.Model):
 class Question(models.Model):
     """ This class stores Assessment detail information """
 
-    assessment = models.ForeignKey(Assessment)
+    assessment = models.ForeignKey(AssessmentStudent)
     name = models.CharField(max_length=200)
     question_type = models.IntegerField(choices=QuestionType, default=1)
     score_min = models.DecimalField(max_digits=10, decimal_places=2,
@@ -989,31 +934,6 @@ class AnswerInstitution(models.Model):
         #print "=================== status is", self.status
         self.full_clean()
         super(AnswerInstitution, self).save(*args, **kwargs)
-
-
-class UserAssessmentPermissions(models.Model):
-    """ This class stores information about user, instituion and assessment permissions"""
-
-    user = models.ForeignKey(User)
-    instituion = models.ForeignKey(Institution)
-    assessment = models.ForeignKey(Assessment)
-    access = models.BooleanField(default=True)
-
-    class Meta:
-
-        unique_together = (('user', 'instituion', 'assessment'), )
-
-
-    def save(self, *args, **kwargs):
-        # custom save method
-        #pdb.set_trace()
-        from django.db import connection
-        connection.features.can_return_id_from_insert = False
-        #print "save"
-
-        #print "Access", self.access
-        self.full_clean()
-        super(UserAssessmentPermissions, self).save(*args, **kwargs)
 
 def call(sender, method, instance):
     func = getattr(sender, method, None)
