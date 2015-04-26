@@ -495,7 +495,7 @@ class Staff(models.Model):
     # qualification = models.ForeignKey(Staff_Qualifications,blank=True,null=True, default=1)
 
     qualification = models.ManyToManyField(Staff_Qualifications,
-            blank=True, null=True)
+            blank=True)
     staff_type = models.ForeignKey(Staff_Type, default=1)
     active = models.IntegerField(blank=True, null=True, default=2)
 
