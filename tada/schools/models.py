@@ -209,46 +209,11 @@ class Institution(models.Model):
     def get_update_url(self):
         return '/institution/%d/update/' % self.id
 
-    def getViewUrl(self):
-        return '<a href="/institution/%s/view/" onclick="return KLP_View(this)" class="KLP_treetxt" title="%s"> <img src="/static_media/tree-images/reicons/institution.gif" title="institution" /> &nbsp; <span id="institution_%s_text">%s</span> </a>' \
-            % (self.id, self.name + ' (' + str(self.id) + ')', self.id,
-               self.name + ' (' + str(self.id) + ')')
-
     def get_view_url(self):
         return '/institution/%s/view/' % self.id
 
     def get_edit_url(self):
         return '/institution/%s/update/' % self.id
-
-    def CreateNewFolder(self):
-        retStr = \
-            '<span><a href="/institution/%s/view/" onclick="return KLP_View(this)" class="KLP_treetxt" title="%s"> <img src="/static_media/tree-images/reicons/institution.gif" title="institution" /> &nbsp; <span id="institution_%s_text">%s</span></a> </span>' \
-            % (self.id, self.name + ' (' + str(self.id) + ')', self.id,
-               self.name + ' (' + str(self.id) + ')')
-        groupObjects = \
-            StudentGroup.objects.filter(institution__id=self.id,
-                active=2)
-        if groupObjects:
-            retStr = \
-                "<div class='hitarea hasChildren-hitarea collapsable-hitarea'></div>" \
-                + retStr + '<ul>'
-            for groupObj in groupObjects:
-                groupName = groupObj.name
-
-                if groupName == '0':
-                    groupName = 'Anganwadi Class'
-                retStr = retStr \
-                    + """<li id="%s"><span><a class="KLP_treetxt" onclick="return KLP_View(this)" href="/studentgroup/%s/view/" title="%s"> <img title="Class" src="/static_media/tree-images/reicons/studentgroup_%s.gif"> <span id="studentgroup_%s_text">%s</span>  </a></span></li>""" \
-                    % (
-                    groupObj.id,
-                    groupObj.id,
-                    groupName,
-                    groupObj.group_type,
-                    groupObj.id,
-                    groupName,
-                    )
-            retStr = retStr + '</ul>'
-        return retStr
 
     def save(self, *args, **kwargs):
         # custom save method
