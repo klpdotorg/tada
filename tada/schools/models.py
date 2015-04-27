@@ -491,7 +491,7 @@ class Staff_StudentGroupRelation(models.Model):
         unique_together = (('staff', 'student_group', 'academic'), )
 
 
-class Programme(models.Model):
+class ProgrammeInstitution(models.Model):
     """ This class Stores information about Programme """
 
     name = models.CharField(max_length=100)
@@ -519,12 +519,46 @@ class Programme(models.Model):
         return '/programme/%s/update/' % self.id
 
     def getModuleName(self):
-        return 'programme'
+        return 'programmeInstitution'
+
+
+class ProgrammeStudent(models.Model):
+    """ This class Stores information about Programme """
+
+    name = models.CharField(max_length=100)
+    description = models.CharField(max_length=500, blank=True,
+                                   null=True)
+    start_date = models.DateField(max_length=20,
+                                 default=datetime.date.today)
+    end_date = models.DateField(max_length=20, default=default_end_date)
+    programme_institution_category = models.ForeignKey(Boundary_Type,
+            blank=True, null=True)
+    active = models.IntegerField(blank=True, null=True, default=2)
+
+    class Meta:
+
+        ordering = ['-start_date', '-end_date', 'name']
+
+    def __unicode__(self):
+        return '%s (%s-%s)' % (self.name, self.start_date.strftime('%Y'
+                               ), self.end_date.strftime('%Y'))
+
+    def get_view_url(self):
+        return '/programme/%s/view/' % self.id
+
+    def get_edit_url(self):
+        return '/programme/%s/update/' % self.id
+
+    def getModuleName(self):
+        return 'programmeStudent'
+
+
+
 
 class AssessmentInstitution(models.Model):
     """ This class stores information about Assessment """
 
-    programme = models.ForeignKey(Programme)
+    programme = models.ForeignKey(ProgrammeInstitution)
     name = models.CharField(max_length=100)
     start_date = models.DateField(max_length=20,
                                  default=datetime.date.today)
@@ -564,12 +598,12 @@ class AssessmentInstitution(models.Model):
             return False
 
     def getModuleName(self):
-        return 'assessment'
+        return 'assessmentInstitution'
 
 class AssessmentStudent(models.Model):
     """ This class stores information about Assessment """
 
-    programme = models.ForeignKey(Programme)
+    programme = models.ForeignKey(ProgrammeStudent)
     name = models.CharField(max_length=100)
     start_date = models.DateField(max_length=20,
                                  default=datetime.date.today)
@@ -609,7 +643,7 @@ class AssessmentStudent(models.Model):
             return False
 
     def getModuleName(self):
-        return 'assessment'
+        return 'assessmentStudent'
 
 class Assessment_StudentGroup_Association(models.Model):
     '''This Class stores the Assessment and Student Group Association Information'''
