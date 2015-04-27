@@ -149,14 +149,6 @@ class Boundary(models.Model):
     def getModuleName(self):
         return 'boundary'
 
-    def getViewUrl(self, boundaryType):
-        return '<a href="/boundary/%s/%s/view/" onclick="return KLP_View(this)" class="KLP_treetxt" title="%s"> <img src="/static_media/tree-images/reicons/boundary.gif" title="Boundary" /> &nbsp; <span id="boundary_%s_text">%s</span> </a>' \
-            % (self.id, boundaryType, self.name, self.id, self.name)
-
-    def CreateNewFolder(self, boundaryType):
-        return '<span><a href="/boundary/%s/%s/view/" onclick="return KLP_View(this)" class="KLP_treetxt" title="%s"> <img src="/static_media/tree-images/reicons/boundary.gif" title="Boundary" /> &nbsp; <span id="boundary_%s_text">%s</span> </a></span>' \
-            % (self.id, boundaryType, self.name, self.id, self.name)
-
     def get_view_url(self, boundaryType):
         return '/boundary/%s/%s/view/' % (self.id, boundaryType)
 
@@ -172,19 +164,6 @@ class Boundary(models.Model):
             return True
         else:
             return False
-
-    def getPermissionViewUrl(self):
-        return '<a href="/boundary/%s/permissions/" onclick="return KLP_View(this)" class="KLP_treetxt" title="%s"> <img src="/static_media/tree-images/reicons/boundary.gif" title="boundary" />  %s </a>' \
-            % (self.id, self.name, self.name)
-
-    def showPermissionViewUrl(self, userSel):
-        if self.boundary_category.id in [9, 10, 13, 14]:
-            return '<a href="/show/%s/user/%s/permissions/" onclick="return KLP_View(this)" class="KLP_treetxt" title="%s"> <img src="/static_media/tree-images/reicons/boundary.gif" title="boundary" />  %s </a>' \
-                % (self.id, userSel, self.name, self.name)
-        else:
-            return '<a href="/list/%s/user/%s/permissions/" onclick="return KLP_View(this)" class="KLP_treetxt" title="%s"> <img src="/static_media/tree-images/reicons/boundary.gif" title="boundary" />  %s </a>' \
-                % (self.id, userSel, self.name, self.name)
-
 
 class Institution(models.Model):
     ''' It stores the all data regarding Institutions'''
