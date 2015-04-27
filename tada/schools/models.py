@@ -439,31 +439,8 @@ class Student(models.Model):
     def get_update_url(self):
         return '/student/%d/update/' % self.id
 
-    def getViewUrl(self):
-        return '<a href="/student/%s/view/" onclick="return KLP_View(this)" class="KLP_treetxt" title="%s"> %s </a>' \
-            % (self.id, self.child, self.child)
-
     def get_view_url(self):
         return '/student/%s/view/' % self.id
-
-    def CreateNewFolder(self):
-        return '<span><img src="/static_media/tree-images/reicons/student.gif" title="student" /> &nbsp;<a href="/boundary/%s/institution/%s/classes/%s/sections/%s/students/%s/view/" onclick="return KLP_View(this)" class="KLP_treetxt"> %s </a><a href="/boundary/%s/institution/%s/classes/%s/sections/%s/students/%s/edit/" onclick="return KLP_View(this)"> <img src="/static_media/images/pagebuilder_edit.gif" title="Edit"/></a><span class="delConf" onclick="deleteSchool(\'%s\', \'student\', \'%s\')"><img width="11" title="Delete" src="/static_media/images/PageRow_delete.gif" title="Delete"></span></span>' \
-            % (
-            self.class_section.classname.sid.boundary.id,
-            self.class_section.classname.sid.id,
-            self.class_section.classname.id,
-            self.class_section.id,
-            self.id,
-            self.name,
-            self.class_section.classname.sid.boundary.id,
-            self.class_section.classname.sid.id,
-            self.class_section.classname.id,
-            self.class_section.id,
-            self.id,
-            self.id,
-            self.name,
-            )
-
 
     def save(self, *args, **kwargs):
         # custom save method
