@@ -681,10 +681,6 @@ class Question(models.Model):
     def getChild(self):
         return False
 
-    def getViewUrl(self):
-        return '<a href="/question/%s/view/" onclick="return KLP_View(this)" class="KLP_treetxt" title="%s"> <img src="/static_media/tree-images/reicons/question.gif" title="Question" /> &nbsp; <span id="question_%s_text">%s</span> </a>' \
-            % (self.id, self.name, self.id, self.name)
-
     def getModuleName(self):
         return 'question'
 
@@ -693,10 +689,6 @@ class Question(models.Model):
 
     def get_edit_url(self):
         return '/question/%s/update/' % self.id
-
-    def CreateNewFolder(self):
-        return '<span><a href="/question/%s/view/" onclick="return KLP_View(this)" class="KLP_treetxt" title="%s"> <img src="/static_media/tree-images/reicons/question.gif" title="Question" /> &nbsp; <span id="question_%s_text">%s</span></a></span>' \
-            % (self.id, self.name, self.id, self.name)
 
 
 class AnswerStudent(models.Model):
