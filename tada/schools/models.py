@@ -328,46 +328,8 @@ class StudentGroup(models.Model):
     def get_update_url(self):
         return '/studentgroup/%d/update/' % self.id
 
-    def getViewUrl(self):
-        sec = self.section
-        if sec == None:
-            sec = ''
-        groupName = self.name
-        if groupName == '0':
-            groupName = 'Anganwadi Class'
-        return '<a href="/studentgroup/%s/view/" onclick="return KLP_View(this)" class="KLP_treetxt" title="%s %s"> <img src="/static_media/tree-images/reicons/studentgroup_%s.gif" title="%s" /> <span id="studentgroup_%s_text">%s %s</span> </a>' \
-            % (
-            self.id,
-            groupName,
-            sec,
-            self.group_type,
-            self.group_type,
-            self.id,
-            groupName,
-            sec,
-            )
-
     def get_view_url(self):
         return '/studentgroup/%s/view/' % self.id
-
-    def CreateNewFolder(self):
-        sec = self.section
-        if sec == None:
-            sec = ''
-        groupName = self.name
-        if groupName == '0':
-            groupName = 'Anganwadi Class'
-        return '<span><a href="/studentgroup/%s/view/" onclick="return KLP_View(this)" class="KLP_treetxt" title="%s %s"> <img src="/static_media/tree-images/reicons/studentgroup_%s.gif" title="%s" /> &nbsp; <span id="studentgroup_%s_text">%s %s</span> </a></span>' \
-            % (
-            self.id,
-            groupName,
-            sec,
-            self.group_type,
-            self.group_type,
-            self.id,
-            groupName,
-            sec,
-            )
 
     def save(self, *args, **kwargs):
         # custom save method
