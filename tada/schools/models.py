@@ -680,7 +680,7 @@ class Assessment_Institution_Association(models.Model):
         unique_together = (('assessment', 'institution'), )
 
 
-class Question(models.Model):
+class QuestionStudent(models.Model):
     """ This class stores Assessment detail information """
 
     assessment = models.ForeignKey(AssessmentStudent)
@@ -716,7 +716,7 @@ class Question(models.Model):
         return False
 
     def getModuleName(self):
-        return 'question'
+        return 'questionStudent'
 
     def get_view_url(self):
         return '/question/%s/view/' % self.id
@@ -725,10 +725,56 @@ class Question(models.Model):
         return '/question/%s/update/' % self.id
 
 
+class QuestionInstitution(models.Model):
+    """ This class stores Assessment detail information """
+
+    assessment = models.ForeignKey(AssessmentInstitution)
+    name = models.CharField(max_length=200)
+    question_type = models.IntegerField(choices=QuestionType, default=1)
+    score_min = models.DecimalField(max_digits=10, decimal_places=2,
+                                   blank=True, null=True)
+    score_max = models.DecimalField(max_digits=10, decimal_places=2,
+                                   blank=True, null=True)
+    grade = models.CharField(max_length=100, blank=True, null=True)
+    order = models.IntegerField()
+    double_entry = models.BooleanField(default=True)
+    active = models.IntegerField(blank=True, null=True, default=2)
+
+    class Meta:
+
+        unique_together = (('assessment', 'name'), )
+        ordering = ['order']
+
+    def __unicode__(self):
+        return self.name
+
+    def getAllGrades(self):
+        return gradeList
+
+    def getSelectedGrades(self):
+        if self.grade:
+            return self.grade.split(',')
+        else:
+            return ''
+
+    def getChild(self):
+        return False
+
+    def getModuleName(self):
+        return 'questionInstitution'
+
+    def get_view_url(self):
+        return '/question/%s/view/' % self.id
+
+    def get_edit_url(self):
+        return '/question/%s/update/' % self.id
+
+
+
 class AnswerStudent(models.Model):
     """ This class stores information about student marks and grade """
     
-    question = models.ForeignKey(Question)
+    question = models.ForeignKey(QuestionStudent)
 
     # student = models.IntegerField(blank = True, null = True,default=0) # models.ForeignKey(Student)
 
@@ -768,7 +814,7 @@ class AnswerStudent(models.Model):
 class AnswerInstitution(models.Model):
     """ This class stores information about student marks and grade """
     
-    question = models.ForeignKey(Question)
+    question = models.ForeignKey(QuestionInstitution)
 
     # student = models.IntegerField(blank = True, null = True,default=0) # models.ForeignKey(Student)
 
