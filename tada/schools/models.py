@@ -521,33 +521,6 @@ class Programme(models.Model):
     def getModuleName(self):
         return 'programme'
 
-    def getViewUrl(self):
-        return '<a href="/programme/%s/view/" onclick="return KLP_View(this)" class="KLP_treetxt" title="%s (%s-%s)"> <img src="/static_media/tree-images/reicons/programme.gif" title="Programme" /> &nbsp; <span id="programme_%s_text">%s (%s-%s)</span> </a>' \
-            % (
-            self.id,
-            self.name,
-            self.start_date.strftime('%Y'),
-            self.end_date.strftime('%Y'),
-            self.id,
-            self.name,
-            self.start_date.strftime('%Y'),
-            self.end_date.strftime('%Y'),
-            )
-
-    def CreateNewFolder(self):
-        return '<span><a href="/programme/%s/view/" onclick="return KLP_View(this)" class="KLP_treetxt" title="%s (%s-%s)"> <img src="/static_media/tree-images/reicons/programme.gif" title="Programme" /> &nbsp; <span id="programme_%s_text">%s (%s-%s)</span></a></span>' \
-            % (
-            self.id,
-            self.name,
-            self.start_date.strftime('%Y'),
-            self.end_date.strftime('%Y'),
-            self.id,
-            self.name,
-            self.start_date.strftime('%Y'),
-            self.end_date.strftime('%Y'),
-            )
-
-
 class AssessmentInstitution(models.Model):
     """ This class stores information about Assessment """
 
