@@ -228,18 +228,6 @@ class Institution(models.Model):
 
 from django.db.models.signals import post_save, pre_save
 
-class TaggedItem(models.Model):
-
-    tag = models.SlugField()
-    content_type = models.ForeignKey(ContentType)
-    object_id = models.PositiveIntegerField()
-    content_object = generic.GenericForeignKey('content_type',
-            'object_id')
-
-    def __unicode__(self):
-        return self.tag
-
-
 class Child(models.Model):
     ''' This class stores the personnel information of the childrens'''
 
