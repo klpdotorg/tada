@@ -1,6 +1,16 @@
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
+*.sw*
+*~
+
+# Mac related
+.DS_Store
+.Trashes
+
+#local settings
+local_settings.py
+local_test_settings.py
 
 # C extensions
 *.so
