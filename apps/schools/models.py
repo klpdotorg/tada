@@ -175,7 +175,7 @@ class Institution(models.Model):
     institution_gender = models.CharField(max_length=10,
             choices=Institution_Gender, default='co-ed')
     languages = models.ManyToManyField(Moi_Type)
-    mgmt = models.ForeignKey(Institution_Management, default='ed')
+    mgmt = models.ForeignKey(Institution_Management, default='1')
     inst_address = models.ForeignKey(Institution_address, blank=True,
             null=True)
     active = models.IntegerField(blank=True, null=True, default=2)
