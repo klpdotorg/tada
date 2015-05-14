@@ -238,7 +238,7 @@ class Child(models.Model):
     dob = models.DateField(max_length=20)
     gender = models.CharField(max_length=10, choices=Gender,
                               default='male')
-    mt = models.ForeignKey(Moi_Type, default='kannada')
+    mt = models.ForeignKey(Moi_Type, default='1')
 
     class Meta:
 
