@@ -7,6 +7,10 @@ That's All Data. Akshara's data entry/management system.
 
     git clone git@github.com:klpdotorg/tada.git
 
+### Install requirements
+
+    pip install -r requirements/base.txt
+
 ### Create a Local settings file
 
     touch tada/local_settings.py
@@ -26,10 +30,9 @@ Install Postgres 9.3 or above. Have the following configuration in your local_se
         }
     }
 
+Run:
 
-### Install requirements
-
-    pip install -r requirements/base.txt
+    python manage.py migrate
 
 ### Run the application
 
