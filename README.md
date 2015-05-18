@@ -31,6 +31,12 @@ Create and activate the virtualenv
 
     pip install -r requirements/base.txt
 
+### Install and create a local database
+
+    sudo apt-get install postgresql-9.3
+    sudo apt-get install postgresql-9.3-postgis-2.1
+    sudo -u postgres createdb -E UTF8 -O klp -T template0 klpproduction
+
 ### Create a Local settings file
 
     touch tada/local_settings.py
