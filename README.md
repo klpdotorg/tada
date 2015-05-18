@@ -7,6 +7,26 @@ That's All Data. Akshara's data entry/management system.
 
     git clone git@github.com:klpdotorg/tada.git
 
+### Setup virualenv using virtualenvwrapper
+
+    pip install virtualenvwrapper
+    
+Add these lines to your .bashrc and source it
+
+    # add virtualenv wrappers
+    export WORKON_HOME=$HOME/.virtualenvs
+    export PROJECT_HOME=$HOME/Devel
+    source /usr/local/bin/virtualenvwrapper.sh
+
+Finally source .bashrc using the following command
+    
+    source ~/.bashrc
+
+Create and activate the virtualenv
+
+    mkvirtualenv tada
+    workon tada
+   
 ### Install requirements
 
     pip install -r requirements/base.txt
