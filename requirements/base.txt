@@ -1,4 +1,4 @@
-Django==1.8
+Django==1.8.1
 #-e git+git://github.com/django/django.git@1.7c2#egg=django
 #South==0.8.1
 argparse==1.2.1
@@ -13,12 +13,12 @@ wsgiref==0.1.2
 django_extensions==1.3.3
 Pillow
 newrelic==2.32.0.28
-
+django-guardian==1.2.5
 #Yolk tells the latest evrsion of any package easily just say yolk -V <pkg_name>
 yolk3k
 
 #pygments, markdown and django-filter are optional dependencies for djangorestfamework
-djangorestframework==3.0
+djangorestframework==3.1.2
 pygments==1.6
 markdown==2.4.1
 django-filter==0.7
