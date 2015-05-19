@@ -342,12 +342,13 @@ class StudentGroup(models.Model):
         self.full_clean()
         super(StudentGroup, self).save(*args, **kwargs)
 
-##FIXME Hipchat #4 Add start and end year in the table and model
 class AcademicYear(models.Model):
     ''' Its stores the academic years information'''
 
     name = models.CharField(max_length=20, unique=True)
     active = models.IntegerField(blank=True, null=True, default=0)
+    start_year = models.IntegerField(blank=True, null=False, default=0)
+    end_year = models.IntegerField(blank=True, null=False,default=0)
     def __unicode__(self):
         return self.name
 
