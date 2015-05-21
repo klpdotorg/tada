@@ -65,3 +65,6 @@ Run:
     python manage.py runserver
 
 Visit `http://127.0.0.1:8000/`
+
+### Code Formattng guidelines
+See PEP8 @ https://www.python.org/dev/peps/pep-0008/
