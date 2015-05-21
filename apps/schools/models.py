@@ -222,57 +222,6 @@ class Institution(models.Model):
 
 from django.db.models.signals import post_save, pre_save
 
-class Child(models.Model):
-    ''' This class stores the personnel information of the childrens'''
-
-    first_name = models.CharField(max_length=50)
-    middle_name = models.CharField(max_length=50, blank=True, null=True)
-    last_name = models.CharField(max_length=50, blank=True, null=True)
-    uid = models.CharField(max_length=100, blank=True, null=True)
-    dob = models.DateField(max_length=20)
-    gender = models.CharField(max_length=10, choices=Gender,
-                              default='male')
-    mt = models.ForeignKey(Moi_Type, default='1')
-
-    class Meta:
-
-        ordering = ['first_name', 'middle_name', 'last_name']
-    
-    def __unicode__(self):
-        return '%s' % self.first_name
-
-    def getRelations(self):
-        return Relations.objects.filter(child__id=self.id)
-
-    def getFather(self):
-        return Relations.objects.get(relation_type='Father',
-                child__id=self.id)
-
-    def getMother(self):
-        return Relations.objects.get(relation_type='Mother',
-                child__id=self.id)
-
-    def getStudent(self):
-        return Student.objects.get(child__id=self.id)
-
-    def get_view_url(self):
-        return '/child/%s/view/' % self.id
-
-    def get_update_url(self):
-        return '/child/%d/update/' % self.id
-
-
-    def save(self, *args, **kwargs):
-        # custom save method
-        #pdb.set_trace()
-        from django.db import connection
-        connection.features.can_return_id_from_insert = False
-        #print "save"
-
-        #print "first name is", self.first_name
-        self.full_clean()
-        super(Child, self).save(*args, **kwargs)
-
 
 class Relations(models.Model):
     ''' This class stores relation information of the childrens'''
@@ -282,7 +231,7 @@ class Relations(models.Model):
     first_name = models.CharField(max_length=100)
     middle_name = models.CharField(max_length=50, blank=True, null=True)
     last_name = models.CharField(max_length=50, blank=True, null=True)
-    child = models.ForeignKey(Child)
+    child = models.ForeignKey("Student")
 
     def __unicode__(self):
         return '%s' % self.first_name
@@ -403,20 +352,33 @@ class Staff(models.Model):
 class Student(models.Model):
     ''' This class gives information regarding the students class , academic year and personnel details'''
 
-    child = models.ForeignKey(Child)
-    other_student_id = models.CharField(max_length=100, blank=True,
-            null=True)
+    first_name = models.CharField(max_length=50)
+    middle_name = models.CharField(max_length=50, blank=True, null=True)
+    last_name = models.CharField(max_length=50, blank=True, null=True)
+    uid = models.CharField(max_length=100, blank=True, null=True)
+    dob = models.DateField(max_length=20)
+    gender = models.CharField(max_length=10, choices=Gender,
+                              default='male')
+    mt = models.ForeignKey(Moi_Type, default='1')
     active = models.IntegerField(blank=True, null=True, default=2)
-
+    
     class Meta:
 
-        ordering = ['child__first_name']
+        ordering = ['first_name', 'middle_name', 'last_name']
+    
+    def __unicode__(self):
+        return '%s' % self.first_name
+
+    def getMother(self):
+        return Relations.objects.get(relation_type='Mother',
+                child__id=self.id)
+
+    def getStudent(self):
+        return Student.objects.get(child__id=self.id)
+
 
     def GetName(self):
         return self.child.first_name
-
-    def __unicode__(self):
-        return '%s' % self.child
 
     def getChild(self):
         return False
@@ -429,12 +391,6 @@ class Student(models.Model):
 
     def getModuleName(self):
         return 'student'
-
-    def get_update_url(self):
-        return '/student/%d/update/' % self.id
-
-    def get_view_url(self):
-        return '/student/%s/view/' % self.id
 
     def save(self, *args, **kwargs):
         # custom save method
