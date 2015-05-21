@@ -161,7 +161,7 @@ class Institution(models.Model):
             choices=Institution_Gender, default='co-ed')
     languages = models.ManyToManyField(Moi_Type)
     mgmt = models.ForeignKey(Institution_Management, default='1')
-    address = models.CharField(max_length=1000)
+    address = models.CharField(max_length=1000,default='NA')
     area = models.CharField(max_length=200, blank=True, null=True)
     pincode = models.CharField(max_length=100, blank=True, null=True)
     landmark = models.CharField(max_length=1000, blank=True, null=True,
@@ -352,11 +352,11 @@ class Staff(models.Model):
 class Student(models.Model):
     ''' This class gives information regarding the students class , academic year and personnel details'''
 
-    first_name = models.CharField(max_length=50)
+    first_name = models.CharField(max_length=50, blank=True, null=True)
     middle_name = models.CharField(max_length=50, blank=True, null=True)
     last_name = models.CharField(max_length=50, blank=True, null=True)
     uid = models.CharField(max_length=100, blank=True, null=True)
-    dob = models.DateField(max_length=20)
+    dob = models.DateField(max_length=20,null=True)
     gender = models.CharField(max_length=10, choices=Gender,
                               default='male')
     mt = models.ForeignKey(Moi_Type, default='1')
