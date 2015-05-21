@@ -68,21 +68,6 @@ class Institution_Management(models.Model):
     def __unicode__(self):
         return '%s' % self.name
 
-class Institution_address(models.Model):
-    ''' This class stores information about institution address '''
-
-    address = models.CharField(max_length=1000)
-    area = models.CharField(max_length=200, blank=True, null=True)
-    pincode = models.CharField(max_length=100, blank=True, null=True)
-    landmark = models.CharField(max_length=1000, blank=True, null=True,
-                                help_text='Can be comma separated')
-    instidentification = models.CharField(max_length=1000, blank=True,
-            null=True, help_text='Can be comma separated')
-    instidentification2 = models.CharField(max_length=1000, blank=True,
-            null=True, help_text='Can be comma separated')
-    route_information = models.CharField(max_length=500, blank=True,
-            null=True, help_text='Can be comma separated')
-
 class Boundary_Category(models.Model):
     '''This Class stores the Boundary Category Information'''
 
@@ -176,8 +161,17 @@ class Institution(models.Model):
             choices=Institution_Gender, default='co-ed')
     languages = models.ManyToManyField(Moi_Type)
     mgmt = models.ForeignKey(Institution_Management, default='1')
-    inst_address = models.ForeignKey(Institution_address, blank=True,
-            null=True)
+    address = models.CharField(max_length=1000)
+    area = models.CharField(max_length=200, blank=True, null=True)
+    pincode = models.CharField(max_length=100, blank=True, null=True)
+    landmark = models.CharField(max_length=1000, blank=True, null=True,
+                                help_text='Can be comma separated')
+    instidentification = models.CharField(max_length=1000, blank=True,
+            null=True, help_text='Can be comma separated')
+    instidentification2 = models.CharField(max_length=1000, blank=True,
+            null=True, help_text='Can be comma separated')
+    route_information = models.CharField(max_length=500, blank=True,
+            null=True, help_text='Can be comma separated')
     active = models.IntegerField(blank=True, null=True, default=2)
 
     class Meta:
