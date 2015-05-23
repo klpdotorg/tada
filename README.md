@@ -31,6 +31,12 @@ Create and activate the virtualenv
 
     pip install -r requirements/base.txt
 
+### Create user klp in postgres
+
+createuser klp (Need super user privileges?)
+
+User klp is needed to make the migrations work. Otherwise, there will be a FATAL error referencing the klp role.
+
 ### Install and create a local database
 
     sudo apt-get install postgresql-9.3
