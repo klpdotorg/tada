@@ -94,7 +94,7 @@ class StaffType(models.Model):
         return '%s' % self.staff_type
 
 
-class StaffQualifications(models.Model):
+class QualificationList(models.Model):
     ''' This Class Stores Information about staff qualification '''
 
     qualification = models.CharField(max_length=100)
@@ -329,7 +329,7 @@ class Staff(models.Model):
                               default='female')
     mt = models.ForeignKey(MoiType, default=1)
 
-    qualification = models.ManyToManyField(StaffQualifications,
+    qualification = models.ManyToManyField(QualificationList,
             blank=True)
     staff_type = models.ForeignKey(StaffType, default=1)
     active = models.IntegerField(blank=True, null=True, default=2)
