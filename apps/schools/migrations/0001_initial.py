@@ -278,7 +278,7 @@ class Migration(migrations.Migration):
                 ('gender', models.CharField(default=b'female', max_length=10, choices=[(b'male', b'male'), (b'female', b'female')])),
                 ('active', models.IntegerField(default=2, null=True, blank=True)),
                 ('institution', models.ForeignKey(blank=True, to='schools.Institution', null=True)),
-                ('mt', models.ForeignKey(default=b'kannada', to='schools.Moi_Type')),
+                ('mt', models.ForeignKey(default=1, to='schools.Moi_Type')),
             ],
             options={
                 'ordering': ['first_name', 'middle_name', 'last_name'],
