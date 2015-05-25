@@ -42,7 +42,7 @@ for typ in range(ord('a'), ord('z') + 1):
     Alpha_list.append(typs)
 
 
-class Institution_Category(models.Model):
+class InstitutionCategory(models.Model):
     '''This Class stores the Institution Category Information'''
 
     name = models.CharField(max_length=50)
@@ -52,7 +52,7 @@ class Institution_Category(models.Model):
         return '%s' % self.name
 
 
-class Moi_Type(models.Model):
+class MoiType(models.Model):
     '''This Class stores the Mother Toungue (Languages) Information'''
 
     name = models.CharField(max_length=50)
@@ -60,7 +60,7 @@ class Moi_Type(models.Model):
     def __unicode__(self):
         return '%s' % self.name
 
-class Institution_Management(models.Model):
+class InstitutionManagement(models.Model):
     '''This Class stores the Institution Management Information'''
 
     name = models.CharField(max_length=50)
@@ -68,7 +68,7 @@ class Institution_Management(models.Model):
     def __unicode__(self):
         return '%s' % self.name
 
-class Boundary_Category(models.Model):
+class BoundaryCategory(models.Model):
     '''This Class stores the Boundary Category Information'''
 
     boundary_category = models.CharField(max_length=100)
@@ -76,7 +76,7 @@ class Boundary_Category(models.Model):
     def __unicode__(self):
         return '%s' % self.boundary_category
 
-class Boundary_Type(models.Model):
+class BoundaryType(models.Model):
     '''This Class stores the Boundary Type Information'''
 
     boundary_type = models.CharField(max_length=100)
@@ -84,7 +84,7 @@ class Boundary_Type(models.Model):
     def __unicode__(self):
         return '%s' % self.boundary_type
 
-class Staff_Type(models.Model):
+class StaffType(models.Model):
     '''This Class stores information about Staff Type'''
 
     staff_type = models.CharField(max_length=100)
@@ -94,7 +94,7 @@ class Staff_Type(models.Model):
         return '%s' % self.staff_type
 
 
-class Staff_Qualifications(models.Model):
+class StaffQualifications(models.Model):
     ''' This Class Stores Information about staff qualification '''
 
     qualification = models.CharField(max_length=100)
@@ -403,8 +403,8 @@ class Student(models.Model):
         self.full_clean()
         super(Student, self).save(*args, **kwargs)
 
-class Student_StudentGroupRelation(models.Model):
-    '''This Class stores the Student and Student Group Realation Information'''
+class StudentStudentGroupRelation(models.Model):
+    '''This Class stores the Student and Student Group Relation Information'''
 
     student = models.ForeignKey(Student)
     student_group = models.ForeignKey(StudentGroup)
@@ -427,8 +427,8 @@ class Student_StudentGroupRelation(models.Model):
         self.full_clean()
         super(Student_StudentGroupRelation, self).save(*args, **kwargs)
 
-class Staff_StudentGroupRelation(models.Model):
-    '''This Class stores the Staff and Student Group Realation Information'''
+class StaffStudentGroupRelation(models.Model):
+    '''This Class stores the Staff and Student Group Relation Information'''
 
     staff = models.ForeignKey(Staff)
     student_group = models.ForeignKey(StudentGroup)
@@ -595,7 +595,7 @@ class AssessmentStudent(models.Model):
     def getModuleName(self):
         return 'assessmentStudent'
 
-class Assessment_StudentGroup_Association(models.Model):
+class AssessmentStudentGroupAssociation(models.Model):
     '''This Class stores the Assessment and Student Group Association Information'''
 
     assessment = models.ForeignKey(AssessmentStudent)
@@ -618,7 +618,7 @@ class Assessment_StudentGroup_Association(models.Model):
 
         unique_together = (('assessment', 'student_group'), )
 
-class Assessment_Institution_Association(models.Model):
+class AssessmentInstitutionAssociation(models.Model):
     '''This Class stores the Assessment and Student Group Association Information'''
 
     assessment = models.ForeignKey(AssessmentStudent)
