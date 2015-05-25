@@ -42,7 +42,7 @@ for typ in range(ord('a'), ord('z') + 1):
     Alpha_list.append(typs)
 
 
-class Institution_Category(models.Model):
+class InstitutionCategory(models.Model):
     '''This Class stores the Institution Category Information'''
 
     name = models.CharField(max_length=50)
@@ -52,7 +52,7 @@ class Institution_Category(models.Model):
         return '%s' % self.name
 
 
-class Moi_Type(models.Model):
+class MoiType(models.Model):
     '''This Class stores the Mother Toungue (Languages) Information'''
 
     name = models.CharField(max_length=50)
@@ -60,7 +60,7 @@ class Moi_Type(models.Model):
     def __unicode__(self):
         return '%s' % self.name
 
-class Institution_Management(models.Model):
+class InstitutionManagement(models.Model):
     '''This Class stores the Institution Management Information'''
 
     name = models.CharField(max_length=50)
@@ -68,7 +68,7 @@ class Institution_Management(models.Model):
     def __unicode__(self):
         return '%s' % self.name
 
-class Boundary_Category(models.Model):
+class BoundaryCategory(models.Model):
     '''This Class stores the Boundary Category Information'''
 
     boundary_category = models.CharField(max_length=100)
@@ -76,7 +76,7 @@ class Boundary_Category(models.Model):
     def __unicode__(self):
         return '%s' % self.boundary_category
 
-class Boundary_Type(models.Model):
+class BoundaryType(models.Model):
     '''This Class stores the Boundary Type Information'''
 
     boundary_type = models.CharField(max_length=100)
@@ -84,7 +84,7 @@ class Boundary_Type(models.Model):
     def __unicode__(self):
         return '%s' % self.boundary_type
 
-class Staff_Type(models.Model):
+class StaffType(models.Model):
     '''This Class stores information about Staff Type'''
 
     staff_type = models.CharField(max_length=100)
@@ -94,7 +94,7 @@ class Staff_Type(models.Model):
         return '%s' % self.staff_type
 
 
-class Staff_Qualifications(models.Model):
+class StaffQualifications(models.Model):
     ''' This Class Stores Information about staff qualification '''
 
     qualification = models.CharField(max_length=100)
@@ -107,9 +107,9 @@ class Boundary(models.Model):
 
     parent = models.ForeignKey('self', blank=True, null=True)
     name = models.CharField(max_length=300)
-    boundary_category = models.ForeignKey(Boundary_Category,
+    boundary_category = models.ForeignKey(BoundaryCategory,
             blank=True, null=True)
-    boundary_type = models.ForeignKey(Boundary_Type, blank=True,
+    boundary_type = models.ForeignKey(BoundaryType, blank=True,
             null=True)
     active = models.IntegerField(blank=True, null=True, default=2)
 
@@ -156,11 +156,11 @@ class Institution(models.Model):
     boundary = models.ForeignKey(Boundary)
     dise_code = models.CharField(max_length=14, blank=True, null=True)
     name = models.CharField(max_length=300)
-    cat = models.ForeignKey(Institution_Category, blank=True, null=True)
+    cat = models.ForeignKey(InstitutionCategory, blank=True, null=True)
     institution_gender = models.CharField(max_length=10,
             choices=Institution_Gender, default='co-ed')
-    languages = models.ManyToManyField(Moi_Type)
-    mgmt = models.ForeignKey(Institution_Management, default='1')
+    languages = models.ManyToManyField(MoiType)
+    mgmt = models.ForeignKey(InstitutionManagement, default='1')
     address = models.CharField(max_length=1000,default='NA')
     area = models.CharField(max_length=200, blank=True, null=True)
     pincode = models.CharField(max_length=100, blank=True, null=True)
@@ -182,7 +182,7 @@ class Institution(models.Model):
         return '%s' % self.name
 
     def get_all_cat(self, category_type):
-        return Institution_Category.objects.all(category_type=category_type)
+        return InstitutionCategory.objects.all(category_type=category_type)
 
     def getChild(self):
         if StudentGroup.objects.filter(institution__id=self.id,
@@ -195,7 +195,7 @@ class Institution(models.Model):
         return institution_Management.objects.all()
 
     def get_all_languages(self):
-        return Moi_Type.objects.all()
+        return MoiType.objects.all()
 
     def getModuleName(self):
         return 'institution'
@@ -327,13 +327,11 @@ class Staff(models.Model):
     doj = models.DateField(max_length=20, blank=True, null=True)
     gender = models.CharField(max_length=10, choices=Gender,
                               default='female')
-    mt = models.ForeignKey(Moi_Type, default='kannada')
+    mt = models.ForeignKey(MoiType, default='kannada')
 
-    # qualification = models.ForeignKey(Staff_Qualifications,blank=True,null=True, default=1)
-
-    qualification = models.ManyToManyField(Staff_Qualifications,
+    qualification = models.ManyToManyField(StaffQualifications,
             blank=True)
-    staff_type = models.ForeignKey(Staff_Type, default=1)
+    staff_type = models.ForeignKey(StaffType, default=1)
     active = models.IntegerField(blank=True, null=True, default=2)
 
     class Meta:
@@ -359,7 +357,7 @@ class Student(models.Model):
     dob = models.DateField(max_length=20,null=True)
     gender = models.CharField(max_length=10, choices=Gender,
                               default='male')
-    mt = models.ForeignKey(Moi_Type, default='1')
+    mt = models.ForeignKey(MoiType, default='1')
     active = models.IntegerField(blank=True, null=True, default=2)
     
     class Meta:
@@ -387,7 +385,7 @@ class Student(models.Model):
         return AcademicYear.objects.all()
 
     def get_all_languages(self):
-        return Moi_Type.objects.all()
+        return MoiType.objects.all()
 
     def getModuleName(self):
         return 'student'
@@ -403,8 +401,8 @@ class Student(models.Model):
         self.full_clean()
         super(Student, self).save(*args, **kwargs)
 
-class Student_StudentGroupRelation(models.Model):
-    '''This Class stores the Student and Student Group Realation Information'''
+class StudentStudentGroupRelation(models.Model):
+    '''This Class stores the Student and Student Group Relation Information'''
 
     student = models.ForeignKey(Student)
     student_group = models.ForeignKey(StudentGroup)
@@ -427,8 +425,8 @@ class Student_StudentGroupRelation(models.Model):
         self.full_clean()
         super(Student_StudentGroupRelation, self).save(*args, **kwargs)
 
-class Staff_StudentGroupRelation(models.Model):
-    '''This Class stores the Staff and Student Group Realation Information'''
+class StaffStudentGroupRelation(models.Model):
+    '''This Class stores the Staff and Student Group Relation Information'''
 
     staff = models.ForeignKey(Staff)
     student_group = models.ForeignKey(StudentGroup)
@@ -450,7 +448,7 @@ class ProgrammeInstitution(models.Model):
     start_date = models.DateField(max_length=20,
                                  default=datetime.date.today)
     end_date = models.DateField(max_length=20, default=default_end_date)
-    programme_institution_category = models.ForeignKey(Boundary_Type,
+    programme_institution_category = models.ForeignKey(BoundaryType,
             blank=True, null=True)
     active = models.IntegerField(blank=True, null=True, default=2)
 
@@ -481,7 +479,7 @@ class ProgrammeStudent(models.Model):
     start_date = models.DateField(max_length=20,
                                  default=datetime.date.today)
     end_date = models.DateField(max_length=20, default=default_end_date)
-    programme_institution_category = models.ForeignKey(Boundary_Type,
+    programme_institution_category = models.ForeignKey(BoundaryType,
             blank=True, null=True)
     active = models.IntegerField(blank=True, null=True, default=2)
 
@@ -595,7 +593,7 @@ class AssessmentStudent(models.Model):
     def getModuleName(self):
         return 'assessmentStudent'
 
-class Assessment_StudentGroup_Association(models.Model):
+class AssessmentStudentGroupAssociation(models.Model):
     '''This Class stores the Assessment and Student Group Association Information'''
 
     assessment = models.ForeignKey(AssessmentStudent)
@@ -618,7 +616,7 @@ class Assessment_StudentGroup_Association(models.Model):
 
         unique_together = (('assessment', 'student_group'), )
 
-class Assessment_Institution_Association(models.Model):
+class AssessmentInstitutionAssociation(models.Model):
     '''This Class stores the Assessment and Student Group Association Information'''
 
     assessment = models.ForeignKey(AssessmentStudent)
@@ -810,7 +808,7 @@ def post_save_hook(sender, **kwargs):
     if kwargs['created']:
         call(sender, 'after_create', kwargs['instance'])
         if kwargs['instance'].boundary_type.id == 2:
-            a=Boundary_Category.objects.get(id=13)
+            a=BoundaryCategory.objects.get(id=13)
             obj = Boundary.objects.get(id=kwargs['instance'].id)
             if obj.parent.id == 1:
                 obj.boundary_category = a
