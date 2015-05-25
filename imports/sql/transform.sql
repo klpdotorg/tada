@@ -1,3 +1,10 @@
+-- This file contains all the transformation necessary to migrate the schema and
+-- data from the old ems schema into the new ems schema  
+
+-- Step 1 : Just rename the table which are not changing
+-- These are tables which are enumeration foreign-key tables
+
+
 -- schools_academic_year
 ALTER TABLE ems_schools_academic_year TO schools_academic_year;
 ALTER TABLE schools_academic_year ADD start_year smallint; 
