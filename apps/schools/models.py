@@ -6,10 +6,10 @@ from django.contrib.contenttypes.models import ContentType
 from django.contrib.contenttypes import generic
 from django.contrib.auth.models import User
 
-primary_field_type = [(0, 'Default'),(1, 'Integer'), (2, 'Char'), (3, 'Date'), (4,
+PRIMARY_FIELD_TYPE = [(0, 'Default'),(1, 'Integer'), (2, 'Char'), (3, 'Date'), (4,
                       'Lookup')]
 
-active_status = [
+ACTIVE_STATUS = [
     (0, 'Deleted'),
     (1, 'Inactive'),
     (2, 'Active'),
@@ -20,19 +20,19 @@ active_status = [
     (7, 'Completed'),
     ]
 
-Institution_Gender = [('boys', 'boys'), ('girls', 'girls'), ('co-ed',
+INSTITUTION_GENDER = [('boys', 'boys'), ('girls', 'girls'), ('co-ed',
                       'co-ed')]
 
-Gender = [('male', 'male'), ('female', 'female')]
+GENDER = [('male', 'male'), ('female', 'female')]
 
-Group_Type = [('Class', 'Class'), ('Center', 'Center')]
+GROUP_TYPE = [('Class', 'Class'), ('Center', 'Center')]
 
-QuestionType = [(1, 'Marks'), (2, 'Grade')]
+QUESTION_TYPE = [(1, 'Marks'), (2, 'Grade')]
 
-Relation_Type = [('Mother', 'Mother'), ('Father', 'Father'), ('Siblings'
+RELATION_TYPE = [('Mother', 'Mother'), ('Father', 'Father'), ('Siblings'
                  , 'Siblings')]
 
-Assessment_type = [(1, 'Institution'), (2, 'Student Group'), (3,
+ASSESSMENT_TYPE = [(1, 'Institution'), (2, 'Student Group'), (3,
                    'Student')]
 
 Alpha_list = [('', 'No Section')]
@@ -158,7 +158,7 @@ class Institution(models.Model):
     name = models.CharField(max_length=300)
     cat = models.ForeignKey(InstitutionCategory, blank=True, null=True)
     institution_gender = models.CharField(max_length=10,
-            choices=Institution_Gender, default='co-ed')
+            choices=INSTITUTION_GENDER, default='co-ed')
     languages = models.ManyToManyField(MoiType)
     mgmt = models.ForeignKey(InstitutionManagement, default='1')
     address = models.CharField(max_length=1000,default='NA')
@@ -227,7 +227,7 @@ class Relations(models.Model):
     ''' This class stores relation information of the childrens'''
 
     relation_type = models.CharField(max_length=10,
-            choices=Relation_Type, default='Mother')
+            choices=RELATION_TYPE, default='Mother')
     first_name = models.CharField(max_length=100)
     middle_name = models.CharField(max_length=50, blank=True, null=True)
     last_name = models.CharField(max_length=50, blank=True, null=True)
@@ -248,7 +248,7 @@ class StudentGroup(models.Model):
     section = models.CharField(max_length=10, choices=Alpha_list,
                                blank=True, default='')
     active = models.IntegerField(blank=True, null=True, default=2)
-    group_type = models.CharField(max_length=10, choices=Group_Type,
+    group_type = models.CharField(max_length=10, choices=GROUP_TYPE,
                                   default='Class')
 
     class Meta:
@@ -325,7 +325,7 @@ class Staff(models.Model):
     middle_name = models.CharField(max_length=50, blank=True, null=True)
     last_name = models.CharField(max_length=50, blank=True, null=True)
     doj = models.DateField(max_length=20, blank=True, null=True)
-    gender = models.CharField(max_length=10, choices=Gender,
+    gender = models.CharField(max_length=10, choices=GENDER,
                               default='female')
     mt = models.ForeignKey(MoiType, default=1)
 
@@ -355,7 +355,7 @@ class Student(models.Model):
     last_name = models.CharField(max_length=50, blank=True, null=True)
     uid = models.CharField(max_length=100, blank=True, null=True)
     dob = models.DateField(max_length=20,null=True)
-    gender = models.CharField(max_length=10, choices=Gender,
+    gender = models.CharField(max_length=10, choices=GENDER,
                               default='male')
     mt = models.ForeignKey(MoiType, default='1')
     active = models.IntegerField(blank=True, null=True, default=2)
@@ -520,8 +520,8 @@ class AssessmentInstitution(models.Model):
                             , default=False)
     primary_field_name = models.CharField(max_length=500, blank=True,
             null=True)
-    primary_field_type = \
-        models.IntegerField(choices=primary_field_type, default=3,
+    PRIMARY_FIELD_TYPE = \
+        models.IntegerField(choices=PRIMARY_FIELD_TYPE, default=3,
                             null=True)
 
     class Meta:
@@ -565,8 +565,8 @@ class AssessmentStudent(models.Model):
                             , default=False)
     primary_field_name = models.CharField(max_length=500, blank=True,
             null=True)
-    primary_field_type = \
-        models.IntegerField(choices=primary_field_type, default=3,
+    PRIMARY_FIELD_TYPE = \
+        models.IntegerField(choices=PRIMARY_FIELD_TYPE, default=3,
                             null=True)
 
     class Meta:
@@ -633,7 +633,7 @@ class QuestionStudent(models.Model):
 
     assessment = models.ForeignKey(AssessmentStudent)
     name = models.CharField(max_length=200)
-    question_type = models.IntegerField(choices=QuestionType, default=1)
+    question_type = models.IntegerField(choices=QUESTION_TYPE, default=1)
     score_min = models.DecimalField(max_digits=10, decimal_places=2,
                                    blank=True, null=True)
     score_max = models.DecimalField(max_digits=10, decimal_places=2,
@@ -678,7 +678,7 @@ class QuestionInstitution(models.Model):
 
     assessment = models.ForeignKey(AssessmentInstitution)
     name = models.CharField(max_length=200)
-    question_type = models.IntegerField(choices=QuestionType, default=1)
+    question_type = models.IntegerField(choices=QUESTION_TYPE, default=1)
     score_min = models.DecimalField(max_digits=10, decimal_places=2,
                                    blank=True, null=True)
     score_max = models.DecimalField(max_digits=10, decimal_places=2,
