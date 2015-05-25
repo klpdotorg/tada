@@ -327,7 +327,7 @@ class Staff(models.Model):
     doj = models.DateField(max_length=20, blank=True, null=True)
     gender = models.CharField(max_length=10, choices=Gender,
                               default='female')
-    mt = models.ForeignKey(MoiType, default='kannada')
+    mt = models.ForeignKey(MoiType, default=1)
 
     qualification = models.ManyToManyField(StaffQualifications,
             blank=True)
