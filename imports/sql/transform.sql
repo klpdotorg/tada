@@ -35,22 +35,32 @@ ALTER TABLE schools_academicyear ADD end_year smallint;
 update schools_academic_year set start_year = (LEFT(name,4))::int2
 update schools_academic_year set end_year = (RIGHT(name,4))::int2;
 
+-- Step 2: Split the programme / assessment hierarchy
+
 -- schools_answer
 -- schools_assessments
+-- schools_question
+-- schools_programme
+
+-- Step 3: Merge child and student tables See issue#19
+-- schools_student
+-- schools_child
+-- schools_relations
+
+-- Step 4: Merge Institution and Institution address tables  
+-- schools_institution
+-- schools_institution_address
+
+-- Step 5: Import and Update Staff tables 
+-- schools_staff
+-- schools_staff_qualification
+
+-- Step 6: Update other tables
 -- schools_assessment_class_association
 -- schools_assessment_institution_association
 -- schools_assessment_studentgroup_association
--- schools_child
--- schools_institution
--- schools_institution_address
 -- schools_institution_languages
--- schools_programme
--- schools_question
--- schools_relations
--- schools_staff
--- schools_staff_qualification
 -- schools_staff_studentgrouprelation
--- schools_student
 -- schools_student_studentgrouprelation
 -- schools_studentgroup
 
