@@ -37,10 +37,26 @@ update schools_academic_year set end_year = (RIGHT(name,4))::int2;
 
 -- Step 2: Split the programme / assessment hierarchy
 
--- schools_answer
--- schools_assessments
--- schools_question
 -- schools_programme
+-- Split into schools_programmeinstitution and schools_programmestudent based on programme typ
+-- Join with assessments table is necessary as type of programme cannot be determined without looking at associated assessments 
+INSERT INTO schools_programmeinstitution SELECT a.id, a.name, a.description, a.start_date, a.end_date, a.active, a.programme_institution_category_id
+FROM schools_programme a
+INNER JOIN schools_assessment b
+ON a.id = b.programme_id WHERE b.typ=1 GROUP BY a.id, a.name, a.description, a.start_date, a.end_date, a.active, a.programme_institution_category_id;
+
+INSERT INTO schools_programmestudent SELECT a.id, a.name, a.description, a.start_date, a.end_date, a.active, a.programme_institution_category_id
+FROM schools_programme a
+INNER JOIN schools_assessment b
+ON a.id = b.programme_id WHERE b.typ=3 GROUP BY a.id, a.name, a.description, a.start_date, a.end_date, a.active, a.programme_institution_category_id;
+
+-- schools_assessments
+-- Split into schools_assessmentinstitution and schools_assessmentstudent based on assessment typ
+INSERT INTO schools_assessmentinstitution SELECT id, name, start_date, end_date, query, active, double_entry, flexi_assessment, primary_field_name,  primary_field_type,  programme_id FROM schools_assessment WHERE typ = 3;
+INSERT INTO schools_assessmentstudent SELECT id, name, start_date, end_date, query, active, double_entry, flexi_assessment, primary_field_name,  primary_field_type,  programme_id FROM schools_assessment WHERE typ = 1;
+
+-- schools_answer
+-- schools_question
 
 -- Step 3: Merge child and student tables See issue#19
 -- schools_student
