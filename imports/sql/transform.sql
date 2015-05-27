@@ -37,15 +37,59 @@ update schools_academic_year set end_year = (RIGHT(name,4))::int2;
 
 -- Step 2: Split the programme / assessment hierarchy
 
--- schools_answer
--- schools_assessments
--- schools_question
 -- schools_programme
+-- Split into schools_programmeinstitution and schools_programmestudent based on programme typ
+-- Join with assessments table is necessary as type of programme cannot be determined without looking at associated assessments 
+INSERT INTO schools_programmeinstitution SELECT a.id, a.name, a.description, a.start_date, a.end_date, a.active, a.programme_institution_category_id
+FROM ems_schools_programme a
+INNER JOIN ems_schools_assessment b
+ON a.id = b.programme_id WHERE b.typ = 1 GROUP BY a.id, a.name, a.description, a.start_date, a.end_date, a.active, a.programme_institution_category_id;
+
+INSERT INTO schools_programmestudent SELECT a.id, a.name, a.description, a.start_date, a.end_date, a.active, a.programme_institution_category_id
+FROM ems_schools_programme a
+INNER JOIN ems_schools_assessment b
+ON a.id = b.programme_id WHERE b.typ = 3 GROUP BY a.id, a.name, a.description, a.start_date, a.end_date, a.active, a.programme_institution_category_id;
+
+-- schools_assessments
+-- Split into schools_assessmentinstitution and schools_assessmentstudent based on assessment typ
+INSERT INTO schools_assessmentinstitution SELECT id, name, start_date, end_date, query, active, double_entry, flexi_assessment, primary_field_name,  primary_field_type,  programme_id FROM ems_schools_assessment WHERE typ = 3;
+INSERT INTO schools_assessmentstudent SELECT id, name, start_date, end_date, query, active, double_entry, flexi_assessment, primary_field_name,  primary_field_type,  programme_id FROM ems_schools_assessment WHERE typ = 1;
+
+-- schools_answer
+-- content_type_id for student is 24 and content_type_id for institution is 16
+INSERT INTO schools_answerstudent select id, answer_score, answer_grade, double_entry, status, creation_date, last_modified_date, flexi_data, last_modified_by_id, question_id, user1_id, user2_id from ems_schools_answer where content_type_id = 24;
+
+INSERT INTO schools_answerinstitution select id, answer_score, answer_grade, double_entry, status, creation_date, last_modified_date, flexi_data, last_modified_by_id, question_id, user1_id, user2_id from ems_schools_answer where content_type_id = 16;
+
+-- schools_question
+-- Separate questions based on assessment.typ
+INSERT INTO schools_questioninstitution SELECT a.id, a.name, a.question_type, a.score_min, a.score_max, a.grade, a.order, a.double_entry, a.active, a.assessment_id
+FROM ems_schools_question a
+INNER JOIN ems_schools_assessment b
+ON a.assessment_id = b.id WHERE b.typ = 1;
+
+INSERT INTO schools_questionstudent SELECT a.id, a.name, a.question_type, a.score_min, a.score_max, a.grade, a.order, a.double_entry, a.active, a.assessment_id
+FROM ems_schools_question a
+INNER JOIN ems_schools_assessment b
+ON a.assessment_id = b.id WHERE b.typ = 3;
+
 
 -- Step 3: Merge child and student tables See issue#19
--- schools_student
--- schools_child
 -- schools_relations
+-- replace child_id with student_id 
+SELECT a.id, a.relation_type, a.first_name, a.middle_name, a.last_name, b.id
+FROM ems_schools_relations a 
+INNER JOIN ems_schools_student b 
+ON a.child_id = b.child_id;
+
+-- schools_student
+INSERT INTO schools_student SELECT a.id, a.active, b.dob, b.first_name, b.gender, b.last_name, b.middle_name, b.mt_id, b.uid
+FROM ems_schools_student a
+INNER JOIN ems_schools_child b
+on a.child_id = b.id
+
+-- schools_child
+-- drop this table later
 
 -- Step 4: Merge Institution and Institution address tables  
 -- schools_institution
@@ -66,3 +110,4 @@ update schools_academic_year set end_year = (RIGHT(name,4))::int2;
 
 -- FIXME : Add List of id sequences
 -- FIXME : Add indices for specific tables
+-- FIXME : Drop ems_* tables after migration is done
