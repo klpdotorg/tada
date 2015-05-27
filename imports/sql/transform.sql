@@ -25,6 +25,9 @@ ALTER TABLE ems_schools_institution_category RENAME TO schools_institutioncatego
 -- schools_staff_qualifications
 ALTER TABLE ems_schools_staff_qualifications RENAME TO schools_qualificationslist;
 
+-- schools_staff_qualification
+ALTER TABLE ems_schools_staff_qualification RENAME TO schools_staff_qualification;
+
 -- schools_staff_type
 ALTER TABLE ems_schools_staff_type RENAME TO schools_stafftype;
 
@@ -77,7 +80,7 @@ ON a.assessment_id = b.id WHERE b.typ = 3;
 -- Step 3: Merge child and student tables See issue#19
 -- schools_relations
 -- replace child_id with student_id 
-SELECT a.id, a.relation_type, a.first_name, a.middle_name, a.last_name, b.id
+INSERT INTO schools_relations SELECT a.id, a.relation_type, a.first_name, a.middle_name, a.last_name, b.id
 FROM ems_schools_relations a 
 INNER JOIN ems_schools_student b 
 ON a.child_id = b.child_id;
@@ -86,18 +89,27 @@ ON a.child_id = b.child_id;
 INSERT INTO schools_student SELECT a.id, a.active, b.dob, b.first_name, b.gender, b.last_name, b.middle_name, b.mt_id, b.uid
 FROM ems_schools_student a
 INNER JOIN ems_schools_child b
-on a.child_id = b.id
+on a.child_id = b.id;
 
 -- schools_child
 -- drop this table later
 
 -- Step 4: Merge Institution and Institution address tables  
 -- schools_institution
+-- merge the institution address with this table
+
+INSERT INTO schools_institution SELECT a.id, a.dise_code, a.name, a.institution_gender, a.active, a.boundary_id, a.cat_id, a.mgmt_id, b.address, b.area, b.instidentification, b.instidentification2, b.landmark, b.pincode, b.route_information 
+FROM ems_schools_institution a 
+INNER JOIN ems_schools_institution_address b 
+ON a.inst_address_id = b.id;
+ 
 -- schools_institution_address
+-- drop this table later
 
 -- Step 5: Import and Update Staff tables 
 -- schools_staff
--- schools_staff_qualification
+-- reorder fields and remove uid column
+INSERT INTO schools_staff SELECT id, first_name, middle_name, last_name, doj, gender, active, institution, mt_id, staff_type_id FROM ems_schools_staff;
 
 -- Step 6: Update other tables
 -- schools_assessment_class_association
