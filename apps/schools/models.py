@@ -231,7 +231,7 @@ class Relations(models.Model):
     first_name = models.CharField(max_length=100)
     middle_name = models.CharField(max_length=50, blank=True, null=True)
     last_name = models.CharField(max_length=50, blank=True, null=True)
-    child = models.ForeignKey("Student")
+    student = models.ForeignKey("Student")
 
     def __unicode__(self):
         return '%s' % self.first_name
