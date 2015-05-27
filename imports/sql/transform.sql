@@ -75,9 +75,21 @@ ON a.assessment_id = b.id WHERE b.typ = 3;
 
 
 -- Step 3: Merge child and student tables See issue#19
--- schools_student
--- schools_child
 -- schools_relations
+-- replace child_id with student_id 
+SELECT a.id, a.relation_type, a.first_name, a.middle_name, a.last_name, b.id
+FROM ems_schools_relations a 
+INNER JOIN ems_schools_student b 
+ON a.child_id = b.child_id;
+
+-- schools_student
+INSERT INTO schools_student SELECT a.id, a.active, b.dob, b.first_name, b.gender, b.last_name, b.middle_name, b.mt_id, b.uid
+FROM ems_schools_student a
+INNER JOIN ems_schools_child b
+on a.child_id = b.id
+
+-- schools_child
+-- drop this table later
 
 -- Step 4: Merge Institution and Institution address tables  
 -- schools_institution
