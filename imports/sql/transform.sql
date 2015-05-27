@@ -25,6 +25,9 @@ ALTER TABLE ems_schools_institution_category RENAME TO schools_institutioncatego
 -- schools_staff_qualifications
 ALTER TABLE ems_schools_staff_qualifications RENAME TO schools_qualificationslist;
 
+-- schools_staff_qualification
+ALTER TABLE ems_schools_staff_qualification RENAME TO schools_staff_qualification;
+
 -- schools_staff_type
 ALTER TABLE ems_schools_staff_type RENAME TO schools_stafftype;
 
@@ -86,7 +89,7 @@ ON a.child_id = b.child_id;
 INSERT INTO schools_student SELECT a.id, a.active, b.dob, b.first_name, b.gender, b.last_name, b.middle_name, b.mt_id, b.uid
 FROM ems_schools_student a
 INNER JOIN ems_schools_child b
-on a.child_id = b.id
+on a.child_id = b.id;
 
 -- schools_child
 -- drop this table later
@@ -105,7 +108,8 @@ ON a.inst_address_id = b.id;
 
 -- Step 5: Import and Update Staff tables 
 -- schools_staff
--- schools_staff_qualification
+-- reorder fields and remove uid column
+INSERT INTO schools_staff SELECT id, first_name, middle_name, last_name, doj, gender, active, institution, mt_id, staff_type_id FROM ems_schools_staff;
 
 -- Step 6: Update other tables
 -- schools_assessment_class_association
