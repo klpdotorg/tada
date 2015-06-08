@@ -3,21 +3,20 @@ You can migrate data to the new format using one of the two following methods
 
 ### Common steps
 Recreate the schema from django.
-1. Create a database using createdb
-
+*  Create a database using createdb
 ```
 $ sudo -u postgres createdb -E UTF8 -O klp -T template0 klp_transform 
 ```
-2. Change your local settings to point to new DB. See README.md in root 
+*  Change your local settings to point to new DB. See README.md in root 
 folder for this.
-3. Run migrate to create the empty data tables
+*  Run migrate to create the empty data tables
 ```
 $ python manage.py migrate
 ```
-4. If all has gone well and you have not got any errors (you might get a 
+* If all has gone well and you have not got any errors (you might get a 
 warning or two - ignore for now) then the database has been created with 
 the tables.
-5. You can check using the following command at the postgres prompt
+* You can check using the following command at the postgres prompt
 ```
 $ sudo -u postgres psql klp_transform
 psql (9.3.7)
@@ -25,22 +24,22 @@ Type "help" for help.
 
 klp_transform=# \d+ <ENTER>
 ```
-6. Now go ahead and try method 1 or 2 to get data into tables.
+*  Now go ahead and try method 1 or 2 to get data into tables.
 
 ### Method 1 - Migrating data from old EMS dump
-1. Login to new EMS machine (as user klp) and download the file
+* Login to new EMS machine (as user klp) and download the file
 klpproduction_feb18.sql.bz2. This is a large file so it might take a few 
 hours.
-2. Unzip the file using the command
+* Unzip the file using the command
 ```
 $ bunzip klpproduction_feb18.sql.bz2
 ```
-3. The above command might take a while as the file will be large about 3.5GB.
+* The above command might take a while as the file will be large about 3.5GB.
 Now import the file using the command
 ```
 $ sudo -u postgres psql klp_transform < klpproduction_20-05-2015_02_45
 ```
-4. Check the inserted data by using the command below and doing select 
+* Check the inserted data by using the command below and doing select 
 limit/count on some of the tables.
 ```
 $ sudo -u postgres psql klp_transform
