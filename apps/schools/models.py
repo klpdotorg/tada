@@ -639,7 +639,7 @@ class QuestionStudent(models.Model):
     score_max = models.DecimalField(max_digits=10, decimal_places=2,
                                    blank=True, null=True)
     grade = models.CharField(max_length=100, blank=True, null=True)
-    order = models.IntegerField()
+    order = models.IntegerField(blank=True, null=True)
     double_entry = models.BooleanField(default=True)
     active = models.IntegerField(blank=True, null=True, default=2)
 
