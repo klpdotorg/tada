@@ -743,11 +743,6 @@ class AnswerStudent(models.Model):
             related_name='last_modified_answer_student')
     flexi_data = models.CharField(max_length=30, blank=True, null=True)
 
-    class Meta:
-
-        unique_together = (('question', 'flexi_data'), )
-
-
     def save(self, *args, **kwargs):
         # custom save method
         #pdb.set_trace()
