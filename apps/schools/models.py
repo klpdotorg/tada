@@ -639,7 +639,7 @@ class QuestionStudent(models.Model):
     score_max = models.DecimalField(max_digits=10, decimal_places=2,
                                    blank=True, null=True)
     grade = models.CharField(max_length=100, blank=True, null=True)
-    order = models.IntegerField()
+    order = models.IntegerField(blank=True, null=True)
     double_entry = models.BooleanField(default=True)
     active = models.IntegerField(blank=True, null=True, default=2)
 
@@ -743,11 +743,6 @@ class AnswerStudent(models.Model):
             related_name='last_modified_answer_student')
     flexi_data = models.CharField(max_length=30, blank=True, null=True)
 
-    class Meta:
-
-        unique_together = (('question', 'flexi_data'), )
-
-
     def save(self, *args, **kwargs):
         # custom save method
         #pdb.set_trace()
@@ -782,11 +777,6 @@ class AnswerInstitution(models.Model):
     last_modified_by = models.ForeignKey(User, blank=True, null=True,
             related_name='last_modified_answer_institution')
     flexi_data = models.CharField(max_length=30, blank=True, null=True)
-
-    class Meta:
-
-        unique_together = (('question', 'flexi_data'), )
-
 
     def save(self, *args, **kwargs):
         # custom save method
