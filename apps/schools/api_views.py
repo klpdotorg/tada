@@ -27,11 +27,8 @@ class StudentDetailView(generics.ListCreateAPIView):
 ''' Returns the list of students. Paginates by 10. Set this globally in settings?'''
 class StudentsListView(generics.ListCreateAPIView):
     serializer_class = StudentSerializer
-    paginate_by = 10
 
     def get_queryset(self):
-        print 'inside query set'
         query_set=Student.objects.all()
-        print 'Finished retrieving students'
         return query_set
 
