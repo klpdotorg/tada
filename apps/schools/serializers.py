@@ -17,7 +17,7 @@ class RelationsSerializer(serializers.ModelSerializer):
 
 class StudentSerializer(serializers.ModelSerializer):
     
-    relations = RelationsSerializer(source='get_relations')
+    relations = RelationsSerializer(many='True', source='get_relations')
     class Meta:
         model = Student
         fields = ('first_name' ,'middle_name', 'last_name' , 'uid', 'dob', 'gender' , 'mt', 'active', 'relations')

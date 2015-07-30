@@ -100,15 +100,15 @@ class Student(models.Model):
 
 
     def get_relations(self):
-        return Relations.objects.get(id=self.id)
+        return Relations.objects.filter(student_id=self.id)
 
     def get_mother(self):
-        return Relations.objects.get(relation_type='Mother',
-                id=self.id)
+        return Relations.objects.filter(relation_type='Mother',
+                student_id=self.id)
     
     def get_father(self):
         return Relations.objects.get(relation_type='Father',
-                id=self.id)
+                student_id=self.id)
 
     def get_student(self):
         return Student.objects.get(id=self.id)
