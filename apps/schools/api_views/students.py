@@ -2,16 +2,16 @@ from rest_framework import generics
 from rest_framework.views import APIView
 from rest_framework.response import Response
 
-from .serializers import (
+from schools.serializers import (
     StudentSerializer,
 )
 
-from .models import (
+from schools.models import (
     Student, 
 )
 
 ''' Returns the details of a student by student id (pk passed in via REST) '''
-class StudentDetailView(generics.ListCreateAPIView):
+class StudentDetailView(generics.RetrieveUpdateDestroyAPIView):
     serializer_class = StudentSerializer
 
     def get_object(self):

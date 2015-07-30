@@ -98,18 +98,26 @@ class Student(models.Model):
     def __unicode__(self):
         return '%s' % self.first_name
 
-    def getMother(self):
+
+    def get_relations(self):
+        return Relations.objects.get(id=self.id)
+
+    def get_mother(self):
         return Relations.objects.get(relation_type='Mother',
-                child__id=self.id)
+                id=self.id)
+    
+    def get_father(self):
+        return Relations.objects.get(relation_type='Father',
+                id=self.id)
 
-    def getStudent(self):
-        return Student.objects.get(child__id=self.id)
+    def get_student(self):
+        return Student.objects.get(id=self.id)
 
 
-    def GetName(self):
+    def get_name(self):
         return self.child.first_name
 
-    def getChild(self):
+    def get_child(self):
         return False
 
     def get_all_academic_years(self):

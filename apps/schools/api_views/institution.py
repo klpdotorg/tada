@@ -2,11 +2,11 @@ from rest_framework import generics
 from rest_framework.views import APIView
 from rest_framework.response import Response
 
-from .serializers import (
+from schools.serializers import (
     InstitutionSerializer,
 )
 
-from .models import (
+from schools.models import (
     Institution,
 )
 
