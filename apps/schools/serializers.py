@@ -1,7 +1,8 @@
 from rest_framework import serializers
 
 from .models import (
-    Institution, Student, Relations, AssessmentInstitution
+    Institution, Student, Relations, AssessmentInstitution,
+    ProgrammeInstitution,
 )
 
 
@@ -24,6 +25,16 @@ class AssessmentSerializer(serializers.ModelSerializer):
             'id', 'programme', 'name', 'start_date', 'end_date', 'query',
             'active', 'double_entry', 'flexi_assessment', 'primary_field_name',
             'PRIMARY_FIELD_TYPE'
+        )
+
+
+class ProgrammeSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = ProgrammeInstitution
+        fields = (
+            'id', 'name', 'description', 'start_date', 'end_date',
+            'programme_institution_category', 'active'
         )
 
 

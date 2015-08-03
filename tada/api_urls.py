@@ -4,13 +4,14 @@ from django.conf.urls import patterns, url
 
 from schools.api_views import (
     InstitutionViewSet, StudentDetailView, StudentsListView,
-    AssessmentViewSet,
+    AssessmentViewSet, ProgrammeViewSet
 )
 
 router = routers.SimpleRouter()
 
 router.register(r'institutions', InstitutionViewSet, base_name='institution')
 router.register(r'assessments', AssessmentViewSet, base_name='assessment')
+router.register(r'programmes', ProgrammeViewSet, base_name='programme')
 
 urlpatterns = patterns(
     '',
