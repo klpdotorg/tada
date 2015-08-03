@@ -1,2 +1,2 @@
-from .institution_view import InstitutionDetailView
-from .students_view import StudentDetailView, StudentsListView
+from .institution import *
+from .students import *
