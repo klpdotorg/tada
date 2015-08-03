@@ -1,6 +1,8 @@
 from rest_framework import serializers
 
-from .models import Institution, Student, Relations
+from .models import (
+    Institution, Student, Relations, AssessmentInstitution
+)
 
 
 class InstitutionSerializer(serializers.ModelSerializer):
@@ -11,6 +13,17 @@ class InstitutionSerializer(serializers.ModelSerializer):
             'id', 'boundary', 'dise_code', 'name', 'cat', 'institution_gender',
             'languages', 'mgmt', 'address', 'area', 'pincode', 'landmark',
             'active'
+        )
+
+
+class AssessmentSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = AssessmentInstitution
+        fields = (
+            'id', 'programme', 'name', 'start_date', 'end_date', 'query',
+            'active', 'double_entry', 'flexi_assessment', 'primary_field_name',
+            'PRIMARY_FIELD_TYPE'
         )
 
 
