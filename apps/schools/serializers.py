@@ -2,7 +2,7 @@ from rest_framework import serializers
 
 from .models import (
     Institution, Student, Relations, AssessmentInstitution,
-    ProgrammeInstitution,
+    ProgrammeInstitution, Boundary
 )
 
 
@@ -35,6 +35,16 @@ class ProgrammeSerializer(serializers.ModelSerializer):
         fields = (
             'id', 'name', 'description', 'start_date', 'end_date',
             'programme_institution_category', 'active'
+        )
+
+
+class BoundarySerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Boundary
+        fields = (
+            'id', 'parent', 'name', 'boundary_category', 'boundary_type',
+            'active'
         )
 
 
