@@ -2,11 +2,16 @@ from rest_framework import serializers
 
 from .models import Institution, Student, Relations
 
+
 class InstitutionSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Institution
-        fields = ('name' ,)
+        fields = (
+            'id', 'boundary', 'dise_code', 'name', 'cat', 'institution_gender',
+            'languages', 'mgmt', 'address', 'area', 'pincode', 'landmark',
+            'active'
+        )
 
 
 class RelationsSerializer(serializers.ModelSerializer):
