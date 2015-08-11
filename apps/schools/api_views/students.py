@@ -2,23 +2,16 @@ from rest_framework import generics
 from rest_framework.views import APIView
 from rest_framework.response import Response
 
-from .serializers import (
-    InstitutionSerializer, StudentSerializer
+from schools.serializers import (
+    StudentSerializer,
 )
 
-from .models import (
-    Institution, Student, 
+from schools.models import (
+    Student, 
 )
-
-
-class InstitutionDetailView(generics.RetrieveUpdateDestroyAPIView):
-    serializer_class = InstitutionSerializer
-
-    def get_object(self):
-        return Institution.objects.get(id=self.kwargs['pk'])
 
 ''' Returns the details of a student by student id (pk passed in via REST) '''
-class StudentDetailView(generics.ListCreateAPIView):
+class StudentDetailView(generics.RetrieveUpdateDestroyAPIView):
     serializer_class = StudentSerializer
 
     def get_object(self):
