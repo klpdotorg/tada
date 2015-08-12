@@ -36,9 +36,10 @@ INSTALLED_APPS = (
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'schools',
     'rest_framework',
-    'rest_framework_swagger',
+    'schools',
+    'tests',
+    'rest_framework_swagger'
 )
 
 MIDDLEWARE_CLASSES = (
@@ -55,6 +56,7 @@ ROOT_URLCONF = 'tada.urls'
 
 WSGI_APPLICATION = 'tada.wsgi.application'
 
+TEST_RUNNER = 'common.testrunner.DiscoverTestRunner'
 
 # Database
 # https://docs.djangoproject.com/en/1.7/ref/settings/#databases
