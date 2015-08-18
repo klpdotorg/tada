@@ -1,0 +1,201 @@
+{% load staticfiles %}
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <link rel="icon" href="{% static 'images/favicon.ico' %}">
+
+    <title>Dashboard Template for Bootstrap</title>
+
+    <!-- Bootstrap core CSS -->
+    <link href="{% static 'css/bootstrap/bootstrap.css' %}" rel="stylesheet">
+    <link href="{% static 'css/font-awesome/font-awesome.css' %}" rel="stylesheet">
+    <link href="{% static 'css/style.css" rel="stylesheet' %}">
+    <!--http://jsfiddle.net/Osis/Mns8q/-->
+    
+
+        <!-- Bootstrap core JavaScript
+    ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
+    <script src="{% static 'js/lib/jquery-2.1.4.min.js' %}"></script>
+    <script src="{% static 'js/lib/bootstrap.min.js' %}"></script>
+    <script src="{% static 'js/lib/bootstrap-treeview.js' %}"></script>
+    <script src="{% static 'js/sidebar.js' %}"></script>
+
+    <!-- Just to make our placeholder images work. Don't actually copy the next line! -->
+    
+  </head>
+
+  <body>
+
+    <nav class="navbar navbar-white navbar-fixed-top">
+      <div class="container-fluid">
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="navbar-brand" href="#"><img src="{% static 'images/KLP_logo.png' %}"></a>
+        </div>
+
+        <div id="navbar" class="navbar-collapse collapse">
+          <p class="app-name navbar-text pull-left">Data Entry Operations 2015-2016</p> 
+          <p class="navbar-text pull-right">
+            <button type="button" class="btn btn-primary"><span class="glyphicon glyphicon-user"></span></button>
+            <button type="button" class="btn btn-primary"><span class="glyphicon glyphicon-off"></span></button>
+          </p>
+          <p class="login-msg navbar-text pull-right">Hello there <span class="fa fa-smile-o"></span> ! Mohsina Taj  </button>
+          </p></p>
+        </div>
+      </div>
+    </nav>
+    
+    <div id="treetoggler">
+      <a href="#menu-toggle" class="btn btn-primary btn-xs" id="menu-toggle">
+        <span id="toggler-icon" class="glyphicon glyphicon-resize-horizontal"></span>
+      </a>
+    </div>
+    <div class="tab-content box-shadow" id="myTabContent" >
+      <div class="container-fluid">
+        <div class="row">
+          <div class="col-lg-12 inst-tabs">
+            <ul class="nav nav-tabs" id="myTab" style="margin-bottom:0px">
+
+                <li class="active"><a data-toggle="tab" href="#home" style="background-color:#ec6608">Primary School</a></li>
+                <li><a data-toggle="tab" href="#profile" style="background-color:#26b262"> Preschool</a></li>
+              </ul>
+          </div>
+        </div>
+      </div>
+      <div id="secondary-menu">
+        <div class="nav nav-pills">
+            <!--left side -->
+            <button type="button" class="btn btn-primary navbar-btn pull-left"><span class="glyphicon glyphicon-home"></span></button>
+            <form class="navbar-form navbar-left" role="search">
+              <div class="form-group">
+                <input type="text" class="form-control" placeholder="Enter KLP ID">
+              </div>
+              <button type="submit" class="btn btn-default">Search</button>
+            </form>
+            <!--right side-->
+            <p class="pull-right">
+              <button type="button" class="btn btn-info navbar-btn"><span class="fa fa-pencil-square-o"></span> Manage Programs</button>
+              <button type="button" class="btn btn-info navbar-btn"><span class="fa fa-undo"></span></button>
+              <button type="button" class="btn btn-info navbar-btn"><span class="fa fa-bar-chart"></span></button>
+              <button type="button" class="btn btn-info navbar-btn"><span class="fa fa-database"></span></button>
+              <button type="button" class="btn btn-info navbar-btn"><span class="fa fa-user-plus"></span></button>
+              <button type="button" class="btn btn-info navbar-btn"><span class="fa fa-key"></span></button>
+              <button type="button" class="btn btn-info navbar-btn"><span class="fa fa-globe"></span></button>
+              <button type="button" class="btn btn-primary navbar-btn"><span class="glyphicon glyphicon-filter"></span> Filter by Programs</button>
+              
+            </p>
+            
+
+        </div>
+      </div>
+      <div id="wrapper" class="">
+         <div id="sidebar-wrapper">
+          <div id="treeview_side" class="treeview"></div>
+        </div>
+
+        <div id="page-content-wrapper">
+            <div class="container-fluid">
+                <div class="row">
+                    
+                    <div class="col-lg-12">
+                        <ol class="breadcrumb">
+                          <li><a href="#">Bangalore</a></li>
+                          <li><a href="#">Bangalore North</a></li>
+                          <li><a href="#">Yelahanka</a></li>
+                          <li class="active">GKLPS Yelahanka</li>
+                        </ol>
+                        <div class="row form-container">
+                          <div class="col-md-1"></div>
+                          <div class="col-md-9">
+                            <div class="form-heading heading-border"> Modify Details </div>
+                        
+                            <form class="form-horizontal" role="form">
+
+                              <div class="form-group">
+                                <label class="control-label col-sm-2" for="name">Name:</label>
+                                <div class="col-sm-10">          
+                                  <input type="text" class="form-control" id="name">
+                                </div>
+                              </div>
+                              <div class="form-group">
+                                <label class="control-label col-sm-2" for="address">Address:</label>
+                                <div class="col-sm-10">          
+                                  <textarea type="password" class="form-control" id="address" rows=3>
+                                  </textarea>
+                                </div>
+                              </div>
+                              <div class="form-group">
+                                <label class="control-label col-sm-2" for="pincode">Pincode:</label>
+                                <div class="col-sm-10">          
+                                  <input type="text" class="form-control" id="pincode">
+                                </div>
+                              </div>
+                              <div class="form-group">
+                                <label class="control-label col-sm-2" for="category">Category:</label>
+                                <div class="col-sm-10">          
+                                  <select class="form-control" id="category">
+                                    <option>Lower Primary School</option>
+                                    <option>Model Primary School</option>
+                                    <option>Higher Primary School</option>
+                                  </select>
+                                </div>
+                              </div>
+                              <div class="form-group">
+                                <label class="control-label col-sm-2" for="medium">Medium:</label>
+                                <div class="col-sm-10">          
+                                  <select class="form-control" id="medium">
+                                    <option>Kannada</option>
+                                    <option>Urdu</option>
+                                    <option>Tamil</option>
+                                  </select>
+                                </div>
+                              </div>
+                              <div class="form-group">
+                                <label class="control-label col-sm-2" for="mgmt">Mangament:</label>
+                                <div class="col-sm-10">          
+                                  <select class="form-control" id="mgmt">
+                                    <option>Government - State</option>
+                                    <option>Government - Central</option>
+                                    <option>Aided</option>
+                                    <option>Private</option>
+                                  </select>
+                                </div>
+                              </div>
+                              <div class="form-group">
+                                <label class="control-label col-sm-2" for="disecode">DISE Code:</label>
+                                <div class="col-sm-10">          
+                                  <input type="text" class="form-control" id="disecode">
+                                </div>
+                              </div>
+                              <div class="form-group">        
+                                <div class="col-sm-offset-2 col-sm-10">
+                                  <button type="submit" class="btn btn-primary">Submit</button>
+                                </div>
+                              </div>
+                            </form>
+                          </div>
+                          <div class="col-md-2"><button type="submit" class="btn btn-primary">Add Class</button></div>
+                        </div>
+                        
+                                                
+                    </div>
+                </div>
+            </div>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>
