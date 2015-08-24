@@ -111,14 +111,29 @@ ON a.inst_address_id = b.id;
 -- reorder fields and remove uid column
 INSERT INTO schools_staff SELECT id, first_name, middle_name, last_name, doj, gender, active, institution, mt_id, staff_type_id FROM ems_schools_staff;
 
+-- Tables fixed in api-phase 2 
 -- Step 6: Update other tables
 -- schools_assessment_class_association
+-- ignore this table as it is empty in production and likely not used
+
+-- These below tables can be used as is from the current EMS with just the renaming of the tables. The data is still valid and linked and does not need any transformations
 -- schools_assessment_institution_association
+ALTER TABLE schools_assessment_institution_association RENAME TO schools_assessmentinstitutionassociation;
+
 -- schools_assessment_studentgroup_association
+ALTER TABLE schools_assessment_studentgroup_association RENAME TO schools_assessmentstudentgroupassociation;
+
 -- schools_institution_languages
+ALTER TABLE schools_institution_languages RENAME TO schools_institutionlanguages;
+
 -- schools_staff_studentgrouprelation
+ALTER TABLE schools_staff_studentgrouprelation RENAME TO schools_staffstudentgrouprelation;
+
 -- schools_student_studentgrouprelation
+ALTER TABLE schools_student_studentgrouprelation RENAME TO schools_studentstudentgrouprelation;
+
 -- schools_studentgroup
+ALTER TABLE schools_studentgroup RENAME TO schools_studentgroup;
 
 -- FIXME : Add List of id sequences
 -- FIXME : Add indices for specific tables
