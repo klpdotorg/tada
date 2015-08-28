@@ -4,6 +4,7 @@ from rest_framework import generics, viewsets
 
 from schools.api_filters import (
     BoundaryFilter, ProgrammeFilter, AssessmentFilter,
+    InstitutionFilter,
 )
 from schools.serializers import (
     InstitutionSerializer, AssessmentSerializer, ProgrammeSerializer,
@@ -18,6 +19,7 @@ from schools.models import (
 class InstitutionViewSet(viewsets.ModelViewSet):
     queryset = Institution.objects.all()
     serializer_class = InstitutionSerializer
+    filter_class = InstitutionFilter
 
 
 class AssessmentViewSet(viewsets.ModelViewSet):
