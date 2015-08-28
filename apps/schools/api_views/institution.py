@@ -3,7 +3,7 @@ from rest_framework.response import Response
 from rest_framework import generics, viewsets
 
 from schools.api_filters import (
-    BoundaryFilter, ProgrammeFilter,
+    BoundaryFilter, ProgrammeFilter, AssessmentFilter,
 )
 from schools.serializers import (
     InstitutionSerializer, AssessmentSerializer, ProgrammeSerializer,
@@ -23,6 +23,7 @@ class InstitutionViewSet(viewsets.ModelViewSet):
 class AssessmentViewSet(viewsets.ModelViewSet):
     queryset = AssessmentInstitution.objects.all()
     serializer_class = AssessmentSerializer
+    filter_class = AssessmentFilter
 
 
 class ProgrammeViewSet(viewsets.ModelViewSet):

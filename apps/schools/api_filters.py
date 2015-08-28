@@ -1,7 +1,9 @@
 import django_filters
 
 from schools.models import (
-    Boundary, ProgrammeInstitution
+    Boundary, ProgrammeInstitution, AssessmentInstitution
+)
+
 
 class BoundaryFilter(django_filters.FilterSet):
     category = django_filters.CharFilter(
@@ -17,4 +19,11 @@ class ProgrammeFilter(django_filters.FilterSet):
 
     class Meta:
         model = ProgrammeInstitution
+        fields = ['name']
+
+
+class AssessmentFilter(django_filters.FilterSet):
+
+    class Meta:
+        model = AssessmentInstitution
         fields = ['name']
