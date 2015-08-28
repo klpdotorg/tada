@@ -2,7 +2,9 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import generics, viewsets
 
-from schools.api_filters import BoundaryFilter
+from schools.api_filters import (
+    BoundaryFilter, ProgrammeFilter,
+)
 from schools.serializers import (
     InstitutionSerializer, AssessmentSerializer, ProgrammeSerializer,
     BoundarySerializer
@@ -26,6 +28,7 @@ class AssessmentViewSet(viewsets.ModelViewSet):
 class ProgrammeViewSet(viewsets.ModelViewSet):
     queryset = ProgrammeInstitution.objects.all()
     serializer_class = ProgrammeSerializer
+    filter_class = ProgrammeFilter
 
 
 class BoundaryViewSet(viewsets.ModelViewSet):
