@@ -1,7 +1,7 @@
 import django_filters
 
 from schools.models import (
-    Boundary, ProgrammeInstitution, AssessmentInstitution
+    Boundary, ProgrammeInstitution, AssessmentInstitution,
     Institution,
 )
 
