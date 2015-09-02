@@ -2,7 +2,7 @@ from rest_framework import serializers
 
 from .models import (
     Institution, Student, Relations, AssessmentInstitution,
-    ProgrammeInstitution, Boundary
+    ProgrammeInstitution, Boundary, Staff
 )
 
 
@@ -65,4 +65,13 @@ class StudentSerializer(serializers.ModelSerializer):
         fields = (
             'first_name', 'middle_name', 'last_name', 'uid', 'dob', 'gender',
             'mt', 'active', 'relations'
+        )
+
+class StaffSerializer(serializers.ModelSerializer):
+    
+    class Meta:
+        model = Staff
+        fields = (
+            'first_name', 'middle_name', 'last_name', 'institution', 'doj', 'gender',
+            'mt', 'qualification', 'active'
         )

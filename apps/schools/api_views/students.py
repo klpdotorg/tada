@@ -12,6 +12,6 @@ from schools.models import (
 
 ''' Returns the list of students. Paginates by 10. Set this globally in settings?'''
 class StudentsListViewSet(viewsets.ModelViewSet):
-    query_set=Student.objects.all()
+    queryset=Student.objects.all()
     serializer_class = StudentSerializer
 
