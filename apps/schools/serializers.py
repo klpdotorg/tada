@@ -2,7 +2,7 @@ from rest_framework import serializers
 
 from .models import (
     Institution, Student, Relations, AssessmentInstitution,
-    ProgrammeInstitution, Boundary
+    ProgrammeInstitution, Boundary, Staff
 )
 
 
@@ -56,13 +56,43 @@ class RelationsSerializer(serializers.ModelSerializer):
             'relation_type', 'first_name' ,'middle_name', 'last_name'
         )
 
+    def create(self, validated_data):
+        print "Relations create"
+
 
 class StudentSerializer(serializers.ModelSerializer):
     
-    relations = RelationsSerializer(many='True', source='get_relations')
+    relations = RelationsSerializer(many='True')
     class Meta:
         model = Student
         fields = (
             'first_name', 'middle_name', 'last_name', 'uid', 'dob', 'gender',
             'mt', 'active', 'relations'
+        )
+
+    def create(self, validated_data):
+        
+        print 'validated_data'
+        print validated_data
+        relations_data=validated_data.pop('relations')
+        print "Relations data is: "
+        print relations_data
+        student=Student.objects.create(**validated_data)
+        print 'created student object'
+        for item in relations_data:
+            print item
+            relation = Relations.objects.create(student=student,**item)
+            print "Done creating relation"
+            relation.save()            
+        student.save()
+        return student
+
+
+class StaffSerializer(serializers.ModelSerializer):
+    
+    class Meta:
+        model = Staff
+        fields = (
+            'first_name', 'middle_name', 'last_name', 'institution', 'doj', 'gender',
+            'mt', 'qualification', 'active'
         )

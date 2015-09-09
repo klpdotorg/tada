@@ -8,11 +8,11 @@ from schools.filters import (
 )
 from schools.serializers import (
     InstitutionSerializer, AssessmentSerializer, ProgrammeSerializer,
-    BoundarySerializer
+    BoundarySerializer, StaffSerializer
 )
 from schools.models import (
     Institution, AssessmentInstitution, ProgrammeInstitution,
-    Boundary
+    Boundary, Staff
 )
 
 
@@ -38,3 +38,8 @@ class BoundaryViewSet(viewsets.ModelViewSet):
     queryset = Boundary.objects.all()
     serializer_class = BoundarySerializer
     filter_class = BoundaryFilter
+
+class StaffViewSet(viewsets.ModelViewSet):
+    queryset = Staff.objects.all()
+    serializer_class=StaffSerializer
+
