@@ -1,5 +1,5 @@
 from rest_framework import status
-from rest_framework.test import APIClient
+from rest_framework.test import APIClient, APIRequestFactory
 from django.test import TestCase
 from django.conf import settings
 from schools.models import Student
@@ -40,10 +40,28 @@ class StudentsApiTestCase(TestCase):
         self.assertTrue('last_name' in data, "has property last name")
         self.assertTrue('uid' in data, "has property uid")
         self.assertTrue('dob' in data, "has property dob")
-        self.assertTrue()
+        
 
     def test_post_new_student(self):
-        pass
+        print 'Testing creation of new student..'
+        data = {"first_name": "Magic2",
+                    "middle_name": "Hope2",
+                    "last_name": "Johnson2",
+                    "uid": "null",
+                    "dob": "2006-10-05",
+                    "gender": "male",
+                    "mt": 1,
+                    "active": 0,
+                    "relations": [{"relation_type": "Mother","first_name": "Kayla2"},
+                                    {"relation_type": "Father","first_name": "Shawn2"}]}
+        json_data = json.dumps(data)
+        print json_data
+        response = self.client.post('/api/v1/students/',json_data,content_type='application/json')
+        print response.status_code
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+        self.assertTrue('relations' in response.data)
+        print response.data
+
 
     def test_edit_student(self):
         pass
