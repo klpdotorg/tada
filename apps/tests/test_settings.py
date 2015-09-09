@@ -1,4 +1,4 @@
-from settings import *
+from tada.settings import *
 
 DBNAME = DATABASES['default']['NAME']
 USER = DATABASES['default']['USER']
@@ -27,6 +27,6 @@ TESTS_STUDENTS_INPUT = {
 
 
 try:
-    from local_test_settings import *
+    from tada.local_test_settings import *
 except:
     pass
