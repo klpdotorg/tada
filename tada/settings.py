@@ -39,8 +39,7 @@ INSTALLED_APPS = (
     'rest_framework',
     'schools',
     'tests',
-    'rest_framework_swagger',
-    'common'
+    'rest_framework_swagger'
 )
 
 MIDDLEWARE_CLASSES = (
@@ -57,7 +56,7 @@ ROOT_URLCONF = 'tada.urls'
 
 WSGI_APPLICATION = 'tada.wsgi.application'
 
-TEST_RUNNER = 'common.nodbtestrunner.NoDbTestRunner'
+TEST_RUNNER = 'common.testrunner.DiscoverTestRunner'
 
 # Database
 # https://docs.djangoproject.com/en/1.7/ref/settings/#databases
