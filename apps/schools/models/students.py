@@ -24,7 +24,7 @@ class Relations(models.Model):
     first_name = models.CharField(max_length=100)
     middle_name = models.CharField(max_length=50, blank=True, null=True)
     last_name = models.CharField(max_length=50, blank=True, null=True)
-    student = models.ForeignKey("Student")
+    student = models.ForeignKey("Student", related_name="relations")
 
     def __unicode__(self):
         return '%s' % self.first_name
@@ -146,7 +146,7 @@ class StudentStudentGroupRelation(models.Model):
     student = models.ForeignKey(Student)
     student_group = models.ForeignKey(StudentGroup)
     academic = models.ForeignKey(AcademicYear,
-                                 default=current_academic())
+                                 default=current_academic)
     active = models.IntegerField(blank=True, null=True, default=2)
 
     class Meta:
