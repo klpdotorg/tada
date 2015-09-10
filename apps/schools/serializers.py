@@ -72,8 +72,6 @@ class StudentSerializer(serializers.ModelSerializer):
 
     def create(self, validated_data):
         
-        print 'validated_data'
-        print validated_data
         relations_data=validated_data.pop('relations')
         print "Relations data is: "
         print relations_data
