@@ -53,11 +53,8 @@ class RelationsSerializer(serializers.ModelSerializer):
     class Meta:
         model = Relations
         fields = (
-            'relation_type', 'first_name' ,'middle_name', 'last_name'
+            'id','relation_type', 'first_name' ,'middle_name', 'last_name'
         )
-
-    def create(self, validated_data):
-        print "Relations create"
 
 
 class StudentSerializer(serializers.ModelSerializer):
@@ -66,7 +63,7 @@ class StudentSerializer(serializers.ModelSerializer):
     class Meta:
         model = Student
         fields = (
-            'first_name', 'middle_name', 'last_name', 'uid', 'dob', 'gender',
+            'id', 'first_name', 'middle_name', 'last_name', 'uid', 'dob', 'gender',
             'mt', 'active', 'relations'
         )
 
@@ -85,12 +82,35 @@ class StudentSerializer(serializers.ModelSerializer):
         student.save()
         return student
 
+    def update(self, instance, validated_data):
+        relations_data=validated_data.pop('relations')
+        print "Relations data is: "
+        print relations_data
+        instance.first_name=validated_data.get('first_name', instance.first_name)
+        instance.middle_name=validated_data.get('middle_name',instance.middle_name)
+        instance.last_name=validated_data.get('last_name',instance.last_name)
+        instance.save()
+        print "Updated student"
+        student_id = instance.id
+        print "Student id is: " + str(student_id)
+        list = Relations.objects.filter(student_id=instance.id)
+        #Now save the relations stuff
+        for item in relations_data:
+            print item
+            relation = Relations.objects.filter(student_id=instance.id)
+            print "Retrieved relation"
+            print relation
+            relation.first_name=item['first_name']
+            relation.relation_type=item['relation_type']
+            relation.save()
+        instance.save()
+        return instance
 
 class StaffSerializer(serializers.ModelSerializer):
     
     class Meta:
         model = Staff
         fields = (
-            'first_name', 'middle_name', 'last_name', 'institution', 'doj', 'gender',
+            'id','first_name', 'middle_name', 'last_name', 'institution', 'doj', 'gender',
             'mt', 'qualification', 'active'
         )
