@@ -171,14 +171,71 @@ class StudentsApiTestCase(TestCase):
         print "RETRIEVE EDITED STUDENT"
         response = self.client.get(self.student_details_url + str(student_id) + "/")
         print response.status_code
-        print response.data
         edited_student = json.loads(response.content)
         self.assertEqual(response.status_code, 200)
         edited_relations = edited_student['relations']
+        # Need to check ordering here
         edited_mothers_name=edited_relations[0]['first_name']
+        edited_fathers_name =edited_relations[1]['first_name']
         self.assertEqual("ModifiedMom", edited_mothers_name)
         self.assertEqual("ModifiedDad", edited_relations[1]['first_name'])
         
+    def test_delete_student_relations(self):
+        print 'Testing edit of student relations..'
+        print "CREATE STUDENT"
+        data = {"first_name": "Delete",
+                    "middle_name": "Test",
+                    "last_name": "Me",
+                    "uid": "null",
+                    "dob": "2006-10-05",
+                    "gender": "male",
+                    "mt": 1,
+                    "active": 0,
+                    "relations": [{"relation_type": "Mother","first_name": "DelMom"},
+                                    {"relation_type": "Father","first_name": "DelDad"}]}
+        json_data = json.dumps(data)
+        response = self.client.post('/api/v1/students/',json_data,content_type='application/json')
+        print response.status_code
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+        self.assertTrue('relations' in response.data)
+        self.assertTrue('id' in response.data)
+        results = json.loads(response.content)
+        student_id = results['id']
+        print "DONE CREATING STUDENT"
+        print "====================="
+        relation_1= results['relations'][0]
+        relation_id_1 = relation_1['id']
+        relation_id_2 = results['relations'][1]['id']
+        print "EDITING STUDENT RELATIONS"
+        edit_url= '/api/v1/students/' + str(student_id)+"/"
+        #Pass empty first_name and last_name for relations and it'll get deleted on the server
+        edited_data = {
+                    "id": str(student_id),
+                    "first_name": "Delete",
+                    "middle_name": "Test",
+                    "last_name": "MODIFIED",
+                    "uid": "null",
+                    "dob": "2006-10-05",
+                    "gender": "male",
+                    "mt": 1,
+                    "active": 0,
+                    "relations": [{"id": str(relation_id_1), 
+                                    "relation_type": "Mother","first_name": " "},
+                                    {"id": str(relation_id_2), "relation_type": "Father","first_name": " "}]}
+        json_data = json.dumps(edited_data)
+        response = self.client.put(edit_url,json_data,content_type='application/json')
+        print response.status_code
+        print response.content
+        self.assertEqual(response.status_code, 200)
+        print "RETRIEVE EDITED STUDENT"
+        response = self.client.get(self.student_details_url + str(student_id) + "/")
+        print response.status_code
+        edited_student = json.loads(response.content)
+        self.assertEqual(response.status_code, 200)
+        edited_relations = edited_student['relations']
+        print edited_relations
+        #Assert that it is empty
+        self.assertFalse(edited_relations)
 
     def test_delete_student(self):
         delete_url = 'api/v1/students/430434/'

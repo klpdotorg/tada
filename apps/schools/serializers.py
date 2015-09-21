@@ -55,6 +55,14 @@ class RelationsSerializer(serializers.ModelSerializer):
         fields = (
             'id','relation_type', 'first_name' ,'middle_name', 'last_name'
         )
+        # Added this so the relation id is propagated in PUTs to the student endpoint. Relation info is
+        # nested in student info.
+        extra_kwargs = {
+            "id": {
+                "read_only": False,
+                "required": False,
+            },
+        }
 
 
 class StudentSerializer(serializers.ModelSerializer):
@@ -77,32 +85,36 @@ class StudentSerializer(serializers.ModelSerializer):
         for item in relations_data:
             print item
             relation = Relations.objects.create(student=student,**item)
-            print "Done creating relation"
-            relation.save()            
+            print "Done creating relation"           
         student.save()
         return student
 
     def update(self, instance, validated_data):
+        print "Validated data:" 
+        print validated_data
         relations_data=validated_data.pop('relations')
-        print "Relations data is: "
-        print relations_data
         instance.first_name=validated_data.get('first_name', instance.first_name)
         instance.middle_name=validated_data.get('middle_name',instance.middle_name)
         instance.last_name=validated_data.get('last_name',instance.last_name)
         instance.save()
-        print "Updated student"
-        student_id = instance.id
-        print "Student id is: " + str(student_id)
-        list = Relations.objects.filter(student_id=instance.id)
-        #Now save the relations stuff
+        student_id = instance.id 
+        relations = Relations.objects.filter(student_id=instance.id)
         for item in relations_data:
             print item
-            relation = Relations.objects.filter(student_id=instance.id)
-            print "Retrieved relation"
-            print relation
-            relation.first_name=item['first_name']
-            relation.relation_type=item['relation_type']
-            relation.save()
+            relation = Relations.objects.get(id=item['id'])
+            #if firstname, lastname and middle name are empty, delete the relation
+            relation.relation_type = item.get('relation_type')       
+            # If all the names are empty, delete the relation
+            first_name=item.get('first_name')
+            middle_name=item.get('middle_name')
+            last_name=item.get('last_name')
+            if not first_name and not middle_name and not last_name:
+                relation.delete()
+            else:
+                relation.first_name=item.get('first_name')
+                relation.middle_name=item.get('middle_name')
+                relation.last_name=item.get('last_name')
+                relation.save()
         instance.save()
         return instance
 
