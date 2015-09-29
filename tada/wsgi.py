@@ -7,7 +7,12 @@ For more information on this file, see
 https://docs.djangoproject.com/en/1.7/howto/deployment/wsgi/
 """
 
-import os
+import sys, os
+
+PROJECT_ROOT = os.path.realpath(os.path.dirname(os.path.dirname(__file__)))
+sys.path.append(PROJECT_ROOT)
+sys.path.append(os.path.join(PROJECT_ROOT,'apps'))
+
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "tada.settings")
 
 from django.core.wsgi import get_wsgi_application

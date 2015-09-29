@@ -2,7 +2,7 @@ from rest_framework import serializers
 
 from .models import (
     Institution, Student, Relations, AssessmentInstitution,
-    ProgrammeInstitution, Boundary, Staff
+    ProgrammeInstitution, Boundary, Staff, BoundaryType, BoundaryCategory
 )
 
 
@@ -47,17 +47,36 @@ class BoundarySerializer(serializers.ModelSerializer):
             'active'
         )
 
+class BoundaryTypeSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model=BoundaryType
+        fields = (
+            'boundary_type',)
+
+class BoundaryCategorySerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model=BoundaryCategory
+        fields = (
+            'boundary_category', )
+
 
 class RelationsSerializer(serializers.ModelSerializer):
     
     class Meta:
         model = Relations
         fields = (
-            'relation_type', 'first_name' ,'middle_name', 'last_name'
+            'id','relation_type', 'first_name' ,'middle_name', 'last_name'
         )
-
-    def create(self, validated_data):
-        print "Relations create"
+        # Added this so the relation id is propagated in PUTs to the student endpoint. Relation info is
+        # nested in student info.
+        extra_kwargs = {
+            "id": {
+                "read_only": False,
+                "required": False,
+            },
+        }
 
 
 class StudentSerializer(serializers.ModelSerializer):
@@ -66,14 +85,12 @@ class StudentSerializer(serializers.ModelSerializer):
     class Meta:
         model = Student
         fields = (
-            'first_name', 'middle_name', 'last_name', 'uid', 'dob', 'gender',
+            'id', 'first_name', 'middle_name', 'last_name', 'uid', 'dob', 'gender',
             'mt', 'active', 'relations'
         )
 
     def create(self, validated_data):
         
-        print 'validated_data'
-        print validated_data
         relations_data=validated_data.pop('relations')
         print "Relations data is: "
         print relations_data
@@ -82,17 +99,44 @@ class StudentSerializer(serializers.ModelSerializer):
         for item in relations_data:
             print item
             relation = Relations.objects.create(student=student,**item)
-            print "Done creating relation"
-            relation.save()            
+            print "Done creating relation"           
         student.save()
         return student
 
+    def update(self, instance, validated_data):
+        print "Validated data:" 
+        print validated_data
+        relations_data=validated_data.pop('relations')
+        instance.first_name=validated_data.get('first_name', instance.first_name)
+        instance.middle_name=validated_data.get('middle_name',instance.middle_name)
+        instance.last_name=validated_data.get('last_name',instance.last_name)
+        instance.save()
+        student_id = instance.id 
+        relations = Relations.objects.filter(student_id=instance.id)
+        for item in relations_data:
+            print item
+            relation = Relations.objects.get(id=item['id'])
+            #if firstname, lastname and middle name are empty, delete the relation
+            relation.relation_type = item.get('relation_type')       
+            # If all the names are empty, delete the relation
+            first_name=item.get('first_name')
+            middle_name=item.get('middle_name')
+            last_name=item.get('last_name')
+            if not first_name and not middle_name and not last_name:
+                relation.delete()
+            else:
+                relation.first_name=item.get('first_name')
+                relation.middle_name=item.get('middle_name')
+                relation.last_name=item.get('last_name')
+                relation.save()
+        instance.save()
+        return instance
 
 class StaffSerializer(serializers.ModelSerializer):
     
     class Meta:
         model = Staff
         fields = (
-            'first_name', 'middle_name', 'last_name', 'institution', 'doj', 'gender',
+            'id','first_name', 'middle_name', 'last_name', 'institution', 'doj', 'gender',
             'mt', 'qualification', 'active'
         )
