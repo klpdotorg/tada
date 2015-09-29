@@ -17,3 +17,5 @@ class StudentViewSet(viewsets.ModelViewSet):
     queryset = Student.objects.all()
     serializer_class = StudentSerializer
     filter_class = StudentFilter
+
+    

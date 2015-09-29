@@ -2,7 +2,7 @@ from rest_framework import serializers
 
 from .models import (
     Institution, Student, Relations, AssessmentInstitution,
-    ProgrammeInstitution, Boundary, Staff
+    ProgrammeInstitution, Boundary, Staff, BoundaryType, BoundaryCategory
 )
 
 
@@ -46,6 +46,20 @@ class BoundarySerializer(serializers.ModelSerializer):
             'id', 'parent', 'name', 'boundary_category', 'boundary_type',
             'active'
         )
+
+class BoundaryTypeSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model=BoundaryType
+        fields = (
+            'boundary_type',)
+
+class BoundaryCategorySerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model=BoundaryCategory
+        fields = (
+            'boundary_category', )
 
 
 class RelationsSerializer(serializers.ModelSerializer):
