@@ -96,6 +96,11 @@ class StudentsApiTestCase(TestCase):
         print student_id
         print "DONE CREATING STUDENT"
         print "====================="
+        relation_1= results['relations'][0]
+        relation_id_1 = relation_1['id']
+        relation_id_2 = results['relations'][1]['id']
+        print "RElation ID 1 is: " + str(relation_id_1)
+        print "relation ID2 is: " + str(relation_id_2)
         print "EDITING STUDENT"
         edit_url= '/api/v1/students/' + str(student_id)+"/"
         edited_data = {"first_name": "Delete",
@@ -106,8 +111,8 @@ class StudentsApiTestCase(TestCase):
                     "gender": "male",
                     "mt": 1,
                     "active": 0,
-                    "relations": [{"relation_type": "Mother","first_name": "DelMom"},
-                                    {"relation_type": "Father","first_name": "DelDad"}]}
+                    "relations": [{"id": str(relation_id_1),"relation_type": "Mother","first_name": "DelMom"},
+                                    {"id": str(relation_id_2),"relation_type": "Father","first_name": "DelDad"}]}
         json_data = json.dumps(edited_data)
         response = self.client.put(edit_url,json_data,content_type='application/json')
         print response.status_code
@@ -244,7 +249,46 @@ class StudentsApiTestCase(TestCase):
         self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
 
     def test_bulk_create(self):
-        pass
+        print 'Testing bulk create..'
+        data = [{"first_name": "Bulk1",
+                    "middle_name": "Middle1",
+                    "last_name": "Create1",
+                    "uid": "null",
+                    "dob": "2002-11-05",
+                    "gender": "male",
+                    "mt": 1,
+                    "active": 0,
+                    "relations": [{"relation_type": "Mother","first_name": "BulkMom1"},
+                                    {"relation_type": "Father","first_name": "BulkDad1"}]},
+                {"first_name": "Bulk2",
+                    "middle_name": "Middle2",
+                    "last_name": "Create2",
+                    "uid": "null",
+                    "dob": "2000-11-05",
+                    "gender": "female",
+                    "mt": 1,
+                    "active": 0,
+                    "relations": [{"relation_type": "Mother","first_name": "BulkMom2"},
+                                    {"relation_type": "Father","first_name": "BulkDad2"}]},
+
+                ]
+        json_data = json.dumps(data)
+        print json_data
+        response = self.client.post('/api/v1/students/',json_data,content_type='application/json')
+        print response.status_code
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+        #self.assertTrue('relations' in response.data)
+        print response.data
+        results = json.loads(response.content)
+        #print results['id']
+        #response = self.client.get(self.student_details_url + str(results['id']) + "/")
+        print response.status_code
+        print response.data
+        #print 'Deleting student'
+        #delete_url= '/api/v1/students/' + str(results['id']) +"/"
+        #response = self.client.delete(delete_url)
+        #print response.status_code
+        #self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
 
     def test_bulk_edit(self):
         pass
