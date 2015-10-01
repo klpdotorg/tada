@@ -1,9 +1,10 @@
 from rest_framework import serializers
-
 from .models import (
     Institution, Student, Relations, AssessmentInstitution,
     ProgrammeInstitution, Boundary, Staff, BoundaryType, BoundaryCategory
 )
+from rest_framework_bulk import (
+    BulkListSerializer, BulkSerializerMixin,)
 
 
 class InstitutionSerializer(serializers.ModelSerializer):
@@ -52,14 +53,14 @@ class BoundaryTypeSerializer(serializers.ModelSerializer):
     class Meta:
         model=BoundaryType
         fields = (
-            'boundary_type',)
+            'id','boundary_type',)
 
 class BoundaryCategorySerializer(serializers.ModelSerializer):
 
     class Meta:
         model=BoundaryCategory
         fields = (
-            'boundary_category', )
+            'id','boundary_category', )
 
 
 class RelationsSerializer(serializers.ModelSerializer):
@@ -69,6 +70,7 @@ class RelationsSerializer(serializers.ModelSerializer):
         fields = (
             'id','relation_type', 'first_name' ,'middle_name', 'last_name'
         )
+        list_serializer_class=BulkListSerializer
         # Added this so the relation id is propagated in PUTs to the student endpoint. Relation info is
         # nested in student info.
         extra_kwargs = {
@@ -79,7 +81,7 @@ class RelationsSerializer(serializers.ModelSerializer):
         }
 
 
-class StudentSerializer(serializers.ModelSerializer):
+class StudentSerializer(BulkSerializerMixin, serializers.ModelSerializer):
     
     relations = RelationsSerializer(many='True')
     class Meta:
@@ -88,6 +90,8 @@ class StudentSerializer(serializers.ModelSerializer):
             'id', 'first_name', 'middle_name', 'last_name', 'uid', 'dob', 'gender',
             'mt', 'active', 'relations'
         )
+        list_serializer_class=BulkListSerializer
+
 
     def create(self, validated_data):
         
