@@ -5,7 +5,7 @@ if [ $# -eq 0 ]; then
     echo "Please pass in the DB username as argument."
     exit 1
 fi
-if [ -z "$2" ]; then
+if [ -z "$1" ]; then
     echo "Please supply a valid db user name"
     exit 2
 fi

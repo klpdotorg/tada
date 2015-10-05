@@ -12,16 +12,25 @@
 # Maybe a better way of doing this?
 CREATE_DB=true
 
-if [ $# -eq 1 ]; then
-    echo $1
-    CREATE_DB=$1
+if [ $# -eq 0 ]; then
+    echo Usage: `basename $0` dbuser createtestdbboolean
+    exit
+fi 
+
+if [ $# -ge 1 ]; then
+    DB_USER=$1
+    if [ -z $2 ]; then 
+      $CREATE_DB = $2
+    fi
 fi
+
+
 
 # Call script to create test database if CREATE_DB is true
 
 if [ "$CREATE_DB" == "true" ]; then
     testDB=''
-    source createTestDb.sh Subha
+    source createTestDb.sh $DB_USER
     exit_status=$?
     if [ $exit_status -ne 0 ]; then
         exit $exit_status
@@ -34,7 +43,7 @@ python manage.py test tests --settings tests.test_settings
 
 # Now, clean up the test database (if it was created at all in the first place)
 if [ "$CREATE_DB" == "true" ]; then
-    source deleteTestDb.sh $testDB Subha
+    source deleteTestDb.sh $testDB $DB_USER
 fi
 
 
