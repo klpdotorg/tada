@@ -243,7 +243,31 @@ class StudentsApiTestCase(TestCase):
         self.assertFalse(edited_relations)
 
     def test_delete_student(self):
-        delete_url = 'api/v1/students/430434/'
+        print "Testing deletion of student..."
+        delete_url = '/api/v1/students/'
+        data = {"first_name": "Delete",
+                    "middle_name": "Test",
+                    "last_name": "Me",
+                    "uid": "null",
+                    "dob": "2006-10-05",
+                    "gender": "male",
+                    "mt": 1,
+                    "active": 0,
+                    "relations": [{"relation_type": "Mother","first_name": "DelMom"},
+                                    {"relation_type": "Father","first_name": "DelDad"}]}
+        json_data = json.dumps(data)
+        print json_data
+        response = self.client.post('/api/v1/students/',json_data,content_type='application/json')
+        print response.status_code
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+        self.assertTrue('relations' in response.data)
+        results = json.loads(response.content)
+        student_id = results['id']
+        print student_id
+        print "DONE CREATING STUDENT"
+        print "====================="
+        delete_url = delete_url + str(student_id) + "/"
+        print delete_url
         response = self.client.delete(delete_url)
         print response.status_code
         self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
