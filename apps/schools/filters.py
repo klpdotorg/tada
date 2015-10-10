@@ -15,10 +15,6 @@ class BoundaryFilter(django_filters.FilterSet):
         model = Boundary
         fields = ['category', 'boundary_type', 'parent']
 
-class BoundaryTypesFilter(django_filters.FilterSet):
-    category = django_filters.CharFilter(
-        name="boundary_category__boundary_category"
-    )
 
 class ProgrammeFilter(django_filters.FilterSet):
 
