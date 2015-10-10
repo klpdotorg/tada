@@ -51,16 +51,14 @@ class BoundarySerializer(serializers.ModelSerializer):
 class BoundaryTypeSerializer(serializers.ModelSerializer):
 
     class Meta:
-        model=BoundaryType
-        fields = (
-            'id','boundary_type',)
+        model = BoundaryType
+        fields = ('id', 'boundary_type')
 
 class BoundaryCategorySerializer(serializers.ModelSerializer):
 
     class Meta:
-        model=BoundaryCategory
-        fields = (
-            'id','boundary_category', )
+        model = BoundaryCategory
+        fields = ('id', 'boundary_category')
 
 
 class RelationsSerializer(serializers.ModelSerializer):
