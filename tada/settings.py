@@ -40,7 +40,8 @@ INSTALLED_APPS = (
     'schools',
     'tests',
     'rest_framework_swagger',
-    'common'
+    'common',
+    'django_extensions'
 )
 
 MIDDLEWARE_CLASSES = (
