@@ -49,7 +49,6 @@ class BoundaryTypeViewSet(viewsets.ModelViewSet):
 class BoundaryCategoryViewSet(viewsets.ModelViewSet):
     queryset = BoundaryCategory.objects.all()
     serializer_class = BoundaryCategorySerializer
-    filter_class = BoundaryFilter
 
 
 class StaffViewSet(viewsets.ModelViewSet):
