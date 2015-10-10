@@ -48,11 +48,13 @@ class BoundarySerializer(serializers.ModelSerializer):
             'active'
         )
 
+
 class BoundaryTypeSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = BoundaryType
         fields = ('id', 'boundary_type')
+
 
 class BoundaryCategorySerializer(serializers.ModelSerializer):
 
@@ -134,11 +136,12 @@ class StudentSerializer(BulkSerializerMixin, serializers.ModelSerializer):
         instance.save()
         return instance
 
+
 class StaffSerializer(serializers.ModelSerializer):
     
     class Meta:
         model = Staff
         fields = (
-            'id','first_name', 'middle_name', 'last_name', 'institution', 'doj', 'gender',
-            'mt', 'qualification', 'active'
+            'id','first_name', 'middle_name', 'last_name', 'institution',
+            'doj', 'gender', 'mt', 'qualification', 'active'
         )
