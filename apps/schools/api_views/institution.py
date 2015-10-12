@@ -25,8 +25,10 @@ from schools.models import (
     BoundaryType,
     Institution,
     ProgrammeInstitution,
+    ProgrammeStudent,
     Staff,
 )
+
 
 class AssessmentInstitutionViewSet(viewsets.ModelViewSet):
     queryset = AssessmentInstitution.objects.all()
@@ -64,6 +66,12 @@ class InstitutionViewSet(viewsets.ModelViewSet):
 
 class ProgrammeInstitutionViewSet(viewsets.ModelViewSet):
     queryset = ProgrammeInstitution.objects.all()
+    serializer_class = ProgrammeSerializer
+    filter_class = ProgrammeFilter
+
+
+class ProgrammeStudentViewSet(viewsets.ModelViewSet):
+    queryset = ProgrammeStudent.objects.all()
     serializer_class = ProgrammeSerializer
     filter_class = ProgrammeFilter
 
