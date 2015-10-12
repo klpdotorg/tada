@@ -7,8 +7,8 @@ from schools.api_views import (
     AssessmentInstitutionViewSet,
     AssessmentStudentViewSet,
     BoundaryViewSet,
-    BoundaryTypeViewSet,
     BoundaryCategoryViewSet,
+    BoundaryTypeViewSet,
     InstitutionViewSet,
     ProgrammeViewSet,
     StaffViewSet,
@@ -35,14 +35,14 @@ router.register(
     base_name='boundary'
 )
 router.register(
-    r'boundarytypes',
-    BoundaryTypeViewSet,
-    base_name='boundarytype'
-)
-router.register(
     r'boundarycategories',
     BoundaryCategoryViewSet,
     base_name='boundarycategory'
+)
+router.register(
+    r'boundarytypes',
+    BoundaryTypeViewSet,
+    base_name='boundarytype'
 )
 router.register(
     r'institutions',

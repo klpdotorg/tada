@@ -1,27 +1,32 @@
-from rest_framework.views import APIView
-from rest_framework.response import Response
-from rest_framework import generics, viewsets
+from rest_framework import viewsets
 
 from schools.filters import (
-    BoundaryFilter, ProgrammeFilter, AssessmentFilter,
+    AssessmentFilter,
+    BoundaryFilter,
     InstitutionFilter,
+    ProgrammeFilter,
 )
+
 from schools.serializers import (
-    InstitutionSerializer, AssessmentSerializer, ProgrammeSerializer,
-    BoundarySerializer, BoundaryTypeSerializer,StaffSerializer,
-    BoundaryCategorySerializer
+    AssessmentSerializer,
+    BoundarySerializer,
+    BoundaryCategorySerializer,
+    BoundaryTypeSerializer,
+    InstitutionSerializer,
+    ProgrammeSerializer,
+    StaffSerializer,
 )
+
 from schools.models import (
-    Institution, AssessmentInstitution, AssessmentStudent, ProgrammeInstitution,
-    Boundary, BoundaryType, Staff, BoundaryCategory
+    AssessmentInstitution,
+    AssessmentStudent,
+    Boundary,
+    BoundaryCategory,
+    BoundaryType,
+    Institution,
+    ProgrammeInstitution,
+    Staff,
 )
-
-
-class InstitutionViewSet(viewsets.ModelViewSet):
-    queryset = Institution.objects.all()
-    serializer_class = InstitutionSerializer
-    filter_class = InstitutionFilter
-
 
 class AssessmentInstitutionViewSet(viewsets.ModelViewSet):
     queryset = AssessmentInstitution.objects.all()
@@ -35,16 +40,15 @@ class AssessmentStudentViewSet(viewsets.ModelViewSet):
     filter_class = AssessmentFilter
 
 
-class ProgrammeViewSet(viewsets.ModelViewSet):
-    queryset = ProgrammeInstitution.objects.all()
-    serializer_class = ProgrammeSerializer
-    filter_class = ProgrammeFilter
-
-
 class BoundaryViewSet(viewsets.ModelViewSet):
     queryset = Boundary.objects.all()
     serializer_class = BoundarySerializer
     filter_class = BoundaryFilter
+
+
+class BoundaryCategoryViewSet(viewsets.ModelViewSet):
+    queryset = BoundaryCategory.objects.all()
+    serializer_class = BoundaryCategorySerializer
 
 
 class BoundaryTypeViewSet(viewsets.ModelViewSet):
@@ -52,9 +56,16 @@ class BoundaryTypeViewSet(viewsets.ModelViewSet):
     serializer_class = BoundaryTypeSerializer
 
 
-class BoundaryCategoryViewSet(viewsets.ModelViewSet):
-    queryset = BoundaryCategory.objects.all()
-    serializer_class = BoundaryCategorySerializer
+class InstitutionViewSet(viewsets.ModelViewSet):
+    queryset = Institution.objects.all()
+    serializer_class = InstitutionSerializer
+    filter_class = InstitutionFilter
+
+
+class ProgrammeViewSet(viewsets.ModelViewSet):
+    queryset = ProgrammeInstitution.objects.all()
+    serializer_class = ProgrammeSerializer
+    filter_class = ProgrammeFilter
 
 
 class StaffViewSet(viewsets.ModelViewSet):
