@@ -4,15 +4,15 @@ from rest_framework_bulk.routes import BulkRouter
 from django.conf.urls import patterns, url
 
 from schools.api_views import (
+    AssessmentInstitutionViewSet,
+    AssessmentStudentViewSet,
     BoundaryViewSet,
     BoundaryTypeViewSet,
     BoundaryCategoryViewSet,
     InstitutionViewSet,
-    InstitutionAssessmentViewSet,
     ProgrammeViewSet,
     StaffViewSet,
     StudentViewSet,
-    StudentAssessmentViewSet,
 )
 
 router = routers.SimpleRouter()
@@ -20,9 +20,14 @@ bulkrouter = BulkRouter()
 bulkrouter.register(r'students', StudentViewSet, base_name='students')
 
 router.register(
-    r'institution-assessments',
+    r'assessments-institution',
     InstitutionAssessmentViewSet,
-    base_name='institution-assessment'
+    base_name='assessment-institution'
+)
+router.register(
+    r'assessments-student',
+    StudentAssessmentViewSet,
+    base_name='assessment-student'
 )
 router.register(
     r'boundaries',
@@ -53,11 +58,6 @@ router.register(
     r'staff',
     StaffViewSet,
     base_name='staff'
-)
-router.register(
-    r'student-assessments',
-    StudentAssessmentViewSet,
-    base_name='student-assessment'
 )
 
 #router.register(r'students', StudentViewSet, base_name='students')
