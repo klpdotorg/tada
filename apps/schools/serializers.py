@@ -1,10 +1,22 @@
 from rest_framework import serializers
+
 from .models import (
-    Institution, Student, Relations, AssessmentInstitution,
-    ProgrammeInstitution, Boundary, Staff, BoundaryType, BoundaryCategory
+    AssessmentInstitution,
+    Boundary,
+    BoundaryCategory,
+    BoundaryType,
+    Institution,
+    ProgrammeInstitution,
+    QuestionInstitution,
+    Relations,
+    Staff,
+    Student
 )
+
 from rest_framework_bulk import (
-    BulkListSerializer, BulkSerializerMixin,)
+    BulkListSerializer,
+    BulkSerializerMixin
+)
 
 
 class InstitutionSerializer(serializers.ModelSerializer):
@@ -37,6 +49,12 @@ class ProgrammeSerializer(serializers.ModelSerializer):
             'id', 'name', 'description', 'start_date', 'end_date',
             'programme_institution_category', 'active'
         )
+
+
+class QuestionSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = QuestionInstitution
 
 
 class BoundarySerializer(serializers.ModelSerializer):

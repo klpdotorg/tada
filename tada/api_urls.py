@@ -13,13 +13,15 @@ from schools.api_views import (
     InstitutionViewSet,
     ProgrammeInstitutionViewSet,
     ProgrammeStudentViewSet,
+    QuestionInstitutionViewSet,
     StaffViewSet,
     StudentViewSet,
 )
 
 router = routers.SimpleRouter()
-nested_router = ExtendedSimpleRouter()
 bulkrouter = BulkRouter()
+nested_router = ExtendedSimpleRouter()
+
 bulkrouter.register(r'students', StudentViewSet, base_name='students')
 
 router.register(
@@ -52,6 +54,11 @@ nested_router.register(
     AssessmentInstitutionViewSet,
     base_name='assessment-institution',
     parents_query_lookups=['programme']
+).register(
+    r'questions-institution',
+    QuestionInstitutionViewSet,
+    base_name='question-institution',
+    parents_query_lookups=['assessment__programme', 'assessment']
 )
 
 nested_router.register(

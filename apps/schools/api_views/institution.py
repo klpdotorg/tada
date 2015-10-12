@@ -6,6 +6,7 @@ from schools.filters import (
     BoundaryFilter,
     InstitutionFilter,
     ProgrammeFilter,
+    QuestionFilter
 )
 
 from schools.serializers import (
@@ -15,6 +16,7 @@ from schools.serializers import (
     BoundaryTypeSerializer,
     InstitutionSerializer,
     ProgrammeSerializer,
+    QuestionSerializer,
     StaffSerializer,
 )
 
@@ -27,6 +29,7 @@ from schools.models import (
     Institution,
     ProgrammeInstitution,
     ProgrammeStudent,
+    QuestionInstitution,
     Staff,
 )
 
@@ -75,6 +78,12 @@ class ProgrammeStudentViewSet(NestedViewSetMixin, viewsets.ModelViewSet):
     queryset = ProgrammeStudent.objects.all()
     serializer_class = ProgrammeSerializer
     filter_class = ProgrammeFilter
+
+
+class QuestionInstitutionViewSet(NestedViewSetMixin, viewsets.ModelViewSet):
+    queryset = QuestionInstitution.objects.all()
+    serializer_class = QuestionSerializer
+    filter_class = QuestionFilter
 
 
 class StaffViewSet(viewsets.ModelViewSet):
