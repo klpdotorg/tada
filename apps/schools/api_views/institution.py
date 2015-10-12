@@ -23,7 +23,7 @@ class InstitutionViewSet(viewsets.ModelViewSet):
     filter_class = InstitutionFilter
 
 
-class AssessmentViewSet(viewsets.ModelViewSet):
+class AssessmentInstitutionViewSet(viewsets.ModelViewSet):
     queryset = AssessmentInstitution.objects.all()
     serializer_class = AssessmentSerializer
     filter_class = AssessmentFilter

@@ -5,7 +5,7 @@ from django.conf.urls import patterns, url
 
 from schools.api_views import (
     StaffViewSet,InstitutionViewSet, StudentViewSet,
-    AssessmentViewSet, ProgrammeViewSet, BoundaryViewSet,
+    InstitutionAssessmentViewSet, ProgrammeViewSet, BoundaryViewSet,
     BoundaryTypeViewSet, BoundaryCategoryViewSet
 )
 
@@ -13,7 +13,11 @@ router = routers.SimpleRouter()
 bulkrouter = BulkRouter()
 bulkrouter.register(r'students', StudentViewSet, base_name='students')
 
-router.register(r'assessments', AssessmentViewSet, base_name='assessment')
+router.register(
+    r'institution-assessments',
+    InstitutionAssessmentViewSet,
+    base_name='institution-assessment'
+)
 router.register(r'boundaries', BoundaryViewSet, base_name='boundary')
 router.register(r'boundarytypes', BoundaryTypeViewSet, base_name='boundarytype')
 router.register(r'boundarycategories', BoundaryCategoryViewSet, base_name='boundarycategory')
