@@ -10,7 +10,7 @@ from schools.api_views import (
     BoundaryCategoryViewSet,
     BoundaryTypeViewSet,
     InstitutionViewSet,
-    ProgrammeViewSet,
+    ProgrammeInstitutionViewSet,
     StaffViewSet,
     StudentViewSet,
 )
@@ -50,9 +50,9 @@ router.register(
     base_name='institution'
 )
 router.register(
-    r'programmes',
-    ProgrammeViewSet,
-    base_name='programme'
+    r'programmes-institution',
+    ProgrammeInstitutionViewSet,
+    base_name='programme-institution'
 )
 router.register(
     r'staff',

@@ -62,7 +62,7 @@ class InstitutionViewSet(viewsets.ModelViewSet):
     filter_class = InstitutionFilter
 
 
-class ProgrammeViewSet(viewsets.ModelViewSet):
+class ProgrammeInstitutionViewSet(viewsets.ModelViewSet):
     queryset = ProgrammeInstitution.objects.all()
     serializer_class = ProgrammeSerializer
     filter_class = ProgrammeFilter
