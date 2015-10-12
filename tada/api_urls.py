@@ -22,12 +22,12 @@ bulkrouter.register(r'students', StudentViewSet, base_name='students')
 
 router.register(
     r'assessments-institution',
-    InstitutionAssessmentViewSet,
+    AssessmentInstitutionViewSet,
     base_name='assessment-institution'
 )
 router.register(
     r'assessments-student',
-    StudentAssessmentViewSet,
+    AssessmentStudentViewSet,
     base_name='assessment-student'
 )
 router.register(
