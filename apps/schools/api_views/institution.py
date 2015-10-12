@@ -30,6 +30,7 @@ from schools.models import (
     ProgrammeInstitution,
     ProgrammeStudent,
     QuestionInstitution,
+    QuestionStudent,
     Staff,
 )
 
@@ -82,6 +83,11 @@ class ProgrammeStudentViewSet(NestedViewSetMixin, viewsets.ModelViewSet):
 
 class QuestionInstitutionViewSet(NestedViewSetMixin, viewsets.ModelViewSet):
     queryset = QuestionInstitution.objects.all()
+    serializer_class = QuestionSerializer
+    filter_class = QuestionFilter
+
+class QuestionStudentViewSet(NestedViewSetMixin, viewsets.ModelViewSet):
+    queryset = QuestionStudent.objects.all()
     serializer_class = QuestionSerializer
     filter_class = QuestionFilter
 

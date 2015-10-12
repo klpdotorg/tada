@@ -14,6 +14,7 @@ from schools.api_views import (
     ProgrammeInstitutionViewSet,
     ProgrammeStudentViewSet,
     QuestionInstitutionViewSet,
+    QuestionStudentViewSet,
     StaffViewSet,
     StudentViewSet,
 )
@@ -70,6 +71,11 @@ nested_router.register(
     AssessmentStudentViewSet,
     base_name='assessment-student',
     parents_query_lookups=['programme']
+).register(
+    r'questions-student',
+    QuestionStudentViewSet,
+    base_name='question-student',
+    parents_query_lookups=['assessment__programme', 'assessment']
 )
 
 router.register(
