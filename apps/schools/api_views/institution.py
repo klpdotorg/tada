@@ -12,7 +12,7 @@ from schools.serializers import (
     BoundaryCategorySerializer
 )
 from schools.models import (
-    Institution, AssessmentInstitution, ProgrammeInstitution,
+    Institution, AssessmentInstitution, AssessmentStudent, ProgrammeInstitution,
     Boundary, BoundaryType, Staff, BoundaryCategory
 )
 
@@ -25,6 +25,12 @@ class InstitutionViewSet(viewsets.ModelViewSet):
 
 class AssessmentInstitutionViewSet(viewsets.ModelViewSet):
     queryset = AssessmentInstitution.objects.all()
+    serializer_class = AssessmentSerializer
+    filter_class = AssessmentFilter
+
+
+class AssessmentStudentViewSet(viewsets.ModelViewSet):
+    queryset = AssessmentStudent.objects.all()
     serializer_class = AssessmentSerializer
     filter_class = AssessmentFilter
 
