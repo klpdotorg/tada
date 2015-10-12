@@ -1,4 +1,5 @@
 from rest_framework import viewsets
+from rest_framework_extensions.mixins import NestedViewSetMixin
 
 from schools.filters import (
     AssessmentFilter,
@@ -30,13 +31,13 @@ from schools.models import (
 )
 
 
-class AssessmentInstitutionViewSet(viewsets.ModelViewSet):
+class AssessmentInstitutionViewSet(NestedViewSetMixin, viewsets.ModelViewSet):
     queryset = AssessmentInstitution.objects.all()
     serializer_class = AssessmentSerializer
     filter_class = AssessmentFilter
 
 
-class AssessmentStudentViewSet(viewsets.ModelViewSet):
+class AssessmentStudentViewSet(NestedViewSetMixin, viewsets.ModelViewSet):
     queryset = AssessmentStudent.objects.all()
     serializer_class = AssessmentSerializer
     filter_class = AssessmentFilter
@@ -64,13 +65,13 @@ class InstitutionViewSet(viewsets.ModelViewSet):
     filter_class = InstitutionFilter
 
 
-class ProgrammeInstitutionViewSet(viewsets.ModelViewSet):
+class ProgrammeInstitutionViewSet(NestedViewSetMixin, viewsets.ModelViewSet):
     queryset = ProgrammeInstitution.objects.all()
     serializer_class = ProgrammeSerializer
     filter_class = ProgrammeFilter
 
 
-class ProgrammeStudentViewSet(viewsets.ModelViewSet):
+class ProgrammeStudentViewSet(NestedViewSetMixin, viewsets.ModelViewSet):
     queryset = ProgrammeStudent.objects.all()
     serializer_class = ProgrammeSerializer
     filter_class = ProgrammeFilter

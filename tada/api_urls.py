@@ -1,5 +1,6 @@
 from rest_framework import routers
 from rest_framework_bulk.routes import BulkRouter
+from rest_framework_extensions.routers import ExtendedSimpleRouter
 
 from django.conf.urls import patterns, url
 
@@ -17,19 +18,10 @@ from schools.api_views import (
 )
 
 router = routers.SimpleRouter()
+nested_router = ExtendedSimpleRouter()
 bulkrouter = BulkRouter()
 bulkrouter.register(r'students', StudentViewSet, base_name='students')
 
-router.register(
-    r'assessments-institution',
-    AssessmentInstitutionViewSet,
-    base_name='assessment-institution'
-)
-router.register(
-    r'assessments-student',
-    AssessmentStudentViewSet,
-    base_name='assessment-student'
-)
 router.register(
     r'boundaries',
     BoundaryViewSet,
@@ -50,16 +42,29 @@ router.register(
     InstitutionViewSet,
     base_name='institution'
 )
-router.register(
+
+nested_router.register(
     r'programmes-institution',
     ProgrammeInstitutionViewSet,
     base_name='programme-institution'
+).register(
+    r'assessments-institution',
+    AssessmentInstitutionViewSet,
+    base_name='assessment-institution',
+    parents_query_lookups=['programme']
 )
-router.register(
+
+nested_router.register(
     r'programmes-student',
     ProgrammeStudentViewSet,
     base_name='programme-student'
+).register(
+    r'assessments-student',
+    AssessmentStudentViewSet,
+    base_name='assessment-student',
+    parents_query_lookups=['programme']
 )
+
 router.register(
     r'staff',
     StaffViewSet,
@@ -67,4 +72,4 @@ router.register(
 )
 
 #router.register(r'students', StudentViewSet, base_name='students')
-urlpatterns = router.urls + bulkrouter.urls
+urlpatterns = router.urls + bulkrouter.urls + nested_router.urls
