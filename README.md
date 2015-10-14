@@ -7,7 +7,7 @@ That's All Data. Akshara's data entry/management system.
 
     git clone git@github.com:klpdotorg/tada.git
 
-### Setup virualenv using virtualenvwrapper
+### Setup virualenv using virtualenvwrapper.
 
     pip install virtualenvwrapper
     

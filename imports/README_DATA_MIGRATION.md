@@ -26,6 +26,9 @@ klp_transform=# \d+ <ENTER>
 ```
 *  Now go ahead and try method 1 or 2 to get data into tables.
 
+* Now you can run the commands listed in imports/sql/transform.sql on the
+psql commandline to alter/fill the created tables with data.
+
 ### Method 1 - Migrating data from old EMS dump
 * Login to new EMS machine (as user klp) and download the file
 klpproduction_feb18.sql.bz2. This is a large file so it might take a few 

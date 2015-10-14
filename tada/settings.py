@@ -36,7 +36,13 @@ INSTALLED_APPS = (
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+
+    'common',
+    'django_extensions',
+    'rest_framework',
+    'rest_framework_swagger',
     'schools',
+    'tests',
 )
 
 MIDDLEWARE_CLASSES = (
@@ -53,6 +59,7 @@ ROOT_URLCONF = 'tada.urls'
 
 WSGI_APPLICATION = 'tada.wsgi.application'
 
+TEST_RUNNER = 'common.nodbtestrunner.NoDbTestRunner'
 
 # Database
 # https://docs.djangoproject.com/en/1.7/ref/settings/#databases
@@ -86,6 +93,13 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/1.7/howto/static-files/
 
 STATIC_URL = '/static/'
+STATIC_ROOT = os.path.join(BASE_DIR, "/static")
+
+REST_FRAMEWORK = {
+    'DEFAULT_FILTER_BACKENDS': ('rest_framework.filters.DjangoFilterBackend',),
+    'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.LimitOffsetPagination',
+    'PAGE_SIZE': 20
+}
 
 try:
     from local_settings import *
