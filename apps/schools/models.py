@@ -102,6 +102,18 @@ class QualificationList(models.Model):
     def __unicode__(self):
         return '%s' % self.qualification
 
+class CompensationAuditLog(models.Model):
+    ''' This class stores information about additions or deletion to entitities in EMS '''
+
+    user = models.CharField(max_length=100)
+    audit_time = models.DateField(max_length=20, default=datetime.date.today)
+    entity_name = models.CharField(max_length=100)
+    operation_type = models.CharField(max_length=20)
+    operation_value = models.CharField(max_length=20)
+
+    def __unicode__(self):
+        return '%s' % self.user
+
 class Boundary(models.Model):
     '''This class specifies the longitude and latitute of the area'''
 
