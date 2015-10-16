@@ -1,10 +1,22 @@
 from rest_framework import serializers
+
 from .models import (
-    Institution, Student, Relations, AssessmentInstitution,
-    ProgrammeInstitution, Boundary, Staff, BoundaryType, BoundaryCategory
+    AssessmentInstitution,
+    Boundary,
+    BoundaryCategory,
+    BoundaryType,
+    Institution,
+    ProgrammeInstitution,
+    QuestionInstitution,
+    Relations,
+    Staff,
+    Student
 )
+
 from rest_framework_bulk import (
-    BulkListSerializer, BulkSerializerMixin,)
+    BulkListSerializer,
+    BulkSerializerMixin
+)
 
 
 class InstitutionSerializer(serializers.ModelSerializer):
@@ -39,6 +51,12 @@ class ProgrammeSerializer(serializers.ModelSerializer):
         )
 
 
+class QuestionSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = QuestionInstitution
+
+
 class BoundarySerializer(serializers.ModelSerializer):
 
     class Meta:
@@ -48,19 +66,19 @@ class BoundarySerializer(serializers.ModelSerializer):
             'active'
         )
 
+
 class BoundaryTypeSerializer(serializers.ModelSerializer):
 
     class Meta:
-        model=BoundaryType
-        fields = (
-            'id','boundary_type',)
+        model = BoundaryType
+        fields = ('id', 'boundary_type')
+
 
 class BoundaryCategorySerializer(serializers.ModelSerializer):
 
     class Meta:
-        model=BoundaryCategory
-        fields = (
-            'id','boundary_category', )
+        model = BoundaryCategory
+        fields = ('id', 'boundary_category')
 
 
 class RelationsSerializer(serializers.ModelSerializer):
@@ -136,11 +154,12 @@ class StudentSerializer(BulkSerializerMixin, serializers.ModelSerializer):
         instance.save()
         return instance
 
+
 class StaffSerializer(serializers.ModelSerializer):
     
     class Meta:
         model = Staff
         fields = (
-            'id','first_name', 'middle_name', 'last_name', 'institution', 'doj', 'gender',
-            'mt', 'qualification', 'active'
+            'id','first_name', 'middle_name', 'last_name', 'institution',
+            'doj', 'gender', 'mt', 'qualification', 'active'
         )
