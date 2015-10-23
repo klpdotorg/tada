@@ -8,3 +8,4 @@ from .assessments import (AssessmentInstitution, AssessmentStudent,
 from .students import (Relations, StudentGroup, Student, 
     StudentStudentGroupRelation)
 from .programs import (ProgrammeInstitution, ProgrammeStudent)
+from .audit import (CompensationAuditLog)
