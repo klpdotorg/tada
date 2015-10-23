@@ -91,7 +91,6 @@ class QuestionStudentViewSet(NestedViewSetMixin, viewsets.ModelViewSet):
     serializer_class = QuestionSerializer
     filter_class = QuestionFilter
 
-
 class StaffViewSet(viewsets.ModelViewSet):
     queryset = Staff.objects.all()
     serializer_class = StaffSerializer
