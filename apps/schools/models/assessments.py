@@ -267,6 +267,43 @@ class AnswerStudent(models.Model):
         self.full_clean()
         super(AnswerStudent, self).save(*args, **kwargs)
 
+
+class AnswerStudentTemp(models.Model):
+    """ This Temp table class stores information about student marks and grade before double entry"""
+    
+    question = models.ForeignKey(QuestionStudent)
+
+    # student = models.IntegerField(blank = True, null = True,default=0) # models.ForeignKey(Student)
+
+    answer_score = models.DecimalField(max_digits=10, decimal_places=2,
+            blank=True, null=True)
+    answer_grade = models.CharField(max_length=30, blank=True, null=True)
+    double_entry = models.IntegerField(blank=True, null=True, default=0)
+    status = models.IntegerField(blank=True, null=True)
+    user1 = models.ForeignKey(User, blank=True, null=True,
+                              related_name='user1')
+    user2 = models.ForeignKey(User, blank=True, null=True,
+                              related_name='user2')
+    creation_date = models.DateField(auto_now_add=True,
+                                    blank=True, null=True)
+    last_modified_date = models.DateField(auto_now=True,
+            blank=True, null=True)
+    last_modified_by = models.ForeignKey(User, blank=True, null=True,
+            related_name='last_modified_answer_student')
+    flexi_data = models.CharField(max_length=30, blank=True, null=True)
+
+    def save(self, *args, **kwargs):
+        # custom save method
+        #pdb.set_trace()
+        from django.db import connection
+        connection.features.can_return_id_from_insert = False
+        #print "save"
+
+        #print "=================== status is", self.status
+        self.full_clean()
+        super(AnswerStudent, self).save(*args, **kwargs)
+
+
 class AnswerInstitution(models.Model):
     """ This class stores information about student marks and grade """
     
