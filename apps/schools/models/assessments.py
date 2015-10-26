@@ -281,15 +281,15 @@ class AnswerStudentTemp(models.Model):
     double_entry = models.IntegerField(blank=True, null=True, default=0)
     status = models.IntegerField(blank=True, null=True)
     user1 = models.ForeignKey(User, blank=True, null=True,
-                              related_name='user1')
+                              related_name='temp_user1')
     user2 = models.ForeignKey(User, blank=True, null=True,
-                              related_name='user2')
+                              related_name='temp_user2')
     creation_date = models.DateField(auto_now_add=True,
                                     blank=True, null=True)
     last_modified_date = models.DateField(auto_now=True,
             blank=True, null=True)
     last_modified_by = models.ForeignKey(User, blank=True, null=True,
-            related_name='last_modified_answer_student')
+            related_name='temp_last_modified_answer_student')
     flexi_data = models.CharField(max_length=30, blank=True, null=True)
 
     def save(self, *args, **kwargs):
@@ -301,7 +301,7 @@ class AnswerStudentTemp(models.Model):
 
         #print "=================== status is", self.status
         self.full_clean()
-        super(AnswerStudent, self).save(*args, **kwargs)
+        super(AnswerStudentTemp, self).save(*args, **kwargs)
 
 
 class AnswerInstitution(models.Model):
