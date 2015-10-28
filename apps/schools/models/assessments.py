@@ -255,6 +255,8 @@ class AnswerStudent(models.Model):
     last_modified_by = models.ForeignKey(User, blank=True, null=True,
             related_name='last_modified_answer_student')
     flexi_data = models.CharField(max_length=30, blank=True, null=True)
+    student_id = models.PositiveIntegerField(default=0)
+    active = models.IntegerField(blank=True, null=True, default=2)
 
     def save(self, *args, **kwargs):
         # custom save method
@@ -327,6 +329,8 @@ class AnswerInstitution(models.Model):
     last_modified_by = models.ForeignKey(User, blank=True, null=True,
             related_name='last_modified_answer_institution')
     flexi_data = models.CharField(max_length=30, blank=True, null=True)
+    institution_id = models.PositiveIntegerField(default=0)
+    active = models.IntegerField(blank=True, null=True, default=2)
 
     def save(self, *args, **kwargs):
         # custom save method
