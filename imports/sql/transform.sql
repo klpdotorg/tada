@@ -60,9 +60,10 @@ INSERT INTO schools_assessmentstudent SELECT id, name, start_date, end_date, que
 
 -- schools_answer
 -- content_type_id for student is 24 and content_type_id for institution is 18
-INSERT INTO schools_answerstudent select id, answer_score, answer_grade, double_entry, status, creation_date, last_modified_date, flexi_data, last_modified_by_id, question_id, user1_id, user2_id from ems_schools_answer where content_type_id = 24;
+-- object_id is student_id for student table nad instituion_id for instituion table
+INSERT INTO schools_answerstudent select id, answer_score, answer_grade, double_entry, status, creation_date, last_modified_date, flexi_data, last_modified_by_id, question_id, user1_id, user2_id, active, object_id from ems_schools_answer where content_type_id = 24;
 
-INSERT INTO schools_answerinstitution select id, answer_score, answer_grade, double_entry, status, creation_date, last_modified_date, flexi_data, last_modified_by_id, question_id, user1_id, user2_id from ems_schools_answer where content_type_id = 18;
+INSERT INTO schools_answerinstitution select id, answer_score, answer_grade, double_entry, status, creation_date, last_modified_date, flexi_data, last_modified_by_id, question_id, user1_id, user2_id, active, object_id from ems_schools_answer where content_type_id = 18;
 
 -- schools_question
 -- Separate questions based on assessment.typ
