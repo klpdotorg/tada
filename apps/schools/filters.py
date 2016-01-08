@@ -45,7 +45,7 @@ class InstitutionFilter(django_filters.FilterSet):
 
     class Meta:
         model = Institution
-        fields = ['name']
+        fields = ['name', 'boundary']
 
 
 class StudentFilter(django_filters.FilterSet):
