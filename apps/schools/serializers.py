@@ -10,7 +10,8 @@ from .models import (
     QuestionInstitution,
     Relations,
     Staff,
-    Student
+    Student,
+    StudentGroup
 )
 
 from rest_framework_bulk import (
@@ -153,6 +154,15 @@ class StudentSerializer(BulkSerializerMixin, serializers.ModelSerializer):
                 relation.save()
         instance.save()
         return instance
+
+
+class StudentGroupSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = StudentGroup
+        fields = (
+            'id', 'institution', 'name', 'section', 'active', 'group_type'
+        )
 
 
 class StaffSerializer(serializers.ModelSerializer):
