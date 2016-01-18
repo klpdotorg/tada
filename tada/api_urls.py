@@ -17,6 +17,7 @@ from schools.api_views import (
     QuestionStudentViewSet,
     StaffViewSet,
     StudentViewSet,
+    StudentGroupViewSet,
 )
 
 router = routers.SimpleRouter()
@@ -40,10 +41,18 @@ router.register(
     BoundaryTypeViewSet,
     base_name='boundarytype'
 )
-router.register(
+
+# Nested Routers
+
+nested_router.register(
     r'institutions',
     InstitutionViewSet,
     base_name='institution'
+).register(
+    r'studentgroups',
+    StudentGroupViewSet,
+    base_name='studentgroup',
+    parents_query_lookups=['institution']
 )
 
 nested_router.register(
