@@ -40,7 +40,9 @@ INSTALLED_APPS = (
     'accounts',
     'common',
     'django_extensions',
+    'djoser',
     'rest_framework',
+    'rest_framework.authtoken',
     'rest_framework_swagger',
     'schools',
     'tests',
@@ -98,6 +100,9 @@ STATIC_URL = '/static/'
 STATIC_ROOT = os.path.join(BASE_DIR, "/static")
 
 REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework.authentication.TokenAuthentication',
+    ),
     'DEFAULT_FILTER_BACKENDS': ('rest_framework.filters.DjangoFilterBackend',),
     'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.LimitOffsetPagination',
     'PAGE_SIZE': 20
