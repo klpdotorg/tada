@@ -3,7 +3,7 @@ from django.contrib.auth.models import User
 
 class EmailOrUsernameModelBackend(object):
     def authenticate(self, username=None, password=None):
-        if '@' in username:
+        if '@' and '.' in username:
             kwargs = {'email': username}
         else:
             kwargs = {'username': username}
