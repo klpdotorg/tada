@@ -103,6 +103,11 @@ REST_FRAMEWORK = {
     'PAGE_SIZE': 20
 }
 
+AUTHENTICATION_BACKENDS = (
+    'accounts.backends.EmailOrUsernameModelBackend',
+    'django.contrib.auth.backends.ModelBackend'
+)
+
 CORS_ORIGIN_ALLOW_ALL = True
 
 
