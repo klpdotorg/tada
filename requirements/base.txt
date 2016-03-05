@@ -1,8 +1,5 @@
-Django==1.8.1
+Django==1.8.9
 Markdown==2.4.1
-Pillow==2.8.1
-PyYAML==3.11
-Pygments==1.6
 argparse==1.2.1
 distribute==0.6.24
 django-appconf==1.0.1
