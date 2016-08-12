@@ -3,13 +3,17 @@ from __future__ import unicode_literals
 
 from django.conf import settings
 from django.db import migrations, models
-from django.contrib.auth.models import Group 
+from django.contrib.auth.models import Group , Permission
 
 
 def forwards_func(apps, schema_editor):
     group = Group.objects.create(name="tada_admin")
+    permissions = Permission.objects.all()
+    for permission in permissions:
+        group.permissions.add(permission)
     group = Group.objects.create(name="tada_deo")
     group = Group.objects.create(name="tada_dee")
+        
     # We get the model from the versioned app registry;
     # if we directly import it, it'll be the wrong version
     # Country = apps.get_model("myapp", "Country")
