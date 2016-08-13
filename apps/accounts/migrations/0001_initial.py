@@ -5,6 +5,7 @@ from django.conf import settings
 from django.db import migrations, models
 from django.contrib.auth.models import Group , Permission
 
+# Initial migration for populating the db with groups and their permissions.
 
 def forwards_func(apps, schema_editor):
     group = Group.objects.create(name="tada_admin")
