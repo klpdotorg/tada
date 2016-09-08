@@ -20,12 +20,21 @@ from schools.api_views import (
     StudentGroupViewSet,
 )
 
+from accounts.api_views import (
+    UserViewSet,
+)
+
 router = routers.SimpleRouter()
 bulkrouter = BulkRouter()
 nested_router = ExtendedSimpleRouter()
 
 bulkrouter.register(r'students', StudentViewSet, base_name='students')
 
+router.register(
+    r'users',
+    UserViewSet,
+    base_name='user'
+)
 router.register(
     r'boundaries',
     BoundaryViewSet,
