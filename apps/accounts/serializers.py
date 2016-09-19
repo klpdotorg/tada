@@ -25,4 +25,5 @@ class UserSerializer(serializers.ModelSerializer):
         )
         read_only_fields = (
             User.USERNAME_FIELD,
+            'groups',
         )
