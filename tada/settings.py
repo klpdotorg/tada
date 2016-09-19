@@ -41,6 +41,7 @@ INSTALLED_APPS = (
     # Third party apps
     'django_extensions',
     'djoser',
+    'guardian',
     'rest_framework',
     'rest_framework_swagger',
     'rest_framework.authtoken',
