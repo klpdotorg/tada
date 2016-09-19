@@ -5,7 +5,8 @@ from django.contrib.auth import get_user_model
 from django.contrib.auth.models import Group
 
 from accounts.serializers import (
-    UserSerializer
+    UserSerializer,
+    GroupSerializer,
 )
 
 User = get_user_model()
@@ -30,3 +31,8 @@ class UserViewSet(viewsets.ModelViewSet):
         serializer.is_valid(raise_exception=True)
         self.perform_update(serializer)
         return Response(serializer.data)
+
+
+class GroupViewSet(viewsets.ModelViewSet):
+    queryset = Group.objects.all()
+    serializer_class = GroupSerializer
