@@ -22,6 +22,7 @@ from schools.api_views import (
 
 from accounts.api_views import (
     UserViewSet,
+    GroupViewSet,
 )
 
 router = routers.SimpleRouter()
@@ -33,6 +34,11 @@ bulkrouter.register(r'students', StudentViewSet, base_name='students')
 router.register(
     r'users',
     UserViewSet,
+    base_name='user'
+)
+router.register(
+    r'groups',
+    GroupViewSet,
     base_name='user'
 )
 router.register(
