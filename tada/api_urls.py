@@ -21,6 +21,18 @@ from schools.api_views import (
     StudentStudentGroupViewSet,
 )
 
+from accounts.api_views import (
+    UserViewSet,
+    GroupViewSet,
+    AssignPermissionView,
+)
+
+
+urlpatterns = patterns(
+    '',
+    url(r'^assign-permissions/$', AssignPermissionView.as_view(), name='assign_permissions'),
+)
+
 bulkrouter = BulkRouter()
 router = routers.SimpleRouter()
 nested_router = ExtendedSimpleRouter()
@@ -103,4 +115,4 @@ nested_router.register(
             parents_query_lookups=['student_id', 'student_group']
         )
 
-urlpatterns = router.urls + bulkrouter.urls + nested_router.urls
+urlpatterns += router.urls + bulkrouter.urls + nested_router.urls

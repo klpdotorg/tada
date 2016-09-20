@@ -1,4 +1,5 @@
 from rest_framework import viewsets
+from rest_framework.views import APIView
 from rest_framework.response import Response
 
 from django.contrib.auth import get_user_model
@@ -25,3 +26,12 @@ class UserViewSet(viewsets.ModelViewSet):
 
         return Response(serializer.data)
 
+
+class GroupViewSet(viewsets.ModelViewSet):
+    queryset = Group.objects.all()
+    serializer_class = GroupSerializer
+
+
+class AssignPermissionView(APIView):
+    def get(self, request):
+        return Response("LOL!")
