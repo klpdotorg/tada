@@ -6,7 +6,8 @@ from schools.filters import (
     AssessmentStudentFilter,
     BoundaryFilter,
     InstitutionFilter,
-    ProgrammeFilter,
+    ProgrammeInstitutionFilter,
+    ProgrammeStudentFilter,
     QuestionFilter
 )
 
@@ -73,13 +74,13 @@ class InstitutionViewSet(viewsets.ModelViewSet):
 class ProgrammeInstitutionViewSet(NestedViewSetMixin, viewsets.ModelViewSet):
     queryset = ProgrammeInstitution.objects.all()
     serializer_class = ProgrammeSerializer
-    filter_class = ProgrammeFilter
+    filter_class = ProgrammeInstitutionFilter
 
 
 class ProgrammeStudentViewSet(NestedViewSetMixin, viewsets.ModelViewSet):
     queryset = ProgrammeStudent.objects.all()
     serializer_class = ProgrammeSerializer
-    filter_class = ProgrammeFilter
+    filter_class = ProgrammeStudentFilter
 
 
 class QuestionInstitutionViewSet(NestedViewSetMixin, viewsets.ModelViewSet):
