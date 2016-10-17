@@ -2,10 +2,12 @@ from rest_framework import viewsets
 from rest_framework_extensions.mixins import NestedViewSetMixin
 
 from schools.filters import (
-    AssessmentFilter,
+    AssessmentInstitutionFilter,
+    AssessmentStudentFilter,
     BoundaryFilter,
     InstitutionFilter,
-    ProgrammeFilter,
+    ProgrammeInstitutionFilter,
+    ProgrammeStudentFilter,
     QuestionFilter
 )
 
@@ -38,13 +40,13 @@ from schools.models import (
 class AssessmentInstitutionViewSet(NestedViewSetMixin, viewsets.ModelViewSet):
     queryset = AssessmentInstitution.objects.all()
     serializer_class = AssessmentSerializer
-    filter_class = AssessmentFilter
+    filter_class = AssessmentInstitutionFilter
 
 
 class AssessmentStudentViewSet(NestedViewSetMixin, viewsets.ModelViewSet):
     queryset = AssessmentStudent.objects.all()
     serializer_class = AssessmentSerializer
-    filter_class = AssessmentFilter
+    filter_class = AssessmentStudentFilter
 
 
 class BoundaryViewSet(viewsets.ModelViewSet):
@@ -72,13 +74,13 @@ class InstitutionViewSet(viewsets.ModelViewSet):
 class ProgrammeInstitutionViewSet(NestedViewSetMixin, viewsets.ModelViewSet):
     queryset = ProgrammeInstitution.objects.all()
     serializer_class = ProgrammeSerializer
-    filter_class = ProgrammeFilter
+    filter_class = ProgrammeInstitutionFilter
 
 
 class ProgrammeStudentViewSet(NestedViewSetMixin, viewsets.ModelViewSet):
     queryset = ProgrammeStudent.objects.all()
     serializer_class = ProgrammeSerializer
-    filter_class = ProgrammeFilter
+    filter_class = ProgrammeStudentFilter
 
 
 class QuestionInstitutionViewSet(NestedViewSetMixin, viewsets.ModelViewSet):
@@ -86,10 +88,12 @@ class QuestionInstitutionViewSet(NestedViewSetMixin, viewsets.ModelViewSet):
     serializer_class = QuestionSerializer
     filter_class = QuestionFilter
 
+
 class QuestionStudentViewSet(NestedViewSetMixin, viewsets.ModelViewSet):
     queryset = QuestionStudent.objects.all()
     serializer_class = QuestionSerializer
     filter_class = QuestionFilter
+
 
 class StaffViewSet(viewsets.ModelViewSet):
     queryset = Staff.objects.all()

@@ -2,9 +2,11 @@ import django_filters
 
 from schools.models import (
     AssessmentInstitution,
+    AssessmentStudent,
     Boundary,
     Institution,
     ProgrammeInstitution,
+    ProgrammeStudent,
     QuestionInstitution,
     Student,
     StudentGroup
@@ -21,10 +23,17 @@ class BoundaryFilter(django_filters.FilterSet):
         fields = ['category', 'boundary_type', 'parent']
 
 
-class ProgrammeFilter(django_filters.FilterSet):
+class ProgrammeInstitutionFilter(django_filters.FilterSet):
 
     class Meta:
         model = ProgrammeInstitution
+        fields = ['name']
+
+
+class ProgrammeStudentFilter(django_filters.FilterSet):
+
+    class Meta:
+        model = ProgrammeStudent
         fields = ['name']
 
 
@@ -35,10 +44,17 @@ class QuestionFilter(django_filters.FilterSet):
         fields = ['name']
 
 
-class AssessmentFilter(django_filters.FilterSet):
+class AssessmentInstitutionFilter(django_filters.FilterSet):
 
     class Meta:
         model = AssessmentInstitution
+        fields = ['name']
+
+
+class AssessmentStudentFilter(django_filters.FilterSet):
+
+    class Meta:
+        model = AssessmentStudent
         fields = ['name']
 
 
