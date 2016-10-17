@@ -2,16 +2,19 @@ from os import system
 import os
 
 #Before running this script 
-
 #change this to point to the ems database that is used.
-database="emstemp"
+emsdatabase="emstemp"
+
+#change this to tada db to be populated with
+tadadatabase="tadatemp"
+
 if not os.path.exists("load"):
     os.makedirs("load")
 inputdatafile="getdata.sql"
 inputfile=open(inputdatafile,'w',0)
 loaddatafile="loaddata.sql"
 loadfile=open(loaddatafile,'w',0)
-command="psql -U klp -d "+database+" -f cleanems.sql"
+command="psql -U klp -d "+emsdatabase+" -f cleanems.sql"
 system(command)
 
 tables=[
@@ -46,24 +49,37 @@ tables=[
 ]
 
 
+#Create the getdata.sql and loaddata.sql files
+# getdata.sql file has the "Copy to" commands for populating the various csv files
+# loaddata.sql file has the "copy from" commands for loading the data into the tada db
 def create_sqlfiles():
+  #Loop through the tables
   for table in tables:
     for name in table:
-      #create the copy to file to get data from ems
+      #create the "copy to" file to get data from ems
       command='echo "'+table[name]+'\">>'+inputdatafile
       system(command)
-      #create the copy from file to load data into tada
+      #create the "copy from" file to load data into tada
       filename=os.getcwd()+'/load/'+name+'.csv'
       open(filename,'w',0)
       os.chmod(filename,0666)
       system('echo "COPY '+name+" from '"+filename+"' with csv NULL 'null';"+'\">>'+loaddatafile)
 
+#Running the "copy to" commands to populate the csvs.
 def getdata():
-  command="psql -U klp -d "+database+" -f "+inputdatafile
+  command="psql -U klp -d "+emsdatabase+" -f "+inputdatafile
   system(command)
 
 
+#Running the "copy from" commands for loading the tadadb.
+def loaddata():
+  command="psql -U klp -d "+tadadatabase+" -f "+loaddatafile+" 1>output 2>error"
+  system(command)
+  
 
+
+#order in which function should be called.
 create_sqlfiles()
 getdata()
+loaddata()
 
