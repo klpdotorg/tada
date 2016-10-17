@@ -39,7 +39,7 @@ class StudentGroup(models.Model):
     institution = models.ForeignKey(Institution)
     name = models.CharField(max_length=50)
     section = models.CharField(max_length=10, choices=Alpha_list,
-                               blank=True, default='')
+                               blank=True, null=True, default='')
     active = models.IntegerField(blank=True, null=True, default=2)
     group_type = models.CharField(max_length=10, choices=GROUP_TYPE,
                                   default='Class')

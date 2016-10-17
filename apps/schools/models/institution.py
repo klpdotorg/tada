@@ -72,7 +72,7 @@ class Institution(models.Model):
             choices=INSTITUTION_GENDER, default='co-ed')
     languages = models.ManyToManyField(MoiType)
     mgmt = models.ForeignKey(InstitutionManagement, default='1')
-    address = models.CharField(max_length=1000,default='NA')
+    address = models.CharField(max_length=1000, blank=True, null=True)
     area = models.CharField(max_length=200, blank=True, null=True)
     pincode = models.CharField(max_length=100, blank=True, null=True)
     landmark = models.CharField(max_length=1000, blank=True, null=True,
@@ -158,6 +158,7 @@ class Staff(models.Model):
     gender = models.CharField(max_length=10, choices=GENDER,
                               default='female')
     mt = models.ForeignKey(MoiType, default=1)
+    uid = models.CharField(max_length=100, blank=True, null=True)
 
     qualification = models.ManyToManyField(QualificationList,
             blank=True)

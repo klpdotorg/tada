@@ -132,7 +132,7 @@ class AssessmentStudentGroupAssociation(models.Model):
 class AssessmentInstitutionAssociation(models.Model):
     '''This Class stores the Assessment and Student Group Association Information'''
 
-    assessment = models.ForeignKey(AssessmentStudent)
+    assessment = models.ForeignKey(AssessmentInstitution)
     institution = models.ForeignKey(Institution)
     active = models.IntegerField(blank=True, null=True, default=2)
 
