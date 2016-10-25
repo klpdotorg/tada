@@ -5,7 +5,7 @@ import datetime
 from django.contrib.contenttypes.models import ContentType
 from django.contrib.contenttypes import generic
 from django.contrib.auth.models import User
-from .programs import ProgrammeInstitution, ProgrammeStudent
+from .programs import Programme
 from .students import StudentGroup
 from .institution import Institution, current_academic, default_end_date
 
