@@ -32,16 +32,10 @@ from schools.models import (
 )
 
 
-class AssessmentInstitutionViewSet(NestedViewSetMixin, viewsets.ModelViewSet):
-    queryset = AssessmentInstitution.objects.all()
+class AssessmentViewSet(NestedViewSetMixin, viewsets.ModelViewSet):
+    queryset = Assessment.objects.all()
     serializer_class = AssessmentSerializer
-    filter_class = AssessmentInstitutionFilter
-
-
-class AssessmentStudentViewSet(NestedViewSetMixin, viewsets.ModelViewSet):
-    queryset = AssessmentStudent.objects.all()
-    serializer_class = AssessmentSerializer
-    filter_class = AssessmentStudentFilter
+    filter_class = AssessmentFilter
 
 
 class BoundaryViewSet(viewsets.ModelViewSet):
