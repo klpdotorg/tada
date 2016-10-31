@@ -5,7 +5,7 @@ from schools.models import (
     Boundary,
     Institution,
     Programme,
-    QuestionInstitution,
+    Question,
     Student,
     StudentGroup
 )
@@ -38,7 +38,7 @@ class ProgrammeStudentFilter(django_filters.FilterSet):
 class QuestionFilter(django_filters.FilterSet):
 
     class Meta:
-        model = QuestionInstitution
+        model = Question
         fields = ['name']
 
 
@@ -61,6 +61,7 @@ class StudentFilter(django_filters.FilterSet):
     class Meta:
         model = Student
         fields = ['first_name', 'middle_name', 'last_name']
+
 
 class StudentGroupFilter(django_filters.FilterSet):
 
