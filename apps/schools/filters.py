@@ -1,8 +1,7 @@
 import django_filters
 
 from schools.models import (
-    AssessmentInstitution,
-    AssessmentStudent,
+    Assessment,
     Boundary,
     Institution,
     ProgrammeInstitution,
@@ -44,17 +43,10 @@ class QuestionFilter(django_filters.FilterSet):
         fields = ['name']
 
 
-class AssessmentInstitutionFilter(django_filters.FilterSet):
+class AssessmentFilter(django_filters.FilterSet):
 
     class Meta:
-        model = AssessmentInstitution
-        fields = ['name']
-
-
-class AssessmentStudentFilter(django_filters.FilterSet):
-
-    class Meta:
-        model = AssessmentStudent
+        model = Assessment
         fields = ['name']
 
 
