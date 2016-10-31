@@ -33,5 +33,12 @@ class GroupViewSet(viewsets.ModelViewSet):
 
 
 class AssignPermissionView(APIView):
+    permission_classes = (permissions.IsAuthenticated,)
+    
     def get(self, request):
+        school_id = self.request.data.get('school_id', None)
+        district_id = self.request.data.get('district_id', None)
+        block_project_id = self.request.data.get('block_project_id', None)
+        cluster_circle_id = self.request.data.get('cluster_circle_id', None)
+        assessment_id = self.request.data.get('assesment_id', None)
         return Response("LOL!")
