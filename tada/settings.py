@@ -30,7 +30,6 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = (
-    # In-built apps
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -38,17 +37,13 @@ INSTALLED_APPS = (
     'django.contrib.messages',
     'django.contrib.staticfiles',
 
-    # Third party apps
-    'django_extensions',
-    'djoser',
-    'guardian',
-    'rest_framework',
-    'rest_framework_swagger',
-    'rest_framework.authtoken',
-
-    # Local apps
     'accounts',
     'common',
+    'django_extensions',
+    'djoser',
+    'rest_framework',
+    'rest_framework.authtoken',
+    'rest_framework_swagger',
     'schools',
     'tests',
 )
@@ -111,7 +106,6 @@ REST_FRAMEWORK = {
     ),
     'DEFAULT_PERMISSION_CLASSES': (
         'rest_framework.permissions.IsAuthenticated',
-        'accounts.permissions.TadaPermissions',
     ),
     'DEFAULT_FILTER_BACKENDS': (
         'rest_framework.filters.DjangoFilterBackend',
@@ -121,8 +115,7 @@ REST_FRAMEWORK = {
 
 AUTHENTICATION_BACKENDS = (
     'accounts.backends.EmailOrUsernameModelBackend',
-    'django.contrib.auth.backends.ModelBackend',
-    'guardian.backends.ObjectPermissionBackend',
+    'django.contrib.auth.backends.ModelBackend'
 )
 
 CORS_ORIGIN_ALLOW_ALL = True

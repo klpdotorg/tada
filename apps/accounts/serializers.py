@@ -9,7 +9,7 @@ User = get_user_model()
 class GroupSerializer(serializers.ModelSerializer):    
     class Meta:
         model = Group
-        fields = ('id', 'name')
+        fields = ('name', )
 
 
 class UserSerializer(serializers.ModelSerializer):
@@ -25,5 +25,4 @@ class UserSerializer(serializers.ModelSerializer):
         )
         read_only_fields = (
             User.USERNAME_FIELD,
-            'groups',
         )
