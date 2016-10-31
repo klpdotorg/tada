@@ -66,14 +66,8 @@ class ProgrammeViewSet(NestedViewSetMixin, viewsets.ModelViewSet):
     filter_class = ProgrammeFilter
 
 
-class QuestionInstitutionViewSet(NestedViewSetMixin, viewsets.ModelViewSet):
-    queryset = QuestionInstitution.objects.all()
-    serializer_class = QuestionSerializer
-    filter_class = QuestionFilter
-
-
-class QuestionStudentViewSet(NestedViewSetMixin, viewsets.ModelViewSet):
-    queryset = QuestionStudent.objects.all()
+class QuestionViewSet(NestedViewSetMixin, viewsets.ModelViewSet):
+    queryset = Question.objects.all()
     serializer_class = QuestionSerializer
     filter_class = QuestionFilter
 
