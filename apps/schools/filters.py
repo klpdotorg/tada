@@ -21,17 +21,10 @@ class BoundaryFilter(django_filters.FilterSet):
         fields = ['category', 'boundary_type', 'parent']
 
 
-class ProgrammeInstitutionFilter(django_filters.FilterSet):
+class ProgrammeFilter(django_filters.FilterSet):
 
     class Meta:
-        model = ProgrammeInstitution
-        fields = ['name']
-
-
-class ProgrammeStudentFilter(django_filters.FilterSet):
-
-    class Meta:
-        model = ProgrammeStudent
+        model = Programme
         fields = ['name']
 
 
