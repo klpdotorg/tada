@@ -21,16 +21,13 @@ from schools.serializers import (
 )
 
 from schools.models import (
-    AssessmentInstitution,
-    AssessmentStudent,
+    Assessment,
     Boundary,
     BoundaryCategory,
     BoundaryType,
     Institution,
-    ProgrammeInstitution,
-    ProgrammeStudent,
-    QuestionInstitution,
-    QuestionStudent,
+    Programme,
+    Question,
     Staff,
 )
 
