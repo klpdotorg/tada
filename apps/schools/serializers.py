@@ -1,13 +1,13 @@
 from rest_framework import serializers
 
 from .models import (
-    AssessmentInstitution,
+    Assessment,
     Boundary,
     BoundaryCategory,
     BoundaryType,
     Institution,
-    ProgrammeInstitution,
-    QuestionInstitution,
+    Programme,
+    Question,
     Relations,
     Staff,
     Student,
@@ -34,7 +34,7 @@ class InstitutionSerializer(serializers.ModelSerializer):
 class AssessmentSerializer(serializers.ModelSerializer):
 
     class Meta:
-        model = AssessmentInstitution
+        model = Assessment
         fields = (
             'id', 'programme', 'name', 'start_date', 'end_date', 'query',
             'active', 'double_entry', 'flexi_assessment', 'primary_field_name',
@@ -45,7 +45,7 @@ class AssessmentSerializer(serializers.ModelSerializer):
 class ProgrammeSerializer(serializers.ModelSerializer):
 
     class Meta:
-        model = ProgrammeInstitution
+        model = Programme
         fields = (
             'id', 'name', 'description', 'start_date', 'end_date',
             'programme_institution_category', 'active'
@@ -55,7 +55,7 @@ class ProgrammeSerializer(serializers.ModelSerializer):
 class QuestionSerializer(serializers.ModelSerializer):
 
     class Meta:
-        model = QuestionInstitution
+        model = Question
 
 
 class BoundarySerializer(serializers.ModelSerializer):
