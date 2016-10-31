@@ -4,8 +4,7 @@ from schools.models import (
     Assessment,
     Boundary,
     Institution,
-    ProgrammeInstitution,
-    ProgrammeStudent,
+    Programme,
     QuestionInstitution,
     Student,
     StudentGroup
