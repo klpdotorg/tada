@@ -2,12 +2,10 @@ from rest_framework import viewsets
 from rest_framework_extensions.mixins import NestedViewSetMixin
 
 from schools.filters import (
-    AssessmentInstitutionFilter,
-    AssessmentStudentFilter,
+    AssessmentFilter,
     BoundaryFilter,
     InstitutionFilter,
-    ProgrammeInstitutionFilter,
-    ProgrammeStudentFilter,
+    ProgrammeFilter,
     QuestionFilter
 )
 
