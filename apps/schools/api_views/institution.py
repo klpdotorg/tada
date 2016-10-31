@@ -60,16 +60,10 @@ class InstitutionViewSet(viewsets.ModelViewSet):
     filter_class = InstitutionFilter
 
 
-class ProgrammeInstitutionViewSet(NestedViewSetMixin, viewsets.ModelViewSet):
-    queryset = ProgrammeInstitution.objects.all()
+class ProgrammeViewSet(NestedViewSetMixin, viewsets.ModelViewSet):
+    queryset = Programme.objects.all()
     serializer_class = ProgrammeSerializer
-    filter_class = ProgrammeInstitutionFilter
-
-
-class ProgrammeStudentViewSet(NestedViewSetMixin, viewsets.ModelViewSet):
-    queryset = ProgrammeStudent.objects.all()
-    serializer_class = ProgrammeSerializer
-    filter_class = ProgrammeStudentFilter
+    filter_class = ProgrammeFilter
 
 
 class QuestionInstitutionViewSet(NestedViewSetMixin, viewsets.ModelViewSet):
