@@ -20,6 +20,30 @@ from rest_framework_bulk import (
 )
 
 
+class BoundarySerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Boundary
+        fields = (
+            'id', 'parent', 'name', 'boundary_category', 'boundary_type',
+            'active'
+        )
+
+
+class BoundaryTypeSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = BoundaryType
+        fields = ('id', 'boundary_type')
+
+
+class BoundaryCategorySerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = BoundaryCategory
+        fields = ('id', 'boundary_category')
+
+
 class InstitutionSerializer(serializers.ModelSerializer):
 
     class Meta:
@@ -43,6 +67,8 @@ class AssessmentSerializer(serializers.ModelSerializer):
 
 class ProgrammeSerializer(serializers.ModelSerializer):
 
+    programme_institution_category = BoundaryTypeSerializer()
+
     class Meta:
         model = Programme
         fields = (
@@ -55,30 +81,6 @@ class QuestionSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Question
-
-
-class BoundarySerializer(serializers.ModelSerializer):
-
-    class Meta:
-        model = Boundary
-        fields = (
-            'id', 'parent', 'name', 'boundary_category', 'boundary_type',
-            'active'
-        )
-
-
-class BoundaryTypeSerializer(serializers.ModelSerializer):
-
-    class Meta:
-        model = BoundaryType
-        fields = ('id', 'boundary_type')
-
-
-class BoundaryCategorySerializer(serializers.ModelSerializer):
-
-    class Meta:
-        model = BoundaryCategory
-        fields = ('id', 'boundary_category')
 
 
 class RelationsSerializer(serializers.ModelSerializer):
