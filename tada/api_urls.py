@@ -5,16 +5,13 @@ from rest_framework_extensions.routers import ExtendedSimpleRouter
 from django.conf.urls import patterns, url
 
 from schools.api_views import (
-    AssessmentInstitutionViewSet,
-    AssessmentStudentViewSet,
+    AssessmentViewSet,
     BoundaryViewSet,
     BoundaryCategoryViewSet,
     BoundaryTypeViewSet,
     InstitutionViewSet,
-    ProgrammeInstitutionViewSet,
-    ProgrammeStudentViewSet,
-    QuestionInstitutionViewSet,
-    QuestionStudentViewSet,
+    ProgrammeViewSet,
+    QuestionViewSet,
     StaffViewSet,
     StudentViewSet,
     StudentGroupViewSet,
@@ -56,34 +53,18 @@ nested_router.register(
 )
 
 nested_router.register(
-    r'programmes-institution',
-    ProgrammeInstitutionViewSet,
-    base_name='programme-institution'
+    r'programmes',
+    ProgrammeViewSet,
+    base_name='programme'
 ).register(
-    r'assessments-institution',
-    AssessmentInstitutionViewSet,
-    base_name='assessment-institution',
+    r'assessments',
+    AssessmentViewSet,
+    base_name='assessment',
     parents_query_lookups=['programme']
 ).register(
-    r'questions-institution',
-    QuestionInstitutionViewSet,
-    base_name='question-institution',
-    parents_query_lookups=['assessment__programme', 'assessment']
-)
-
-nested_router.register(
-    r'programmes-student',
-    ProgrammeStudentViewSet,
-    base_name='programme-student'
-).register(
-    r'assessments-student',
-    AssessmentStudentViewSet,
-    base_name='assessment-student',
-    parents_query_lookups=['programme']
-).register(
-    r'questions-student',
-    QuestionStudentViewSet,
-    base_name='question-student',
+    r'questions',
+    QuestionViewSet,
+    base_name='question',
     parents_query_lookups=['assessment__programme', 'assessment']
 )
 

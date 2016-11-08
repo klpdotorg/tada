@@ -1,13 +1,13 @@
 from rest_framework import serializers
 
 from .models import (
-    AssessmentInstitution,
+    Assessment,
     Boundary,
     BoundaryCategory,
     BoundaryType,
     Institution,
-    ProgrammeInstitution,
-    QuestionInstitution,
+    Programme,
+    Question,
     Relations,
     Staff,
     Student,
@@ -18,44 +18,6 @@ from rest_framework_bulk import (
     BulkListSerializer,
     BulkSerializerMixin
 )
-
-
-class InstitutionSerializer(serializers.ModelSerializer):
-
-    class Meta:
-        model = Institution
-        fields = (
-            'id', 'boundary', 'dise_code', 'name', 'cat', 'institution_gender',
-            'languages', 'mgmt', 'address', 'area', 'pincode', 'landmark',
-            'active'
-        )
-
-
-class AssessmentSerializer(serializers.ModelSerializer):
-
-    class Meta:
-        model = AssessmentInstitution
-        fields = (
-            'id', 'programme', 'name', 'start_date', 'end_date', 'query',
-            'active', 'double_entry', 'flexi_assessment', 'primary_field_name',
-            'PRIMARY_FIELD_TYPE'
-        )
-
-
-class ProgrammeSerializer(serializers.ModelSerializer):
-
-    class Meta:
-        model = ProgrammeInstitution
-        fields = (
-            'id', 'name', 'description', 'start_date', 'end_date',
-            'programme_institution_category', 'active'
-        )
-
-
-class QuestionSerializer(serializers.ModelSerializer):
-
-    class Meta:
-        model = QuestionInstitution
 
 
 class BoundarySerializer(serializers.ModelSerializer):
@@ -80,6 +42,45 @@ class BoundaryCategorySerializer(serializers.ModelSerializer):
     class Meta:
         model = BoundaryCategory
         fields = ('id', 'boundary_category')
+
+
+class InstitutionSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Institution
+        fields = (
+            'id', 'boundary', 'dise_code', 'name', 'cat', 'institution_gender',
+            'languages', 'mgmt', 'address', 'area', 'pincode', 'landmark',
+            'active'
+        )
+
+
+class AssessmentSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Assessment
+        fields = (
+            'id', 'programme', 'name', 'start_date', 'end_date', 'query',
+            'active', 'double_entry',
+        )
+
+
+class ProgrammeSerializer(serializers.ModelSerializer):
+
+    programme_institution_category = BoundaryTypeSerializer()
+
+    class Meta:
+        model = Programme
+        fields = (
+            'id', 'name', 'description', 'start_date', 'end_date',
+            'programme_institution_category', 'active'
+        )
+
+
+class QuestionSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Question
 
 
 class RelationsSerializer(serializers.ModelSerializer):

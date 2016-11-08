@@ -2,12 +2,10 @@ from rest_framework import viewsets
 from rest_framework_extensions.mixins import NestedViewSetMixin
 
 from schools.filters import (
-    AssessmentInstitutionFilter,
-    AssessmentStudentFilter,
+    AssessmentFilter,
     BoundaryFilter,
     InstitutionFilter,
-    ProgrammeInstitutionFilter,
-    ProgrammeStudentFilter,
+    ProgrammeFilter,
     QuestionFilter
 )
 
@@ -23,30 +21,21 @@ from schools.serializers import (
 )
 
 from schools.models import (
-    AssessmentInstitution,
-    AssessmentStudent,
+    Assessment,
     Boundary,
     BoundaryCategory,
     BoundaryType,
     Institution,
-    ProgrammeInstitution,
-    ProgrammeStudent,
-    QuestionInstitution,
-    QuestionStudent,
+    Programme,
+    Question,
     Staff,
 )
 
 
-class AssessmentInstitutionViewSet(NestedViewSetMixin, viewsets.ModelViewSet):
-    queryset = AssessmentInstitution.objects.all()
+class AssessmentViewSet(NestedViewSetMixin, viewsets.ModelViewSet):
+    queryset = Assessment.objects.all()
     serializer_class = AssessmentSerializer
-    filter_class = AssessmentInstitutionFilter
-
-
-class AssessmentStudentViewSet(NestedViewSetMixin, viewsets.ModelViewSet):
-    queryset = AssessmentStudent.objects.all()
-    serializer_class = AssessmentSerializer
-    filter_class = AssessmentStudentFilter
+    filter_class = AssessmentFilter
 
 
 class BoundaryViewSet(viewsets.ModelViewSet):
@@ -71,26 +60,14 @@ class InstitutionViewSet(viewsets.ModelViewSet):
     filter_class = InstitutionFilter
 
 
-class ProgrammeInstitutionViewSet(NestedViewSetMixin, viewsets.ModelViewSet):
-    queryset = ProgrammeInstitution.objects.all()
+class ProgrammeViewSet(NestedViewSetMixin, viewsets.ModelViewSet):
+    queryset = Programme.objects.all()
     serializer_class = ProgrammeSerializer
-    filter_class = ProgrammeInstitutionFilter
+    filter_class = ProgrammeFilter
 
 
-class ProgrammeStudentViewSet(NestedViewSetMixin, viewsets.ModelViewSet):
-    queryset = ProgrammeStudent.objects.all()
-    serializer_class = ProgrammeSerializer
-    filter_class = ProgrammeStudentFilter
-
-
-class QuestionInstitutionViewSet(NestedViewSetMixin, viewsets.ModelViewSet):
-    queryset = QuestionInstitution.objects.all()
-    serializer_class = QuestionSerializer
-    filter_class = QuestionFilter
-
-
-class QuestionStudentViewSet(NestedViewSetMixin, viewsets.ModelViewSet):
-    queryset = QuestionStudent.objects.all()
+class QuestionViewSet(NestedViewSetMixin, viewsets.ModelViewSet):
+    queryset = Question.objects.all()
     serializer_class = QuestionSerializer
     filter_class = QuestionFilter
 
