@@ -197,7 +197,7 @@ def default_end_date():
     academicYear = current_academic().name
     academicYear = academicYear.split('-')
     if currentMont > 5 and int(academicYear[0]) == currentYear:
-        academic_end_date = datetime.date(currentYear+1,12, 30)
+        academic_end_date = datetime.date(currentYear+1, 5, 30)
     else:
         academic_end_date = datetime.date(currentYear, 5, 30)
     return academic_end_date
