@@ -10,6 +10,7 @@ from schools.api_views import (
     BoundaryCategoryViewSet,
     BoundaryTypeViewSet,
     InstitutionViewSet,
+    LanguageViewSet,
     ProgrammeViewSet,
     QuestionViewSet,
     StaffViewSet,
@@ -72,6 +73,12 @@ router.register(
     r'staff',
     StaffViewSet,
     base_name='staff'
+)
+
+router.register(
+    r'languages',
+    LanguageViewSet,
+    base_name='language'
 )
 
 #router.register(r'students', StudentViewSet, base_name='students')
