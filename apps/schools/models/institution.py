@@ -32,6 +32,7 @@ class MoiType(models.Model):
     def __unicode__(self):
         return '%s' % self.name
 
+
 class InstitutionManagement(models.Model):
     '''This Class stores the Institution Management Information'''
 

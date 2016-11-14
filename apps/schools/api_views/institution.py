@@ -15,6 +15,7 @@ from schools.serializers import (
     BoundaryCategorySerializer,
     BoundaryTypeSerializer,
     InstitutionSerializer,
+    LanguageSerializer,
     ProgrammeSerializer,
     QuestionSerializer,
     StaffSerializer,
@@ -26,6 +27,7 @@ from schools.models import (
     BoundaryCategory,
     BoundaryType,
     Institution,
+    MoiType,
     Programme,
     Question,
     Staff,
@@ -58,6 +60,11 @@ class InstitutionViewSet(viewsets.ModelViewSet):
     queryset = Institution.objects.all()
     serializer_class = InstitutionSerializer
     filter_class = InstitutionFilter
+
+
+class LanguageViewSet(viewsets.ModelViewSet):
+    queryset = MoiType.objects.all()
+    serializer_class = LanguageSerializer
 
 
 class ProgrammeViewSet(NestedViewSetMixin, viewsets.ModelViewSet):
