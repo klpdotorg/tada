@@ -18,7 +18,7 @@ from schools.models import (
 )
 
 
-class StudentViewSet(BulkCreateModelMixin, viewsets.ModelViewSet):
+class StudentViewSet(NestedViewSetMixin, BulkCreateModelMixin, viewsets.ModelViewSet):
     queryset = Student.objects.all()
     serializer_class = StudentSerializer
     filter_class = StudentFilter
