@@ -6,6 +6,7 @@ from .models import (
     BoundaryCategory,
     BoundaryType,
     Institution,
+    MoiType,
     Programme,
     Question,
     Relations,
@@ -53,6 +54,12 @@ class InstitutionSerializer(serializers.ModelSerializer):
             'languages', 'mgmt', 'address', 'area', 'pincode', 'landmark',
             'active'
         )
+
+
+class LanguageSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = MoiType
 
 
 class AssessmentSerializer(serializers.ModelSerializer):
