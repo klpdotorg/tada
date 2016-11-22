@@ -33,9 +33,21 @@ Create and activate the virtualenv
 
 ### Create user klp in postgres
 
-createuser klp (Need super user privileges?)
+    createuser klp --superuser
 
-User klp is needed to make the migrations work. Otherwise, there will be a FATAL error referencing the klp role.
+User klp is needed to make the migrations work. Otherwise, there will be a FATAL error referencing the klp role. It needs to be superuser so that the copy command works.
+
+The default peer authentication might not work if you're accessing the db as another user. So either set an `md5` password authentication system or `trust` all local connections.
+
+    emacs -nw /etc/postgresql/9.3/main/pg_hba.conf
+
+Edit:
+
+    local   all   all   peer
+
+To:
+
+    local   all   all   trust
 
 ### Install and create a local database
 
