@@ -1,10 +1,31 @@
 from django.conf.urls import patterns, include, url
 from django.contrib import admin
 
-from accounts.views import UserView
+from accounts.api_views import UserViewSet
+
+ListCreateMapper = {
+    'get' : 'list',
+    'post' : 'create',
+}
+
+RetrieveUpdateDestroyMapper = {
+    'get' : 'retrieve',
+    'put' : 'update',
+    'patch' : 'update',
+    'delete' : 'destroy',
+}
 
 urlpatterns = patterns(
     '',
-    url(r'^me/$', UserView.as_view(), name='user'),
+    url(
+        r'^users/$',
+        UserViewSet.as_view(ListCreateMapper),
+        name='users_list_create'
+    ),
+    url(
+        r'^users/(?P<pk>[0-9]+)$',
+        UserViewSet.as_view(RetrieveUpdateDestroyMapper),
+        name='users_detail'
+    ),
     url(r'^', include('djoser.urls.authtoken')),
 )
