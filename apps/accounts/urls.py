@@ -5,13 +5,13 @@ from accounts.api_views import UserViewSet
 
 ListCreateMapper = {
     'get' : 'list',
-    'post' : 'create',
+    # 'post' : 'create',
 }
 
 RetrieveUpdateDestroyMapper = {
     'get' : 'retrieve',
     'put' : 'update',
-    'patch' : 'update',
+    'patch' : 'partial_update',
     'delete' : 'destroy',
 }
 
