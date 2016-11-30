@@ -23,7 +23,7 @@ urlpatterns = patterns(
         name='users_list_create'
     ),
     url(
-        r'^users/(?P<pk>[0-9]+)$',
+        r'^users/(?P<pk>[0-9]+)/$',
         UserViewSet.as_view(RetrieveUpdateDestroyMapper),
         name='users_detail'
     ),
