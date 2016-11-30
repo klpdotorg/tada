@@ -14,7 +14,7 @@ class GroupSerializer(serializers.ModelSerializer):
 
 class UserSerializer(serializers.ModelSerializer):
 
-    groups = GroupSerializer(many=True)
+    groups = GroupSerializer(many=True, required=False)
 
     class Meta:
         model = User
@@ -22,6 +22,8 @@ class UserSerializer(serializers.ModelSerializer):
             User._meta.pk.name,
             User.USERNAME_FIELD,
             'groups',
+            'first_name',
+            'last_name',
         )
         read_only_fields = (
             User.USERNAME_FIELD,
