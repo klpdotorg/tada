@@ -78,6 +78,9 @@ Run:
 
     python manage.py migrate
 
+### To import old data refer to README.md in imports directory
+
+
 ### Run the application
 
     python manage.py runserver
