@@ -74,8 +74,6 @@ class AssessmentSerializer(serializers.ModelSerializer):
 
 class ProgrammeSerializer(serializers.ModelSerializer):
 
-    programme_institution_category = BoundaryTypeSerializer()
-
     class Meta:
         model = Programme
         fields = (
