@@ -68,7 +68,7 @@ class AssessmentSerializer(serializers.ModelSerializer):
         model = Assessment
         fields = (
             'id', 'programme', 'name', 'start_date', 'end_date', 'query',
-            'active', 'double_entry',
+            'active', 'double_entry', 'type',
         )
 
 
