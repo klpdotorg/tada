@@ -12,7 +12,8 @@ from .models import (
     Relations,
     Staff,
     Student,
-    StudentGroup
+    StudentGroup,
+    StudentStudentGroupRelation
 )
 
 from rest_framework_bulk import (
@@ -168,6 +169,14 @@ class StudentGroupSerializer(serializers.ModelSerializer):
         model = StudentGroup
         fields = (
             'id', 'institution', 'name', 'section', 'active', 'group_type'
+        )
+
+class StudentStudentGroupSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = StudentStudentGroupRelation
+        fields = (
+            'id','student','student_group','academic','active'
         )
 
 
