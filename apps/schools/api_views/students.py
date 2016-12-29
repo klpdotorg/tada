@@ -27,6 +27,8 @@ class StudentViewSet(NestedViewSetMixin, BulkCreateModelMixin, viewsets.ModelVie
     serializer_class = StudentSerializer
     filter_class = StudentFilter
 
+    # M2M query returns duplicates. Overrode this function
+    # from NestedViewSetMixin to implement the .distinct()
     def filter_queryset_by_parents_lookups(self, queryset):
         parents_query_dict = self.get_parents_query_dict()
         if parents_query_dict:
@@ -44,3 +46,37 @@ class StudentGroupViewSet(NestedViewSetMixin, viewsets.ModelViewSet):
     queryset = StudentGroup.objects.all()
     serializer_class = StudentGroupSerializer
     filter_class = StudentGroupFilter
+
+    # M2M query returns duplicates. Overrode this function
+    # from NestedViewSetMixin to implement the .distinct()
+    def filter_queryset_by_parents_lookups(self, queryset):
+        parents_query_dict = self.get_parents_query_dict()
+        if parents_query_dict:
+            try:
+                return queryset.filter(
+                    **parents_query_dict
+                ).order_by().distinct('id')
+            except ValueError:
+                raise Http404
+        else:
+            return queryset
+
+
+class StudentStudentGroupViewSet(NestedViewSetMixin, viewsets.ModelViewSet):
+    queryset = StudentStudentGroupRelation.objects.all()
+    serializer_class = StudentStudentGroupSerializer
+
+    # M2M query returns duplicates. Overrode this function
+    # from NestedViewSetMixin to implement the .distinct()
+    def filter_queryset_by_parents_lookups(self, queryset):
+        parents_query_dict = self.get_parents_query_dict()
+        if parents_query_dict:
+            try:
+                return queryset.filter(
+                    **parents_query_dict
+                ).order_by().distinct('id')
+            except ValueError:
+                raise Http404
+        else:
+            return queryset
+
