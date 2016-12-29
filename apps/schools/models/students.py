@@ -179,7 +179,7 @@ class StudentStudentGroupRelation(models.Model):
 
         #print "active is", self.active
         self.full_clean()
-        super(Student_StudentGroupRelation, self).save(*args, **kwargs)
+        super(StudentStudentGroupRelation, self).save(*args, **kwargs)
 
 class StaffStudentGroupRelation(models.Model):
     '''This Class stores the Staff and Student Group Relation Information'''
