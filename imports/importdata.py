@@ -78,6 +78,11 @@ def loaddata():
   command="psql -U klp -d "+tadadatabase+" -f "+loaddatafile+" 1>output 2>error"
   system(command)
   
+#Reset Sequences
+#https://wiki.postgresql.org/wiki/Fixing_Sequences 
+def resetseq():
+    command="psql -U klp -d "+emsdatabase+" -f resetseq.sql"
+    system(command)
 
 
 #order in which function should be called.
@@ -85,4 +90,5 @@ init()
 create_sqlfiles()
 getdata()
 loaddata()
+resetseq()
 
