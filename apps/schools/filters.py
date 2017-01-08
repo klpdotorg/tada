@@ -25,7 +25,7 @@ class ProgrammeFilter(django_filters.FilterSet):
 
     class Meta:
         model = Programme
-        fields = ['name']
+        fields = ['name', 'active']
 
 
 class QuestionFilter(django_filters.FilterSet):
