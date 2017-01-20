@@ -81,7 +81,7 @@ def loaddata():
 #Reset Sequences
 #https://wiki.postgresql.org/wiki/Fixing_Sequences 
 def resetseq():
-    command="psql -U klp -d "+emsdatabase+" -f resetseq.sql"
+    command="psql -U klp -d "+tadadatabase+" -f "+resetseq.sql+" 1>seq_out 2>seq_err"
     system(command)
 
 
