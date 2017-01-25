@@ -10,6 +10,8 @@ from schools.api_views import (
     BoundaryCategoryViewSet,
     BoundaryTypeViewSet,
     InstitutionViewSet,
+    InstitutionCategoryViewSet,
+    InstitutionManagementViewSet,
     LanguageViewSet,
     ProgrammeViewSet,
     QuestionViewSet,
@@ -26,6 +28,12 @@ nested_router = ExtendedSimpleRouter()
 router.register(r'boundaries', BoundaryViewSet, base_name='boundary')
 router.register(r'boundarycategories', BoundaryCategoryViewSet, base_name='boundarycategory')
 router.register(r'boundarytypes', BoundaryTypeViewSet, base_name='boundarytype')
+router.register(r'institutioncategories', InstitutionCategoryViewSet, base_name='institutiocategory')
+router.register(r'institutionmanagements', InstitutionManagementViewSet, base_name='institutiomanagement')
+router.register(r'languages', LanguageViewSet, base_name='language')
+router.register(r'staff', StaffViewSet, base_name='staff')
+
+bulkrouter.register(r'students', StudentViewSet, base_name='students')
 
 ## Institution -> StudentGroup -> Students
 nested_router.register(
@@ -44,8 +52,6 @@ nested_router.register(
             parents_query_lookups=['studentgroups__institution', 'studentgroups']
         )
 
-router.register(r'languages', LanguageViewSet, base_name='language')
-
 ## Programmes -> Assessments -> Questions
 nested_router.register(
     r'programmes',
@@ -62,8 +68,6 @@ nested_router.register(
             base_name='question',
             parents_query_lookups=['assessment__programme', 'assessment']
         )
-
-router.register(r'staff', StaffViewSet, base_name='staff')
 
 ## StudentGroups -> Students -> StudentStudentGroupRelation
 nested_router.register(
@@ -98,9 +102,5 @@ nested_router.register(
             base_name='studentstudentgrouprelation',
             parents_query_lookups=['student_id', 'student_group']
         )
-
-#http://localhost:8000/api/v1/studentgroups/3525154/students/2294002/enrollment
-
-bulkrouter.register(r'students', StudentViewSet, base_name='students')
 
 urlpatterns = router.urls + bulkrouter.urls + nested_router.urls

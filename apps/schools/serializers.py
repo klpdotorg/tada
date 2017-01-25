@@ -6,6 +6,8 @@ from .models import (
     BoundaryCategory,
     BoundaryType,
     Institution,
+    InstitutionCategory,
+    InstitutionManagement,
     MoiType,
     Programme,
     Question,
@@ -55,6 +57,18 @@ class InstitutionSerializer(serializers.ModelSerializer):
             'languages', 'mgmt', 'address', 'area', 'pincode', 'landmark',
             'active'
         )
+
+
+class InstitutionCategorySerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = InstitutionCategory
+
+
+class InstitutionManagementSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = InstitutionManagement
 
 
 class LanguageSerializer(serializers.ModelSerializer):
