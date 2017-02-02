@@ -1,10 +1,13 @@
 from rest_framework import viewsets
+from rest_framework import permissions
 from rest_framework.views import APIView
 from rest_framework.response import Response
 
+from django.contrib.auth.models import Group
 from django.contrib.auth import get_user_model
 
-from accounts.serializers import UserSerializer
+from .filters import UserFilter
+from .serializers import GroupSerializer, UserSerializer
 
 User = get_user_model()
 
@@ -12,6 +15,7 @@ User = get_user_model()
 class UserViewSet(viewsets.ModelViewSet):
     queryset = User.objects.all()
     serializer_class = UserSerializer
+    filter_class = UserFilter
 
     def update(self, request, *args, **kwargs):
         partial = kwargs.pop('partial', False)
