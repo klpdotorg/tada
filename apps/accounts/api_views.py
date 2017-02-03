@@ -37,7 +37,7 @@ class GroupViewSet(viewsets.ModelViewSet):
 
 
 class AssignPermissionView(APIView):
-    permission_classes = (permissions.IsAuthenticated,)
+    # permission_classes = (permissions.IsAuthenticated,)
     
     def get(self, request):
         school_id = self.request.data.get('school_id', None)
