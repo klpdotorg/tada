@@ -7,4 +7,4 @@ User = get_user_model()
 class UserFilter(django_filters.FilterSet):
     class Meta:
         model = User
-        fields = ['is_active']
+        fields = ['is_active', 'username']
