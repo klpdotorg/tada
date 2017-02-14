@@ -30,6 +30,12 @@ class Assessment(models.Model):
     active = models.IntegerField(blank=True, null=True, default=2)
     double_entry = models.BooleanField('Requires double entry',
             default=True)
+    institutions = models.ManyToManyField(
+        'Institution',
+        through='AssessmentInstitutionAssociation',
+        blank=True,
+        null=True,
+    )
 
     class Meta:
         unique_together = (('programme', 'name'), )
