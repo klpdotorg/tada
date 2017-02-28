@@ -1,5 +1,6 @@
 from django.http import Http404
 
+from rest_framework import status
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import generics,viewsets
@@ -79,4 +80,10 @@ class StudentStudentGroupViewSet(NestedViewSetMixin, viewsets.ModelViewSet):
                 raise Http404
         else:
             return queryset
+
+    def destroy(self, request, *args, **kwargs):
+        instance = self.get_object()
+        instance.active = 0
+        instance.save()
+        return Response(status=status.HTTP_204_NO_CONTENT)
 
