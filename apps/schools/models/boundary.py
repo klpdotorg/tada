@@ -7,16 +7,12 @@ from django.contrib.contenttypes import generic
 
 
 class BoundaryCategory(models.Model):
-    '''This Class stores the Boundary Category Information'''
-
     boundary_category = models.CharField(max_length=100)
 
     def __unicode__(self):
         return '%s' % self.boundary_category
 
 class BoundaryType(models.Model):
-    '''This Class stores the Boundary Type Information'''
-
     boundary_type = models.CharField(max_length=100)
 
     def __unicode__(self):
@@ -34,8 +30,6 @@ class Boundary(models.Model):
     active = models.IntegerField(blank=True, null=True, default=2)
 
     class Meta:
-        """ Used For ordering """
-
         ordering = ['name']
 
     def __unicode__(self):
@@ -50,6 +44,16 @@ class Boundary(models.Model):
             return True
         else:
             return False
+
+    def children(self):
+        if self.boundary_category.boundary_category == 'district':
+            return Boundary.objects.filter(
+                Q(parent=self) | Q(parent__parent=self)
+            )
+        elif self.boundary_category.boundary_category in ['block', 'project']:
+            return Boundary.objects.filter(parent=self)
+        else:
+            return []
 
     def schools(self):
         Institution = get_model('schools', 'Institution')
