@@ -4,7 +4,7 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.exceptions import APIException
 
-from guardian.shortcuts import assign_perm
+from guardian.shortcuts import assign_perm, remove_perm
 
 from django.contrib.auth.models import Group
 from django.contrib.auth import get_user_model
@@ -47,17 +47,16 @@ class GroupViewSet(viewsets.ModelViewSet):
     serializer_class = GroupSerializer
 
 
-class AssignPermissionView(APIView):
+class PermissionView(APIView):
     permission_classes = (HasAssignPermPermission,)
     
-    def post(self, request):
-        user_id = self.request.data.get('user_id', None)
+    def post(self, request, pk):
         institution_id = self.request.data.get('institution_id', None)
         boundary_id = self.request.data.get('boundary_id', None)
         assessment_id = self.request.data.get('assesment_id', None)
 
         try:
-            user_to_be_permitted = User.objects.get(id=user_id)
+            user_to_be_permitted = User.objects.get(id=pk)
         except Exception as ex:
             raise APIException(ex)
 
