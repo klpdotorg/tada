@@ -1,6 +1,7 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 from django.db import models
+from django.db.models.loading import get_model
 from django.contrib.contenttypes.models import ContentType
 from django.contrib.contenttypes import generic
 
@@ -49,6 +50,10 @@ class Boundary(models.Model):
             return True
         else:
             return False
+
+    def schools(self):
+        Institution = get_model('schools', 'Institution')
+        return Institution.objects.filter(boundary=self)
 
     def getModuleName(self):
         return 'boundary'
