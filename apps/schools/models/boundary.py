@@ -55,7 +55,7 @@ class Boundary(models.Model):
         else:
             return []
 
-    def schools(self):
+    def institutions(self):
         Institution = get_model('schools', 'Institution')
         return Institution.objects.filter(boundary=self)
 

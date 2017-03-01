@@ -2,12 +2,20 @@ from rest_framework import viewsets
 from rest_framework import permissions
 from rest_framework.views import APIView
 from rest_framework.response import Response
+from guardian.shortcuts import assign_perm
 
 from django.contrib.auth.models import Group
 from django.contrib.auth import get_user_model
 
 from .filters import UserFilter
 from .serializers import GroupSerializer, UserSerializer
+
+from schools.models import (
+    Assessment,
+    Boundary,
+    BoundaryCategory,
+    Institution,
+)
 
 User = get_user_model()
 
@@ -39,10 +47,28 @@ class GroupViewSet(viewsets.ModelViewSet):
 class AssignPermissionView(APIView):
     permission_classes = (permissions.HasAssignPermPermission,)
     
-    def get(self, request):
-        school_id = self.request.data.get('school_id', None)
-        district_id = self.request.data.get('district_id', None)
-        block_project_id = self.request.data.get('block_project_id', None)
-        cluster_circle_id = self.request.data.get('cluster_circle_id', None)
+    def post(self, request):
+        user_id = self.request.data.get('user_id', None)
+        # school_id = self.request.data.get('school_id', None)
+        boundary_id = self.request.data.get('boundary_id', None)
         assessment_id = self.request.data.get('assesment_id', None)
-        return Response("LOL!")
+
+        user_to_be_permitted = User.objects.get(id=user_id)
+
+        if assessment_id:
+            assessment = Assessment.objects.get(id=assessment_id)
+            assign_perm('change_assessment', user_to_be_permitted, assessment)
+
+        if boundary_id:
+            boundary = Boundary.objects.get(id=boundary_id)
+            assign_perm('change_boundary', user_to_be_permitted, boundary)
+
+            institutions_under_boundary = boundary.institutions()
+            for institution in institutions_under_boundary:
+                assign_perm('change_institution', user_to_be_permitted, institution)
+
+            child_boundaries = boundary.children()
+            for boundary in child_boundaries:
+                assign_perm('change_boundary', user_to_be_permitted, boundary)
+
+        return Response("Permissions assigned")
