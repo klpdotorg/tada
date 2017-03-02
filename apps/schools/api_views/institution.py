@@ -2,6 +2,7 @@ from rest_framework import viewsets
 from rest_framework_extensions.mixins import NestedViewSetMixin
 
 from accounts.permissions import (
+    AssessmentPermission,
     InstitutionPermission,
 )
 
@@ -43,6 +44,7 @@ from schools.models import (
 
 
 class AssessmentViewSet(NestedViewSetMixin, viewsets.ModelViewSet):
+    permission_classes = (AssessmentPermission,)
     queryset = Assessment.objects.all()
     serializer_class = AssessmentSerializer
     filter_class = AssessmentFilter
