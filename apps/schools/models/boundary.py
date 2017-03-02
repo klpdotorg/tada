@@ -11,13 +11,13 @@ class BoundaryCategory(models.Model):
     name = models.CharField(max_length=100)
 
     def __unicode__(self):
-        return '%s' % self.boundary_category
+        return '%s' % self.name
 
 class BoundaryType(models.Model):
     name = models.CharField(max_length=100)
 
     def __unicode__(self):
-        return '%s' % self.boundary_type
+        return '%s' % self.name
 
 class Boundary(models.Model):
     '''This class specifies the longitude and latitute of the area'''
@@ -47,16 +47,17 @@ class Boundary(models.Model):
             return False
 
     def get_clusters(self):
-        if self.boundary_category.boundary_category == 'district':
+        if self.boundary_category.name == 'district':
             return Boundary.objects.filter(parent__parent=self)
-        elif self.boundary_category.boundary_category in ['block', 'project']:
+        elif self.boundary_category.name in ['block', 'project']:
             return Boundary.objects.filter(parent=self)
         else:
             return Boundary.objects.filter(id=self)
 
     def get_institutions(self):
         Institution = get_model('schools', 'Institution')
-        return Institution.objects.filter(boundary=self)
+        clusters = self.get_clusters()
+        return Institution.objects.filter(boundary__in=clusters)
 
     def getModuleName(self):
         return 'boundary'
