@@ -1,9 +1,10 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 from django.db import models
+from django.db.models import Q
 from django.db.models.loading import get_model
-from django.contrib.contenttypes.models import ContentType
 from django.contrib.contenttypes import generic
+from django.contrib.contenttypes.models import ContentType
 
 
 class BoundaryCategory(models.Model):
