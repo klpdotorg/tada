@@ -46,17 +46,15 @@ class Boundary(models.Model):
         else:
             return False
 
-    def children(self):
+    def get_clusters(self):
         if self.boundary_category.boundary_category == 'district':
-            return Boundary.objects.filter(
-                Q(parent=self) | Q(parent__parent=self)
-            )
+            return Boundary.objects.filter(parent__parent=self)
         elif self.boundary_category.boundary_category in ['block', 'project']:
             return Boundary.objects.filter(parent=self)
         else:
-            return []
+            return Boundary.objects.filter(id=self)
 
-    def institutions(self):
+    def get_institutions(self):
         Institution = get_model('schools', 'Institution')
         return Institution.objects.filter(boundary=self)
 

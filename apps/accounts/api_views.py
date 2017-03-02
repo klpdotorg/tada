@@ -4,7 +4,11 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.exceptions import APIException
 
-from guardian.shortcuts import assign_perm, remove_perm
+from guardian.shortcuts import (
+    assign_perm,
+    get_objects_for_user,
+    remove_perm
+)
 
 from django.contrib.auth.models import Group
 from django.contrib.auth import get_user_model
@@ -97,12 +101,12 @@ class PermissionView(APIView):
                 user_to_be_permitted, boundary_id, 'boundary')
 
             # Give institution edit rights under the assigned boundary.
-            institutions_under_boundary = boundary.institutions()
+            institutions_under_boundary = boundary.get_institutions()
             for institution in institutions_under_boundary:
                 assign_perm('change_institution', user_to_be_permitted, institution)
 
             # Give boundary edit rights for all boundaries under the parent one.
-            child_boundaries = boundary.children()
+            child_boundaries = boundary.get_clusters()
             for boundary in child_boundaries:
                 assign_perm('change_boundary', user_to_be_permitted, boundary)
 
