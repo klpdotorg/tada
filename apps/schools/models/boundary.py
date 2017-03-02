@@ -8,13 +8,13 @@ from django.contrib.contenttypes.models import ContentType
 
 
 class BoundaryCategory(models.Model):
-    boundary_category = models.CharField(max_length=100)
+    name = models.CharField(max_length=100)
 
     def __unicode__(self):
         return '%s' % self.boundary_category
 
 class BoundaryType(models.Model):
-    boundary_type = models.CharField(max_length=100)
+    name = models.CharField(max_length=100)
 
     def __unicode__(self):
         return '%s' % self.boundary_type
