@@ -23,11 +23,29 @@ class InstitutionPermission(BasePermission):
     def has_object_permission(self, request, view, obj):
         if request.method in permissions.SAFE_METHODS:
             return True
-        return request.user.has_perm('change_institution', obj)
+        else:
+            return request.user.has_perm('change_institution', obj)
 
     def has_permission(self, request, view):
         if request.method in permissions.SAFE_METHODS:
             return True
-        if request.user.is_superuser:
+        elif request.user.is_superuser:
             return True
-        return True
+        else:
+            return request.user.has_perm('change_institution')
+
+
+class AssessmentPermission(BasePermission):
+    def has_object_permission(self, request, view, obj):
+        if request.method in permissions.SAFE_METHODS:
+            return True
+        else:
+            return request.user.has_perm('change_assessment', obj)
+
+    def has_permission(self, request, view):
+        if request.method in permissions.SAFE_METHODS:
+            return True
+        elif request.user.is_superuser:
+            return True
+        else:
+            return request.user.has_perm('change_assessment')
