@@ -49,7 +49,31 @@ class GroupViewSet(viewsets.ModelViewSet):
 
 class PermissionView(APIView):
     permission_classes = (HasAssignPermPermission,)
-    
+
+    def _assign_permission(self, model_id, model_type):
+        app_name = "schools"
+        change_permission = "change_" + model_type
+        global_change_permission = app_name + "." + change_permission
+
+        try:
+            if model_type == 'institution':
+                obj = Institution.objects.get(id=model_id)
+            elif model_type == 'assessment':
+                obj = Assessment.objects.get(id=model_id)
+            elif model_type == 'boundary':
+                obj = Boundary.objects.get(id=model_id)
+            else:
+                raise APIException(
+                    "Please specify an institution_id, assessment_id and / or boundary_id"
+                )
+        except Exception as ex:
+            raise APIException(ex)
+
+        assign_perm(global_change_permission, user_to_be_permitted)
+        assign_perm(change_permission, user_to_be_permitted, obj)
+
+        return obj
+
     def post(self, request, pk):
         institution_id = self.request.data.get('institution_id', None)
         boundary_id = self.request.data.get('boundary_id', None)
@@ -61,33 +85,23 @@ class PermissionView(APIView):
             raise APIException(ex)
 
         if institution_id:
-            try:
-                institution = Institution.objects.get(id=institution_id)
-            except Exception as ex:
-                raise APIException(ex)
-            assign_perm('schools.change_institution', user_to_be_permitted)
-            assign_perm('change_institution', user_to_be_permitted, institution)
+            institution = self._assign_permission(
+                user_to_be_permitted, institution_id, 'institution')
 
         if assessment_id:
-            try:
-                assessment = Assessment.objects.get(id=assessment_id)
-            except Exception as ex:
-                raise APIException(ex)
-            assign_perm('change_assessment', user_to_be_permitted, assessment)
+            assessment = self._assign_permission(
+                user_to_be_permitted, assessment_id, 'assessment')
 
         if boundary_id:
-            try:
-                boundary = Boundary.objects.get(id=boundary_id)
-            except Exception as ex:
-                raise APIException(ex)
-            assign_perm('change_boundary', user_to_be_permitted, boundary)
+            boundary = self._assign_permission(
+                user_to_be_permitted, boundary_id, 'boundary')
 
             # Give institution edit rights under the assigned boundary.
-            assign_perm('schools.change_institution', user_to_be_permitted)
             institutions_under_boundary = boundary.institutions()
             for institution in institutions_under_boundary:
                 assign_perm('change_institution', user_to_be_permitted, institution)
 
+            # Give boundary edit rights for all boundaries under the parent one.
             child_boundaries = boundary.children()
             for boundary in child_boundaries:
                 assign_perm('change_boundary', user_to_be_permitted, boundary)
