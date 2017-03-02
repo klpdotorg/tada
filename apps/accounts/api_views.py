@@ -65,7 +65,7 @@ class PermissionView(APIView):
                 institution = Institution.objects.get(id=institution_id)
             except Exception as ex:
                 raise APIException(ex)
-            assign_perm('change_institution', user_to_be_permitted)
+            assign_perm('schools.change_institution', user_to_be_permitted)
             assign_perm('change_institution', user_to_be_permitted, institution)
 
         if assessment_id:
@@ -83,7 +83,7 @@ class PermissionView(APIView):
             assign_perm('change_boundary', user_to_be_permitted, boundary)
 
             # Give institution edit rights under the assigned boundary.
-            assign_perm('change_institution', user_to_be_permitted)
+            assign_perm('schools.change_institution', user_to_be_permitted)
             institutions_under_boundary = boundary.institutions()
             for institution in institutions_under_boundary:
                 assign_perm('change_institution', user_to_be_permitted, institution)
