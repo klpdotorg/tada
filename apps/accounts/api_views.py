@@ -57,7 +57,6 @@ class PermissionView(APIView):
     def _assign_permission(self, model_id, model_type):
         app_name = "schools"
         change_permission = "change_" + model_type
-        global_change_permission = app_name + "." + change_permission
 
         try:
             if model_type == 'institution':
@@ -73,10 +72,31 @@ class PermissionView(APIView):
         except Exception as ex:
             raise APIException(ex)
 
-        assign_perm(global_change_permission, user_to_be_permitted)
         assign_perm(change_permission, user_to_be_permitted, obj)
 
         return obj
+
+    def get(self, request, pk):
+        try:
+            permitted_user = User.objects.get(id=pk)
+        except Exception as ex:
+            raise APIException(ex)
+
+        response = {}
+
+        response['assessments'] = get_objects_for_user(
+            permitted_user, "schools.change_assessment"
+        ).values_list('id', flat=True)
+
+        response['boundaries'] = get_objects_for_user(
+            permitted_user, "schools.change_boundary"
+        ).values_list('id', flat=True)
+
+        response['institutions'] = get_objects_for_user(
+            permitted_user, "schools.change_institution"
+        ).values_list('id', flat=True)
+
+        return Response(response)
 
     def post(self, request, pk):
         institution_id = self.request.data.get('institution_id', None)
