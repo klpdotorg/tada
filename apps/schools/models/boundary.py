@@ -32,6 +32,12 @@ class Boundary(models.Model):
 
     class Meta:
         ordering = ['name']
+        permissions = (
+            ('add_school', 'Add School'),
+            ('add_student', 'Add Student'),
+            ('add_staff', 'Add Staff'),
+            ('add_class', 'Add Class'),
+        )
 
     def __unicode__(self):
         return '%s' % self.name
