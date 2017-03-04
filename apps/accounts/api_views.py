@@ -63,8 +63,8 @@ class PermissionView(APIView):
                 obj = Institution.objects.get(id=model_id)
             elif model_type == 'assessment':
                 obj = Assessment.objects.get(id=model_id)
-            elif model_type == 'boundary':
-                obj = Boundary.objects.get(id=model_id)
+            # elif model_type == 'boundary':
+            #     obj = Boundary.objects.get(id=model_id)
             else:
                 raise APIException(
                     "Please specify an institution_id, assessment_id and / or boundary_id"
@@ -117,17 +117,20 @@ class PermissionView(APIView):
                 user_to_be_permitted, assessment_id, 'assessment')
 
         if boundary_id:
-            boundary = self._assign_permission(
-                user_to_be_permitted, boundary_id, 'boundary')
+            try:
+                boundary = Boundary.objects.get(id=boundary_id)
+            except Exception as ex:
+                raise APIException(ex)
 
-            # Give institution edit rights under the assigned boundary.
             institutions_under_boundary = boundary.get_institutions()
             for institution in institutions_under_boundary:
                 assign_perm('change_institution', user_to_be_permitted, institution)
 
-            # Give boundary edit rights for all boundaries under the parent one.
-            child_boundaries = boundary.get_clusters()
-            for boundary in child_boundaries:
-                assign_perm('change_boundary', user_to_be_permitted, boundary)
+            child_clusters = boundary.get_clusters()
+            for cluster in child_clusters:
+                assign_perm('add_class', user_to_be_permitted, cluster)
+                assign_perm('add_school', user_to_be_permitted, cluster)
+                assign_perm('add_student', user_to_be_permitted, cluster)
+                assign_perm('add_staff', user_to_be_permitted, cluster)
 
         return Response("Permissions assigned")
