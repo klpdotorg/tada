@@ -129,7 +129,7 @@ class PermissionView(APIView):
             child_clusters = boundary.get_clusters()
             for cluster in child_clusters:
                 assign_perm('add_class', user_to_be_permitted, cluster)
-                assign_perm('add_school', user_to_be_permitted, cluster)
+                assign_perm('add_institution', user_to_be_permitted, cluster)
                 assign_perm('add_student', user_to_be_permitted, cluster)
                 assign_perm('add_staff', user_to_be_permitted, cluster)
 
