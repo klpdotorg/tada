@@ -34,12 +34,14 @@ class UserSerializer(serializers.ModelSerializer):
         )
 
     def update(self, instance, validated_data):
+        user = instance
         group_name = validated_data.pop('group', None)
 
         if group_name:
             try:
+                user.groups.clear()
                 group = Group.objects.get(name=group_name)
-                group.user_set.add(instance)
+                group.user_set.add(user)
             except:
                 raise ValidationError(group_name + " not found.")
 
