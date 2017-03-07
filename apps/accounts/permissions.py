@@ -89,7 +89,7 @@ class StudentPermission(BasePermission):
         elif request.user.is_superuser:
             return True
         elif request.method == 'POST':
-            studentgroup_id = view.kwargs.get('parent_lookup_studentgroups':None)
+            studentgroup_id = view.kwargs.get('parent_lookup_studentgroups', None)
             try:
                 studentgroup = StudentGroup.objects.get(id=studentgroup_id)
                 boundary = studentgroup.institution.boundary
