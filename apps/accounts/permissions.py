@@ -6,6 +6,14 @@ from django.contrib.auth.models import Group
 from schools.models import Boundary
 
 
+class AssessmentPermission(BasePermission):
+    def has_object_permission(self, request, view, obj):
+        if request.method in permissions.SAFE_METHODS:
+            return True
+        else:
+            return request.user.has_perm('change_assessment', obj)
+
+
 class HasAssignPermPermission(BasePermission):
     def has_permission(self, request, view):
         GROUPS_ALLOWED = [u'tada_admin',u'tada_dee']
@@ -42,12 +50,3 @@ class InstitutionPermission(BasePermission):
              return request.user.has_perm('add_institution', boundary)
         else:
             return True
-
-
-class AssessmentPermission(BasePermission):
-    def has_object_permission(self, request, view, obj):
-        if request.method in permissions.SAFE_METHODS:
-            return True
-        else:
-            return request.user.has_perm('change_assessment', obj)
-
