@@ -125,8 +125,12 @@ class PermissionView(APIView):
             institutions_under_boundary = boundary.get_institutions()
             for institution in institutions_under_boundary:
                 assign_perm('change_institution', user_to_be_permitted, institution)
+                for staff in institution.staff_set.all():
+                    assign_perm('change_staff', user_to_be_permitted, staff)
                 for studentgroup in institution.studentgroup_set.all():
                     assign_perm('change_studentgroup', user_to_be_permitted, studentgroup)
+                    for student is studentgroup.objects.all():
+                        assign_perm('change_student', user_to_be_permitted, student)
 
             child_clusters = boundary.get_clusters()
             for cluster in child_clusters:
