@@ -6,15 +6,22 @@ from rest_framework import generics,viewsets
 from rest_framework_extensions.mixins import NestedViewSetMixin
 from rest_framework_bulk import BulkCreateModelMixin, ListBulkCreateUpdateDestroyAPIView
 
+from accounts.permissions import (
+    StudentPermission,
+    StudentGroupPermission,
+)
+
 from schools.filters import (
     StudentFilter,
     StudentGroupFilter
 )
+
 from schools.serializers import (
     StudentSerializer,
     StudentGroupSerializer,
     StudentStudentGroupSerializer
 )
+
 from schools.models import (
     Student,
     StudentGroup,
@@ -23,6 +30,7 @@ from schools.models import (
 
 
 class StudentViewSet(NestedViewSetMixin, BulkCreateModelMixin, viewsets.ModelViewSet):
+    permission_classes = (StudentPermission,)
     queryset = Student.objects.all()
     serializer_class = StudentSerializer
     filter_class = StudentFilter
@@ -43,6 +51,7 @@ class StudentViewSet(NestedViewSetMixin, BulkCreateModelMixin, viewsets.ModelVie
 
 
 class StudentGroupViewSet(NestedViewSetMixin, viewsets.ModelViewSet):
+    permission_classes = (StudentGroupPermission,)
     queryset = StudentGroup.objects.all()
     serializer_class = StudentGroupSerializer
     filter_class = StudentGroupFilter

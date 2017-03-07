@@ -3,7 +3,7 @@ from rest_framework.permissions import BasePermission
 
 from django.contrib.auth.models import Group
 
-from schools.models import Boundary
+from schools.models import Boundary, Institution, StudentGroup
 
 
 class AssessmentPermission(BasePermission):
@@ -48,5 +48,53 @@ class InstitutionPermission(BasePermission):
              except:
                  return False
              return request.user.has_perm('add_institution', boundary)
+        else:
+            return True
+
+
+class StudentGroupPermission(BasePermission):
+    def has_object_permission(self, request, view, obj):
+        if request.method in permissions.SAFE_METHODS:
+            return True
+        else:
+            return request.user.has_perm('change_studentgroup', obj)
+
+    def has_permission(self, request, view):
+        if request.method in permissions.SAFE_METHODS:
+            return True
+        elif request.user.is_superuser:
+            return True
+        elif request.method == 'POST':
+             institution_id = request.data.get('institution', None)
+             try:
+                 institution = Institution.objects.get(id=institution_id)
+                 boundary = institution.boundary
+             except:
+                 return False
+             return request.user.has_perm('add_studentgroup', boundary)
+        else:
+            return True
+
+
+class StudentPermission(BasePermission):
+    def has_object_permission(self, request, view, obj):
+        if request.method in permissions.SAFE_METHODS:
+            return True
+        else:
+            return request.user.has_perm('change_student', obj)
+
+    def has_permission(self, request, view):
+        if request.method in permissions.SAFE_METHODS:
+            return True
+        elif request.user.is_superuser:
+            return True
+        elif request.method == 'POST':
+            studentgroup_id = view.kwargs.get('parent_lookup_studentgroups':None)
+            try:
+                studentgroup = StudentGroup.objects.get(id=studentgroup_id)
+                boundary = studentgroup.institution.boundary
+            except:
+                return False
+            return request.user.has_perm('add_student', boundary)
         else:
             return True
