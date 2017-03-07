@@ -42,12 +42,12 @@ class InstitutionPermission(BasePermission):
         elif request.user.is_superuser:
             return True
         elif request.method == 'POST':
-             boundary_id = request.data.get('boundary', None)
-             try:
-                 boundary = Boundary.objects.get(id=boundary_id)
-             except:
-                 return False
-             return request.user.has_perm('add_institution', boundary)
+            boundary_id = request.data.get('boundary', None)
+            try:
+                boundary = Boundary.objects.get(id=boundary_id)
+            except:
+                return False
+            return request.user.has_perm('add_institution', boundary)
         else:
             return True
 
@@ -65,13 +65,13 @@ class StudentGroupPermission(BasePermission):
         elif request.user.is_superuser:
             return True
         elif request.method == 'POST':
-             institution_id = request.data.get('institution', None)
-             try:
-                 institution = Institution.objects.get(id=institution_id)
-                 boundary = institution.boundary
-             except:
-                 return False
-             return request.user.has_perm('add_studentgroup', boundary)
+            institution_id = request.data.get('institution', None)
+            try:
+                institution = Institution.objects.get(id=institution_id)
+                boundary = institution.boundary
+            except:
+                return False
+            return request.user.has_perm('add_studentgroup', boundary)
         else:
             return True
 
@@ -96,5 +96,29 @@ class StudentPermission(BasePermission):
             except:
                 return False
             return request.user.has_perm('add_student', boundary)
+        else:
+            return True
+
+
+class StaffPermission(BasePermission):
+    def has_object_permission(self, request, view, obj):
+        if request.method in permissions.SAFE_METHODS:
+            return True
+        else:
+            return request.user.has_perm('change_staff', obj)
+
+    def has_permission(self, request, view):
+        if request.method in permissions.SAFE_METHODS:
+            return True
+        elif request.user.is_superuser:
+            return True
+        elif request.method == 'POST':
+            institution_id = request.data.get('institution', None)
+            try:
+                institution = Institution.objects.get(id=institution_id)
+                boundary = institution.boundary
+            except:
+                return False
+            return request.user.has_perm('add_staff', boundary)
         else:
             return True

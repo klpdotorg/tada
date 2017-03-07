@@ -4,6 +4,7 @@ from rest_framework_extensions.mixins import NestedViewSetMixin
 from accounts.permissions import (
     AssessmentPermission,
     InstitutionPermission,
+    StaffPermission,
 )
 
 from schools.filters import (
@@ -101,6 +102,7 @@ class QuestionViewSet(NestedViewSetMixin, viewsets.ModelViewSet):
 
 
 class StaffViewSet(viewsets.ModelViewSet):
+    permission_classes = (StaffPermission,)
     queryset = Staff.objects.all()
     serializer_class = StaffSerializer
 
