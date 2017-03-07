@@ -36,7 +36,7 @@ class Boundary(models.Model):
             ('add_institution', 'Add Institution'),
             ('add_student', 'Add Student'),
             ('add_staff', 'Add Staff'),
-            ('add_class', 'Add Class'),
+            ('add_studentgroup', 'Add StudentGroup'),
         )
 
     def __unicode__(self):
