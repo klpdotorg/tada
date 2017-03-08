@@ -20,6 +20,12 @@ class TadaBasePermission(BasePermission):
         else:
             return False
 
+    def has_permission(self, request, view):
+        if self.is_user_permitted(request):
+            return True
+        else:
+            return False
+
 
 class AssessmentPermission(TadaBasePermission):
     def has_object_permission(self, request, view, obj):
