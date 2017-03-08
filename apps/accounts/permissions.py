@@ -6,9 +6,24 @@ from django.contrib.auth.models import Group
 from schools.models import Boundary, Institution, StudentGroup
 
 
-class AssessmentPermission(BasePermission):
-    def has_object_permission(self, request, view, obj):
+class TadaBasePermission(BasePermission):
+    def is_user_permitted(self, request):
+        GROUPS_ALLOWED = [u'tada_admin']
+        groups = Group.objects.filter(name__in=GROUPS_ALLOWED)
+
         if request.method in permissions.SAFE_METHODS:
+            return True
+        elif request.user.is_superuser:
+            return True
+        elif request.user.groups.filter(id__in=groups).exists():
+            return True
+        else:
+            return False
+
+
+class AssessmentPermission(TadaBasePermission):
+    def has_object_permission(self, request, view, obj):
+        if self.is_user_permitted(request):
             return True
         else:
             return request.user.has_perm('change_assessment', obj)
@@ -29,17 +44,15 @@ class HasAssignPermPermission(BasePermission):
             return True
 
 
-class InstitutionPermission(BasePermission):
+class InstitutionPermission(TadaBasePermission):
     def has_object_permission(self, request, view, obj):
-        if request.method in permissions.SAFE_METHODS:
+        if self.is_user_permitted(request):
             return True
         else:
             return request.user.has_perm('change_institution', obj)
 
     def has_permission(self, request, view):
-        if request.method in permissions.SAFE_METHODS:
-            return True
-        elif request.user.is_superuser:
+        if self.is_user_permitted(request):
             return True
         elif request.method == 'POST':
             boundary_id = request.data.get('boundary', None)
@@ -52,17 +65,15 @@ class InstitutionPermission(BasePermission):
             return True
 
 
-class StudentGroupPermission(BasePermission):
+class StudentGroupPermission(TadaBasePermission):
     def has_object_permission(self, request, view, obj):
-        if request.method in permissions.SAFE_METHODS:
+        if self.is_user_permitted(request):
             return True
         else:
             return request.user.has_perm('change_studentgroup', obj)
 
     def has_permission(self, request, view):
-        if request.method in permissions.SAFE_METHODS:
-            return True
-        elif request.user.is_superuser:
+        if self.is_user_permitted(request):
             return True
         elif request.method == 'POST':
             institution_id = request.data.get('institution', None)
@@ -75,17 +86,15 @@ class StudentGroupPermission(BasePermission):
             return True
 
 
-class StudentPermission(BasePermission):
+class StudentPermission(TadaBasePermission):
     def has_object_permission(self, request, view, obj):
-        if request.method in permissions.SAFE_METHODS:
+        if self.is_user_permitted(request):
             return True
         else:
             return request.user.has_perm('change_student', obj)
 
     def has_permission(self, request, view):
-        if request.method in permissions.SAFE_METHODS:
-            return True
-        elif request.user.is_superuser:
+        if self.is_user_permitted(request):
             return True
         elif request.method == 'POST':
             studentgroup_id = view.kwargs.get('parent_lookup_studentgroups', None)
@@ -105,17 +114,15 @@ class StudentPermission(BasePermission):
             return True
 
 
-class StaffPermission(BasePermission):
+class StaffPermission(TadaBasePermission):
     def has_object_permission(self, request, view, obj):
-        if request.method in permissions.SAFE_METHODS:
+        if self.is_user_permitted(request):
             return True
         else:
             return request.user.has_perm('change_staff', obj)
 
     def has_permission(self, request, view):
-        if request.method in permissions.SAFE_METHODS:
-            return True
-        elif request.user.is_superuser:
+        if self.is_user_permitted(request):
             return True
         elif request.method == 'POST':
             institution_id = request.data.get('institution', None)
