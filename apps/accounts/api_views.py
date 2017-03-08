@@ -63,11 +63,9 @@ class PermissionView(APIView):
                 obj = Institution.objects.get(id=model_id)
             elif model_type == 'assessment':
                 obj = Assessment.objects.get(id=model_id)
-            # elif model_type == 'boundary':
-            #     obj = Boundary.objects.get(id=model_id)
             else:
                 raise APIException(
-                    "Please specify an institution_id, assessment_id and / or boundary_id"
+                    "Please specify an institution_id or assessment_id"
                 )
         except Exception as ex:
             raise APIException(ex)
@@ -85,11 +83,9 @@ class PermissionView(APIView):
                 obj = Institution.objects.get(id=model_id)
             elif model_type == 'assessment':
                 obj = Assessment.objects.get(id=model_id)
-            # elif model_type == 'boundary':
-            #     obj = Boundary.objects.get(id=model_id)
             else:
                 raise APIException(
-                    "Please specify an institution_id, assessment_id and / or boundary_id"
+                    "Please specify an institution_id or assessment_id"
                 )
         except Exception as ex:
             raise APIException(ex)
@@ -134,6 +130,9 @@ class PermissionView(APIView):
         if institution_id:
             institution = self._assign_permission(
                 user_to_be_permitted, institution_id, 'institution')
+            assign_perm('add_studentgroup', user_to_be_permitted, institution)
+            assign_perm('add_student', user_to_be_permitted, institution)
+            assign_perm('add_staff', user_to_be_permitted, institution)
 
         if assessment_id:
             assessment = self._assign_permission(
@@ -148,6 +147,10 @@ class PermissionView(APIView):
             institutions_under_boundary = boundary.get_institutions()
             for institution in institutions_under_boundary:
                 assign_perm('change_institution', user_to_be_permitted, institution)
+                assign_perm('add_studentgroup', user_to_be_permitted, institution)
+                assign_perm('add_student', user_to_be_permitted, institution)
+                assign_perm('add_staff', user_to_be_permitted, institution)
+
                 for staff in institution.staff_set.all():
                     assign_perm('change_staff', user_to_be_permitted, staff)
                 for studentgroup in institution.studentgroup_set.all():
@@ -157,10 +160,7 @@ class PermissionView(APIView):
 
             child_clusters = boundary.get_clusters()
             for cluster in child_clusters:
-                assign_perm('add_studentgroup', user_to_be_permitted, cluster)
                 assign_perm('add_institution', user_to_be_permitted, cluster)
-                assign_perm('add_student', user_to_be_permitted, cluster)
-                assign_perm('add_staff', user_to_be_permitted, cluster)
 
         return Response("Permissions assigned")
 
@@ -177,6 +177,9 @@ class PermissionView(APIView):
         if institution_id:
             institution = self._unassign_permission(
                 user_to_be_permitted, institution_id, 'institution')
+            remove_perm('add_studentgroup', user_to_be_permitted, institution)
+            remove_perm('add_student', user_to_be_permitted, institution)
+            remove_perm('add_staff', user_to_be_permitted, institution)
 
         if assessment_id:
             assessment = self._unassign_permission(
@@ -191,6 +194,10 @@ class PermissionView(APIView):
             institutions_under_boundary = boundary.get_institutions()
             for institution in institutions_under_boundary:
                 remove_perm('change_institution', user_to_be_permitted, institution)
+                remove_perm('add_studentgroup', user_to_be_permitted, institution)
+                remove_perm('add_student', user_to_be_permitted, institution)
+                remove_perm('add_staff', user_to_be_permitted, institution)
+
                 for staff in institution.staff_set.all():
                     remove_perm('change_staff', user_to_be_permitted, staff)
                 for studentgroup in institution.studentgroup_set.all():
@@ -200,10 +207,7 @@ class PermissionView(APIView):
 
             child_clusters = boundary.get_clusters()
             for cluster in child_clusters:
-                remove_perm('add_studentgroup', user_to_be_permitted, cluster)
                 remove_perm('add_institution', user_to_be_permitted, cluster)
-                remove_perm('add_student', user_to_be_permitted, cluster)
-                remove_perm('add_staff', user_to_be_permitted, cluster)
 
         return Response("Permissions unassigned")
 
