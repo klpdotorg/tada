@@ -152,7 +152,7 @@ class PermissionView(APIView):
                     assign_perm('change_staff', user_to_be_permitted, staff)
                 for studentgroup in institution.studentgroup_set.all():
                     assign_perm('change_studentgroup', user_to_be_permitted, studentgroup)
-                    for student in studentgroup.objects.all():
+                    for student in studentgroup.students.all():
                         assign_perm('change_student', user_to_be_permitted, student)
 
             child_clusters = boundary.get_clusters()
@@ -164,7 +164,7 @@ class PermissionView(APIView):
 
         return Response("Permissions assigned")
 
-    def destroy(self, request, pk):
+    def delete(self, request, pk):
         institution_id = self.request.data.get('institution_id', None)
         boundary_id = self.request.data.get('boundary_id', None)
         assessment_id = self.request.data.get('assesment_id', None)
@@ -195,7 +195,7 @@ class PermissionView(APIView):
                     remove_perm('change_staff', user_to_be_permitted, staff)
                 for studentgroup in institution.studentgroup_set.all():
                     remove_perm('change_studentgroup', user_to_be_permitted, studentgroup)
-                    for student in studentgroup.objects.all():
+                    for student in studentgroup.students.all():
                         remove_perm('change_student', user_to_be_permitted, student)
 
             child_clusters = boundary.get_clusters()
@@ -204,4 +204,6 @@ class PermissionView(APIView):
                 remove_perm('add_institution', user_to_be_permitted, cluster)
                 remove_perm('add_student', user_to_be_permitted, cluster)
                 remove_perm('add_staff', user_to_be_permitted, cluster)
+
+        return Response("Permissions unassigned")
 

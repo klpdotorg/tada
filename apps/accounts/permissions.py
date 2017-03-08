@@ -90,9 +90,16 @@ class StudentPermission(BasePermission):
             return True
         elif request.method == 'POST':
             studentgroup_id = view.kwargs.get('parent_lookup_studentgroups', None)
+            institution_id = view.kwargs.get('parent_lookup_studentgroups__institution', None)
             try:
-                studentgroup = StudentGroup.objects.get(id=studentgroup_id)
-                boundary = studentgroup.institution.boundary
+                if institution_id:
+                    institution = Institution.objects.get(id=institution_id)
+                    boundary = institution.boundary
+                elif studentgroup_id:
+                    studentgroup = StudentGroup.objects.get(id=studentgroup_id)
+                    boundary = studentgroup.institution.boundary
+                else:
+                    return False
             except:
                 return False
             return request.user.has_perm('add_student', boundary)
