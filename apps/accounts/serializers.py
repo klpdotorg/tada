@@ -4,8 +4,11 @@ from rest_framework.exceptions import ValidationError
 from django.contrib.auth.models import Group
 from django.contrib.auth import get_user_model
 
-User = get_user_model()
+from guardian.shortcuts import get_objects_for_user
 
+from schools.models import Boundary
+
+User = get_user_model()
 
 class GroupSerializer(serializers.ModelSerializer):    
     class Meta:
@@ -14,6 +17,7 @@ class GroupSerializer(serializers.ModelSerializer):
 
 
 class UserSerializer(serializers.ModelSerializer):
+    permissions = serializers.SerializerMethodField()
 
     group = serializers.CharField(write_only=True, allow_blank=True)
     groups = GroupSerializer(many=True, required=False)
@@ -27,6 +31,7 @@ class UserSerializer(serializers.ModelSerializer):
             'groups',
             'first_name',
             'last_name',
+            'permissions',
         )
         read_only_fields = (
             User.USERNAME_FIELD,
@@ -50,3 +55,22 @@ class UserSerializer(serializers.ModelSerializer):
         instance.save()
 
         return instance
+
+    def get_permissions(self, obj):
+        user = obj
+        response = {}
+
+        response['assessments'] = get_objects_for_user(
+            user, "schools.change_assessment"
+        ).values_list('id', flat=True)
+
+        response['boundaries'] = get_objects_for_user(
+            user, "add_institution", klass=Boundary
+        ).values_list('id', flat=True)
+
+        response['institutions'] = get_objects_for_user(
+            user, "schools.change_institution"
+        ).values_list('id', flat=True)
+
+        return response
+
