@@ -60,15 +60,7 @@ class PermissionView(APIView):
         except Exception as ex:
             raise APIException(ex)
         assign_perm('change_institution', user_to_be_permitted, institution)
-        assign_perm('add_studentgroup', user_to_be_permitted, institution)
-        assign_perm('add_student', user_to_be_permitted, institution)
-        assign_perm('add_staff', user_to_be_permitted, institution)
-        for staff in institution.staff_set.all():
-            assign_perm('change_staff', user_to_be_permitted, staff)
-            for studentgroup in institution.studentgroup_set.all():
-                assign_perm('change_studentgroup', user_to_be_permitted, studentgroup)
-                for student in studentgroup.students.all():
-                    assign_perm('change_student', user_to_be_permitted, student)
+        assign_perm('crud_student_class_staff', user_to_be_permitted, institution)
 
     def assign_boundary_permissions(self, user_to_be_permitted, boundary_id):
         try:
@@ -97,15 +89,7 @@ class PermissionView(APIView):
         except Exception as ex:
             raise APIException(ex)
         remove_perm('change_institution', user_to_be_denied, institution)
-        remove_perm('add_studentgroup', user_to_be_denied, institution)
-        remove_perm('add_student', user_to_be_denied, institution)
-        remove_perm('add_staff', user_to_be_denied, institution)
-        for staff in institution.staff_set.all():
-            remove_perm('change_staff', user_to_be_denied, staff)
-            for studentgroup in institution.studentgroup_set.all():
-                remove_perm('change_studentgroup', user_to_be_denied, studentgroup)
-                for student in studentgroup.students.all():
-                    remove_perm('change_student', user_to_be_denied, student)
+        remove_perm('crud_student_class_staff', user_to_be_permitted, institution)
 
     def unassign_boundary_permissions(self, user_to_be_denied, boundary_id):
         try:

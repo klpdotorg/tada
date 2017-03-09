@@ -50,7 +50,7 @@ class HasAssignPermPermission(BasePermission):
             return True
 
 
-class InstitutionPermission(TadaBasePermission):
+class InstitutionCreateUpdatePermission(TadaBasePermission):
     def has_object_permission(self, request, view, obj):
         if self.is_user_permitted(request):
             return True
@@ -63,7 +63,7 @@ class InstitutionPermission(TadaBasePermission):
         elif request.method == 'POST':
             boundary_id = request.data.get('boundary', None)
             try:
-                boundary = Boundary.objects.get(id=boundary_id)
+                boundary = Boundary.objects.get(id=boundary_id)in
             except:
                 return False
             return request.user.has_perm('add_institution', boundary)
@@ -71,71 +71,14 @@ class InstitutionPermission(TadaBasePermission):
             return True
 
 
-class StudentGroupPermission(TadaBasePermission):
-    def has_object_permission(self, request, view, obj):
-        if self.is_user_permitted(request):
-            return True
-        else:
-            return request.user.has_perm('change_studentgroup', obj)
-
+class WorkUnderInstitutionPermission(TadaBasePermission):
     def has_permission(self, request, view):
         if self.is_user_permitted(request):
             return True
-        elif request.method == 'POST':
+        else:
             institution_id = request.data.get('institution', None)
             try:
                 institution = Institution.objects.get(id=institution_id)
             except:
                 return False
-            return request.user.has_perm('add_studentgroup', institution)
-        else:
-            return True
-
-
-class StudentPermission(TadaBasePermission):
-    def has_object_permission(self, request, view, obj):
-        if self.is_user_permitted(request):
-            return True
-        else:
-            return request.user.has_perm('change_student', obj)
-
-    def has_permission(self, request, view):
-        if self.is_user_permitted(request):
-            return True
-        elif request.method == 'POST':
-            studentgroup_id = view.kwargs.get('parent_lookup_studentgroups', None)
-            institution_id = view.kwargs.get('parent_lookup_studentgroups__institution', None)
-            try:
-                if institution_id:
-                    institution = Institution.objects.get(id=institution_id)
-                elif studentgroup_id:
-                    studentgroup = StudentGroup.objects.get(id=studentgroup_id)
-                    institution = studentgroup.institution
-                else:
-                    return False
-            except:
-                return False
-            return request.user.has_perm('add_student', institution)
-        else:
-            return True
-
-
-class StaffPermission(TadaBasePermission):
-    def has_object_permission(self, request, view, obj):
-        if self.is_user_permitted(request):
-            return True
-        else:
-            return request.user.has_perm('change_staff', obj)
-
-    def has_permission(self, request, view):
-        if self.is_user_permitted(request):
-            return True
-        elif request.method == 'POST':
-            institution_id = request.data.get('institution', None)
-            try:
-                institution = Institution.objects.get(id=institution_id)
-            except:
-                return False
-            return request.user.has_perm('add_staff', institution)
-        else:
-            return True
+        return request.user.has_perm('crud_student_class_staff', institution)

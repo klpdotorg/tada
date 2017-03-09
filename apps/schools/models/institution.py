@@ -89,9 +89,7 @@ class Institution(models.Model):
     class Meta:
         ordering = ['name']
         permissions = (
-            ('add_student', 'Add Student'),
-            ('add_staff', 'Add Staff'),
-            ('add_studentgroup', 'Add StudentGroup'),
+            ('crud_student_class_staff', 'CRUD Student Class and Staff'),
         )
 
     def __unicode__(self):
