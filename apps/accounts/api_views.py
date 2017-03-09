@@ -125,7 +125,7 @@ class PermissionView(APIView):
         ).values_list('id', flat=True)
 
         response['boundaries'] = get_objects_for_user(
-            permitted_user, "schools.change_boundary"
+            permitted_user, "add_institution", klass=Boundary
         ).values_list('id', flat=True)
 
         response['institutions'] = get_objects_for_user(

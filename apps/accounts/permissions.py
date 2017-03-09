@@ -63,7 +63,7 @@ class InstitutionCreateUpdatePermission(TadaBasePermission):
         elif request.method == 'POST':
             boundary_id = request.data.get('boundary', None)
             try:
-                boundary = Boundary.objects.get(id=boundary_id)in
+                boundary = Boundary.objects.get(id=boundary_id)
             except:
                 return False
             return request.user.has_perm('add_institution', boundary)

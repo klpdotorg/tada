@@ -3,8 +3,8 @@ from rest_framework_extensions.mixins import NestedViewSetMixin
 
 from accounts.permissions import (
     AssessmentPermission,
-    InstitutionPermission,
-    StaffPermission,
+    InstitutionCreateUpdatePermission,
+    WorkUnderInstitutionPermission,
 )
 
 from schools.filters import (
@@ -68,7 +68,7 @@ class BoundaryTypeViewSet(viewsets.ModelViewSet):
 
 
 class InstitutionViewSet(viewsets.ModelViewSet):
-    permission_classes = (InstitutionPermission,)
+    permission_classes = (InstitutionCreateUpdatePermission,)
     queryset = Institution.objects.all()
     serializer_class = InstitutionSerializer
     filter_class = InstitutionFilter
@@ -102,7 +102,7 @@ class QuestionViewSet(NestedViewSetMixin, viewsets.ModelViewSet):
 
 
 class StaffViewSet(viewsets.ModelViewSet):
-    permission_classes = (StaffPermission,)
+    permission_classes = (WorkUnderInstitutionPermission,)
     queryset = Staff.objects.all()
     serializer_class = StaffSerializer
 
