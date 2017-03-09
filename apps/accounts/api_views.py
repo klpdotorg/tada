@@ -54,46 +54,79 @@ class GroupViewSet(viewsets.ModelViewSet):
 class PermissionView(APIView):
     permission_classes = (HasAssignPermPermission,)
 
-    def _assign_permission(self, model_id, model_type):
-        app_name = "schools"
-        change_permission = "change_" + model_type
-
+    def assign_institution_permissions(self, user_to_be_permitted, institution_id):
         try:
-            if model_type == 'institution':
-                obj = Institution.objects.get(id=model_id)
-            elif model_type == 'assessment':
-                obj = Assessment.objects.get(id=model_id)
-            else:
-                raise APIException(
-                    "Please specify an institution_id or assessment_id"
-                )
+            institution = Institution.objects.get(id=institution_id)
+        except Exception as ex:
+            raise APIException(ex)
+        assign_perm('change_institution', user_to_be_permitted, institution)
+        assign_perm('add_studentgroup', user_to_be_permitted, institution)
+        assign_perm('add_student', user_to_be_permitted, institution)
+        assign_perm('add_staff', user_to_be_permitted, institution)
+        for staff in institution.staff_set.all():
+            assign_perm('change_staff', user_to_be_permitted, staff)
+            for studentgroup in institution.studentgroup_set.all():
+                assign_perm('change_studentgroup', user_to_be_permitted, studentgroup)
+                for student in studentgroup.students.all():
+                    assign_perm('change_student', user_to_be_permitted, student)
+
+    def assign_boundary_permissions(self, user_to_be_permitted, boundary_id):
+        try:
+            boundary = Boundary.objects.get(id=boundary_id)
         except Exception as ex:
             raise APIException(ex)
 
-        assign_perm(change_permission, user_to_be_permitted, obj)
+        institutions_under_boundary = boundary.get_institutions()
+        for institution in institutions_under_boundary:
+            self.assign_institution_permissions(user_to_be_permitted, institution.id)
 
-        return obj
+        child_clusters = boundary.get_clusters()
+        for cluster in child_clusters:
+            assign_perm('add_institution', user_to_be_permitted, cluster)
 
-    def _unaassign_permission(self, model_id, model_type):
-        app_name = "schools"
-        change_permission = "change_" + model_type
-
+    def assign_assessment_permissions(self, user_to_be_permitted, assessment_id):
         try:
-            if model_type == 'institution':
-                obj = Institution.objects.get(id=model_id)
-            elif model_type == 'assessment':
-                obj = Assessment.objects.get(id=model_id)
-            else:
-                raise APIException(
-                    "Please specify an institution_id or assessment_id"
-                )
+            assessment = Assessment.objects.get(id=assessment_id)
+        except Exception as ex:
+            raise APIException(ex)
+        assign_perm('change_assessment', user_to_be_permitted, assessment)
+
+    def unassign_institution_permissions(self, user_to_be_denied, institution_id):
+        try:
+            institution = Institution.objects.get(id=institution_id)
+        except Exception as ex:
+            raise APIException(ex)
+        remove_perm('change_institution', user_to_be_denied, institution)
+        remove_perm('add_studentgroup', user_to_be_denied, institution)
+        remove_perm('add_student', user_to_be_denied, institution)
+        remove_perm('add_staff', user_to_be_denied, institution)
+        for staff in institution.staff_set.all():
+            remove_perm('change_staff', user_to_be_denied, staff)
+            for studentgroup in institution.studentgroup_set.all():
+                remove_perm('change_studentgroup', user_to_be_denied, studentgroup)
+                for student in studentgroup.students.all():
+                    remove_perm('change_student', user_to_be_denied, student)
+
+    def unassign_boundary_permissions(self, user_to_be_denied, boundary_id):
+        try:
+            boundary = Boundary.objects.get(id=boundary_id)
         except Exception as ex:
             raise APIException(ex)
 
-        remove_perm(change_permission, user_to_be_permitted, obj)
+        institutions_under_boundary = boundary.get_institutions()
+        for institution in institutions_under_boundary:
+            self.unassign_institution_permissions(user_to_be_denied, institution.id)
 
-        return obj
+        child_clusters = boundary.get_clusters()
+        for cluster in child_clusters:
+            remove_perm('add_institution', user_to_be_denied, cluster)
 
+    def unassign_assessment_permissions(self, user_to_be_denied, assessment_id):
+        try:
+            assessment = Assessment.objects.get(id=assessment_id)
+        except Exception as ex:
+            raise APIException(ex)
+        remove_perm('change_assessment', user_to_be_denied, assessment)
 
     def get(self, request, pk):
         try:
@@ -128,39 +161,13 @@ class PermissionView(APIView):
             raise APIException(ex)
 
         if institution_id:
-            institution = self._assign_permission(
-                user_to_be_permitted, institution_id, 'institution')
-            assign_perm('add_studentgroup', user_to_be_permitted, institution)
-            assign_perm('add_student', user_to_be_permitted, institution)
-            assign_perm('add_staff', user_to_be_permitted, institution)
+            self.assign_institution_permissions(user_to_be_permitted, institution_id)
 
         if assessment_id:
-            assessment = self._assign_permission(
-                user_to_be_permitted, assessment_id, 'assessment')
+            self.assign_assessment_permissions(user_to_be_permitted, assessment_id)
 
         if boundary_id:
-            try:
-                boundary = Boundary.objects.get(id=boundary_id)
-            except Exception as ex:
-                raise APIException(ex)
-
-            institutions_under_boundary = boundary.get_institutions()
-            for institution in institutions_under_boundary:
-                assign_perm('change_institution', user_to_be_permitted, institution)
-                assign_perm('add_studentgroup', user_to_be_permitted, institution)
-                assign_perm('add_student', user_to_be_permitted, institution)
-                assign_perm('add_staff', user_to_be_permitted, institution)
-
-                for staff in institution.staff_set.all():
-                    assign_perm('change_staff', user_to_be_permitted, staff)
-                for studentgroup in institution.studentgroup_set.all():
-                    assign_perm('change_studentgroup', user_to_be_permitted, studentgroup)
-                    for student in studentgroup.students.all():
-                        assign_perm('change_student', user_to_be_permitted, student)
-
-            child_clusters = boundary.get_clusters()
-            for cluster in child_clusters:
-                assign_perm('add_institution', user_to_be_permitted, cluster)
+            self.assign_boundary_permissions(user_to_be_permitted, boundary_id)
 
         return Response("Permissions assigned")
 
@@ -170,44 +177,18 @@ class PermissionView(APIView):
         assessment_id = self.request.data.get('assesment_id', None)
 
         try:
-            user_to_be_permitted = User.objects.get(id=pk)
+            user_to_be_denied = User.objects.get(id=pk)
         except Exception as ex:
             raise APIException(ex)
 
         if institution_id:
-            institution = self._unassign_permission(
-                user_to_be_permitted, institution_id, 'institution')
-            remove_perm('add_studentgroup', user_to_be_permitted, institution)
-            remove_perm('add_student', user_to_be_permitted, institution)
-            remove_perm('add_staff', user_to_be_permitted, institution)
+            self.unassign_institution_permissions(user_to_be_denied, institution_id)
 
         if assessment_id:
-            assessment = self._unassign_permission(
-                user_to_be_permitted, assessment_id, 'assessment')
+            self.unassign_assessment_permissions(user_to_be_denied, assessment_id)
 
         if boundary_id:
-            try:
-                boundary = Boundary.objects.get(id=boundary_id)
-            except Exception as ex:
-                raise APIException(ex)
-
-            institutions_under_boundary = boundary.get_institutions()
-            for institution in institutions_under_boundary:
-                remove_perm('change_institution', user_to_be_permitted, institution)
-                remove_perm('add_studentgroup', user_to_be_permitted, institution)
-                remove_perm('add_student', user_to_be_permitted, institution)
-                remove_perm('add_staff', user_to_be_permitted, institution)
-
-                for staff in institution.staff_set.all():
-                    remove_perm('change_staff', user_to_be_permitted, staff)
-                for studentgroup in institution.studentgroup_set.all():
-                    remove_perm('change_studentgroup', user_to_be_permitted, studentgroup)
-                    for student in studentgroup.students.all():
-                        remove_perm('change_student', user_to_be_permitted, student)
-
-            child_clusters = boundary.get_clusters()
-            for cluster in child_clusters:
-                remove_perm('add_institution', user_to_be_permitted, cluster)
+            self.unassign_boundary_permissions(user_to_be_denied, boundary_id)
 
         return Response("Permissions unassigned")
 
