@@ -20,7 +20,7 @@ class UserSerializer(serializers.ModelSerializer):
     permissions = serializers.SerializerMethodField()
 
     group = serializers.CharField(write_only=True, allow_blank=True)
-    groups = GroupSerializer(many=True, required=False)
+    groups = serializers.SerializerMethodField()
 
     class Meta:
         model = User
@@ -74,3 +74,9 @@ class UserSerializer(serializers.ModelSerializer):
 
         return response
 
+    def get_groups(self, obj):
+        user = obj
+        groups = user.groups.all().values('name')
+        if user.is_superuser:
+            groups = [{'name':'tada_admin'}]
+        return groups
