@@ -17,10 +17,9 @@ class GroupSerializer(serializers.ModelSerializer):
 
 
 class UserSerializer(serializers.ModelSerializer):
-    permissions = serializers.SerializerMethodField()
-
-    group = serializers.CharField(write_only=True, allow_blank=True)
     groups = serializers.SerializerMethodField()
+    permissions = serializers.SerializerMethodField()
+    group = serializers.CharField(write_only=True, allow_blank=True)
 
     class Meta:
         model = User
