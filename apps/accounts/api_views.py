@@ -1,8 +1,7 @@
-from rest_framework import viewsets
-from rest_framework import permissions
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.exceptions import APIException
+from rest_framework import status, generics, viewsets, permissions
 
 from guardian.shortcuts import (
     assign_perm,
@@ -13,13 +12,15 @@ from guardian.shortcuts import (
 from django.contrib.auth.models import Group
 from django.contrib.auth import get_user_model
 
+from .utils import ActionViewMixin, login_user
 from .filters import UserFilter
-from .serializers import GroupSerializer, UserSerializer
-from .permissions import (
-    HasAssignPermPermission,
-    UserPermission,
+from .permissions import HasAssignPermPermission, UserPermission
+from .serializers import (
+    GroupSerializer,
+    UserSerializer,
+    LoginSerializer,
+    TokenSerializer,
 )
-
 from schools.models import (
     Assessment,
     Boundary,
@@ -28,6 +29,26 @@ from schools.models import (
 )
 
 User = get_user_model()
+
+
+class LoginView(ActionViewMixin, generics.GenericAPIView):
+    """
+    Use this endpoint to obtain user authentication token.
+    """
+    serializer_class = LoginSerializer
+    permission_classes = (
+        permissions.AllowAny,
+    )
+
+    def _action(self, serializer):
+        token = login_user(self.request, serializer.user)
+        token_serializer_class = TokenSerializer
+        response = token_serializer_class(token).data
+        response['user_id'] = serializer.user.id
+        return Response(
+            data=response,
+            status=status.HTTP_200_OK,
+        )
 
 
 class UserViewSet(viewsets.ModelViewSet):

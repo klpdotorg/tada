@@ -3,7 +3,8 @@ from django.contrib import admin
 
 from .api_views import (
     PermissionView,
-    UserViewSet
+    UserViewSet,
+    LoginView,
 )
 
 ListCreateMapper = {
@@ -40,5 +41,6 @@ urlpatterns = patterns(
         PermissionView.as_view(),
         name='permissions_view'
     ),
+    url(r'^login/$', LoginView.as_view(), name='login'),
     url(r'^', include('djoser.urls.authtoken')),
 )
