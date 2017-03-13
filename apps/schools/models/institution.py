@@ -87,8 +87,10 @@ class Institution(models.Model):
     active = models.IntegerField(blank=True, null=True, default=2)
 
     class Meta:
-
         ordering = ['name']
+        permissions = (
+            ('crud_student_class_staff', 'CRUD Student Class and Staff'),
+        )
 
     def __unicode__(self):
         return '%s' % self.name

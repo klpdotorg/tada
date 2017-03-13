@@ -1,25 +1,23 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 from django.db import models
-from django.contrib.contenttypes.models import ContentType
+from django.db.models import Q
+from django.db.models.loading import get_model
 from django.contrib.contenttypes import generic
+from django.contrib.contenttypes.models import ContentType
 
 
 class BoundaryCategory(models.Model):
-    '''This Class stores the Boundary Category Information'''
-
-    boundary_category = models.CharField(max_length=100)
+    name = models.CharField(max_length=100)
 
     def __unicode__(self):
-        return '%s' % self.boundary_category
+        return '%s' % self.name
 
 class BoundaryType(models.Model):
-    '''This Class stores the Boundary Type Information'''
-
-    boundary_type = models.CharField(max_length=100)
+    name = models.CharField(max_length=100)
 
     def __unicode__(self):
-        return '%s' % self.boundary_type
+        return '%s' % self.name
 
 class Boundary(models.Model):
     '''This class specifies the longitude and latitute of the area'''
@@ -33,9 +31,10 @@ class Boundary(models.Model):
     active = models.IntegerField(blank=True, null=True, default=2)
 
     class Meta:
-        """ Used For ordering """
-
         ordering = ['name']
+        permissions = (
+            ('add_institution', 'Add Institution'),
+        )
 
     def __unicode__(self):
         return '%s' % self.name
@@ -49,6 +48,19 @@ class Boundary(models.Model):
             return True
         else:
             return False
+
+    def get_clusters(self):
+        if self.boundary_category.name == 'district':
+            return Boundary.objects.filter(parent__parent=self.id)
+        elif self.boundary_category.name in ['block', 'project']:
+            return Boundary.objects.filter(parent=self.id)
+        else:
+            return Boundary.objects.filter(id=self.id)
+
+    def get_institutions(self):
+        Institution = get_model('schools', 'Institution')
+        clusters = self.get_clusters()
+        return Institution.objects.filter(boundary__in=clusters)
 
     def getModuleName(self):
         return 'boundary'
