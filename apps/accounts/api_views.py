@@ -15,7 +15,10 @@ from django.contrib.auth import get_user_model
 
 from .filters import UserFilter
 from .serializers import GroupSerializer, UserSerializer
-from .permissions import HasAssignPermPermission
+from .permissions import (
+    HasAssignPermPermission,
+    UserPermission,
+)
 
 from schools.models import (
     Assessment,
@@ -31,6 +34,7 @@ class UserViewSet(viewsets.ModelViewSet):
     queryset = User.objects.all()
     serializer_class = UserSerializer
     filter_class = UserFilter
+    permission_classes = (UserPermission,)
 
     def update(self, request, *args, **kwargs):
         partial = kwargs.pop('partial', False)

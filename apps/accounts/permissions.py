@@ -82,3 +82,11 @@ class WorkUnderInstitutionPermission(TadaBasePermission):
             except:
                 return False
         return request.user.has_perm('crud_student_class_staff', institution)
+
+
+class UserPermission(TadaBasePermission):
+    def has_object_permission(self, request, view, obj):
+        if self.is_user_permitted(request):
+            return True
+        else:
+            return request.user.id == obj.id
