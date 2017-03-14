@@ -39,14 +39,14 @@ class BoundaryTypeSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = BoundaryType
-        fields = ('id', 'boundary_type')
+        fields = ('id', 'name')
 
 
 class BoundaryCategorySerializer(serializers.ModelSerializer):
 
     class Meta:
         model = BoundaryCategory
-        fields = ('id', 'boundary_category')
+        fields = ('id', 'name')
 
 
 class InstitutionSerializer(serializers.ModelSerializer):
