@@ -6,6 +6,7 @@ from django.conf.urls import patterns, url
 
 from schools.api_views import (
     AssessmentViewSet,
+    AssessmentListViewSet,
     BoundaryViewSet,
     BoundaryCategoryViewSet,
     BoundaryTypeViewSet,
@@ -25,6 +26,7 @@ bulkrouter = BulkRouter()
 router = routers.SimpleRouter()
 nested_router = ExtendedSimpleRouter()
 
+router.register(r'assessments', AssessmentListViewSet, base_name='list_assessment')
 router.register(r'boundaries', BoundaryViewSet, base_name='boundary')
 router.register(r'boundarycategories', BoundaryCategoryViewSet, base_name='boundarycategory')
 router.register(r'boundarytypes', BoundaryTypeViewSet, base_name='boundarytype')

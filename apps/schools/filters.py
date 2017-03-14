@@ -13,7 +13,7 @@ from schools.models import (
 
 class BoundaryFilter(django_filters.FilterSet):
     category = django_filters.CharFilter(
-        name="boundary_category__boundary_category"
+        name="boundary_category__name"
     )
 
     class Meta:
@@ -36,10 +36,13 @@ class QuestionFilter(django_filters.FilterSet):
 
 
 class AssessmentFilter(django_filters.FilterSet):
+    boundary = django_filters.NumberFilter(
+        name="institutions__boundary"
+    )
 
     class Meta:
         model = Assessment
-        fields = ['name']
+        fields = ['name', 'boundary', 'active']
 
 
 class InstitutionFilter(django_filters.FilterSet):

@@ -44,6 +44,12 @@ from schools.models import (
 )
 
 
+class AssessmentListViewSet(viewsets.ReadOnlyModelViewSet):
+    queryset = Assessment.objects.all()
+    serializer_class = AssessmentSerializer
+    filter_class = AssessmentFilter
+
+
 class AssessmentViewSet(NestedViewSetMixin, viewsets.ModelViewSet):
     permission_classes = (AssessmentPermission,)
     queryset = Assessment.objects.all()
