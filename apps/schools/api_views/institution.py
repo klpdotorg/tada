@@ -22,6 +22,7 @@ from schools.filters import (
 
 from schools.serializers import (
     AssessmentSerializer,
+    AnswerInstitutionSerializer,
     BoundarySerializer,
     BoundaryCategorySerializer,
     BoundaryTypeSerializer,
@@ -38,6 +39,7 @@ from schools.models import (
     Assessment,
     AssessmentStudentGroupAssociation,
     AssessmentInstitutionAssociation,
+    AnswerInstitution,
     Boundary,
     BoundaryCategory,
     BoundaryType,
@@ -63,6 +65,13 @@ class AssessmentViewSet(NestedViewSetMixin, viewsets.ModelViewSet):
     queryset = Assessment.objects.all()
     serializer_class = AssessmentSerializer
     filter_class = AssessmentFilter
+
+
+class AnswerInstitutionViewSet(NestedViewSetMixin, viewsets.ModelViewSet):
+    # permission_classes = (AssessmentPermission,)
+    queryset = AnswerInstitution.objects.all()
+    serializer_class = AnswerInstitutionSerializer
+    # filter_class = AnswerInstitutionFilter
 
 
 class BoundaryViewSet(viewsets.ModelViewSet):

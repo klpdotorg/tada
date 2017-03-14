@@ -3,6 +3,8 @@ from rest_framework.exceptions import ValidationError
 
 from .models import (
     Assessment,
+    AnswerInstitution,
+    AnswerStudent,
     Boundary,
     BoundaryCategory,
     BoundaryType,
@@ -23,6 +25,12 @@ from rest_framework_bulk import (
     BulkListSerializer,
     BulkSerializerMixin
 )
+
+
+class AnswerInstitutionSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = AnswerInstitution
 
 
 class BoundarySerializer(serializers.ModelSerializer):
