@@ -6,7 +6,7 @@ from django.conf.urls import patterns, url
 
 from schools.api_views import (
     AssessmentViewSet,
-    # AnswerStudentViewSet,
+    AnswerStudentViewSet,
     AnswerInstitutionViewSet,
     AssessmentListViewSet,
     BoundaryViewSet,
@@ -57,26 +57,26 @@ nested_router.register(
         )
 
 ## Programmes -> Assessments -> Questions -> AnswerStudent
-# nested_router.register(
-#     r'programmes',
-#     ProgrammeViewSet,
-#     base_name='programme'
-#     ).register(
-#         r'assessments',
-#         AssessmentViewSet,
-#         base_name='assessment',
-#         parents_query_lookups=['programme']
-#         ).register(
-#             r'questions',
-#             QuestionViewSet,
-#             base_name='question',
-#             parents_query_lookups=['assessment__programme', 'assessment']
-#             ).register(
-#                 r'student-answers',
-#                 AnswerStudentViewSet,
-#                 base_name='answer_student',
-#                 parents_query_lookups=['question__assessment__programme', 'question__assessment', 'question']
-#             )
+nested_router.register(
+    r'programmes',
+    ProgrammeViewSet,
+    base_name='programme'
+    ).register(
+        r'assessments',
+        AssessmentViewSet,
+        base_name='assessment',
+        parents_query_lookups=['programme']
+        ).register(
+            r'questions',
+            QuestionViewSet,
+            base_name='question',
+            parents_query_lookups=['assessment__programme', 'assessment']
+            ).register(
+                r'student-answers',
+                AnswerStudentViewSet,
+                base_name='answer_student',
+                parents_query_lookups=['question__assessment__programme', 'question__assessment', 'question']
+            )
 
 ## Programmes -> Assessments -> Questions -> AnswerInstitution
 nested_router.register(

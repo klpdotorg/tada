@@ -33,6 +33,12 @@ class AnswerInstitutionSerializer(serializers.ModelSerializer):
         model = AnswerInstitution
 
 
+class AnswerStudentSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = AnswerStudent
+
+
 class BoundarySerializer(serializers.ModelSerializer):
 
     class Meta:
