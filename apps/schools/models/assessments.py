@@ -26,11 +26,11 @@ class Assessment(models.Model):
     start_date = models.DateField(max_length=20,
                                  default=datetime.date.today)
     end_date = models.DateField(max_length=20, default=default_end_date)
-    query = models.CharField(max_length=500, blank=True, null=True)
-    active = models.IntegerField(blank=True, null=True, default=2)
+    query = models.CharField(max_length=500, blank=True, null=True) #Shivangi, is this needed?
+    active = models.IntegerField(blank=True, null=True, default=2) #Shivangi, should this be null or blank?
     double_entry = models.BooleanField('Requires double entry',
             default=True)
-    institutions = models.ManyToManyField(
+    institutions = models.ManyToManyField( #Shivangi, why is this needed?
         'Institution',
         through='AssessmentInstitutionAssociation',
         blank=True,
@@ -66,7 +66,7 @@ class AssessmentStudentGroupAssociation(models.Model):
 
     assessment = models.ForeignKey(Assessment)
     student_group = models.ForeignKey(StudentGroup)
-    active = models.IntegerField(blank=True, null=True, default=2)
+    active = models.IntegerField(blank=True, null=True, default=2) #Shivangi, why null or blank?
 
     def save(self, *args, **kwargs):
         # custom save method
@@ -89,7 +89,7 @@ class AssessmentInstitutionAssociation(models.Model):
 
     assessment = models.ForeignKey(Assessment)
     institution = models.ForeignKey(Institution)
-    active = models.IntegerField(blank=True, null=True, default=2)
+    active = models.IntegerField(blank=True, null=True, default=2) #Shivangi, why null or blank?
 
     class Meta:
 
@@ -109,7 +109,8 @@ class Question(models.Model):
     grade = models.CharField(max_length=100, blank=True, null=True)
     order = models.IntegerField(blank=True, null=True)
     double_entry = models.BooleanField(default=True)
-    active = models.IntegerField(blank=True, null=True, default=2)
+    active = models.IntegerField(blank=True, null=True, default=2) #Shivangi, why null or blank
+    desc = models.CharField(max_length=500, null=True)
 
     class Meta:
         unique_together = (('assessment', 'name'), )
@@ -162,8 +163,8 @@ class AnswerStudent(models.Model):
             blank=True, null=True)
     last_modified_by = models.ForeignKey(User, blank=True, null=True,
             related_name='last_modified_answer_student')
-    flexi_data = models.CharField(max_length=30, blank=True, null=True)
-    active = models.IntegerField(blank=True, null=True, default=2)
+    flexi_data = models.CharField(max_length=30, blank=True, null=True) #Shivangi, is this needed?
+    active = models.IntegerField(blank=True, null=True, default=2) #Shivangi, null or blank?
 
     class Meta:
         unique_together = (('question', 'student'), )
@@ -202,8 +203,11 @@ class AnswerInstitution(models.Model):
             blank=True, null=True)
     last_modified_by = models.ForeignKey(User, blank=True, null=True,
             related_name='last_modified_answer_institution')
-    flexi_data = models.CharField(max_length=30, blank=True, null=True)
-    active = models.IntegerField(blank=True, null=True, default=2)
+    flexi_data = models.CharField(max_length=30, blank=True, null=True) #Shivangi, why is this needed?
+    active = models.IntegerField(blank=True, null=True, default=2)#Shivangi, blank or null?
+
+    class Meta:
+        unique_together = (('question', 'institution'), )
 
     def save(self, *args, **kwargs):
         # custom save method
@@ -215,3 +219,39 @@ class AnswerInstitution(models.Model):
         #print "=================== status is", self.status
         self.full_clean()
         super(AnswerInstitution, self).save(*args, **kwargs)
+
+class AnswerStudentGroup(models.Model):
+    """ This class stores information about studentgroups marks and grade """
+    
+    question = models.ForeignKey(Question)
+    studentgroup = models.ForeignKey(StudentGroup)
+
+    answer_score = models.DecimalField(max_digits=10, decimal_places=2,
+            blank=True, null=True)
+    answer_grade = models.CharField(max_length=30, blank=True, null=True)
+    double_entry = models.IntegerField(blank=True, null=True, default=0)
+    status = models.IntegerField(blank=True, null=True)
+    user1 = models.ForeignKey(User, blank=True, null=True,
+                              related_name='ans_sg_user1')
+    user2 = models.ForeignKey(User, blank=True, null=True,
+                              related_name='ans_sg_user2')
+    creation_date = models.DateField(auto_now_add=True,
+                                    blank=True, null=True)
+    last_modified_date = models.DateField(auto_now=True,
+            blank=True, null=True)
+    last_modified_by = models.ForeignKey(User, blank=True, null=True,
+            related_name='last_modified_answer_studentgroup')
+    flexi_data = models.CharField(max_length=30, blank=True, null=True)#shivangi, why is this needed?
+    active = models.IntegerField(blank=True, null=True, default=2)#Shivangi, null or blank?
+
+    class Meta:
+        unique_together = (('question', 'studentgroup'), )
+        ordering = ['question']
+
+    def save(self, *args, **kwargs):
+        # custom save method
+        from django.db import connection
+        connection.features.can_return_id_from_insert = False
+
+        self.full_clean()
+        super(AnswerStudentGroup, self).save(*args, **kwargs)

@@ -26,6 +26,9 @@ class Relations(models.Model):
     last_name = models.CharField(max_length=50, blank=True, null=True)
     student = models.ForeignKey("Student", related_name="relations")
 
+    class Meta:
+        unique_together = (('relation_type', 'student'), )
+
     def __unicode__(self):
         return '%s' % self.first_name
 
@@ -41,13 +44,13 @@ class StudentGroup(models.Model):
     section = models.CharField(
         max_length=10,
         choices=Alpha_list,
-        blank=True,
+        blank=True, #Shivangi Check if this should be there!
         null=True,
-        default=''
+        default='' #Shivangi, should there be No Section? Or just null?
     )
     active = models.IntegerField(
-        blank=True,
-        null=True,
+        blank=True, #Shivangi, why blank?
+        null=True, #Shivangi, why nullable?
         default=2
     )
     group_type = models.CharField(
@@ -98,7 +101,7 @@ class StudentGroup(models.Model):
 class Student(models.Model):
     ''' This class gives information regarding the students class , academic year and personnel details'''
 
-    first_name = models.CharField(max_length=50, blank=True, null=True)
+    first_name = models.CharField(max_length=50, blank=True, null=True) #Shivangi, should not be blank or null!
     middle_name = models.CharField(max_length=50, blank=True, null=True)
     last_name = models.CharField(max_length=50, blank=True, null=True)
     uid = models.CharField(max_length=100, blank=True, null=True)
@@ -106,7 +109,7 @@ class Student(models.Model):
     gender = models.CharField(max_length=10, choices=GENDER,
                               default='male')
     mt = models.ForeignKey(MoiType, default='1')
-    active = models.IntegerField(blank=True, null=True, default=2)
+    active = models.IntegerField(blank=True, null=True, default=2) #Shivangi, should not be blank or null
     
     class Meta:
 
@@ -132,9 +135,9 @@ class Student(models.Model):
 
 
     def get_name(self):
-        return self.child.first_name
+        return self.child.first_name #shivangi, self.first_name?
 
-    def get_child(self):
+    def get_child(self): #Shivangi, why is this needed?
         return False
 
     def get_all_academic_years(self):
@@ -164,7 +167,7 @@ class StudentStudentGroupRelation(models.Model):
     student_group = models.ForeignKey(StudentGroup)
     academic = models.ForeignKey(AcademicYear,
                                  default=current_academic)
-    active = models.IntegerField(blank=True, null=True, default=2)
+    active = models.IntegerField(blank=True, null=True, default=2) #Shivangi, should not be null or blank!
 
     class Meta:
 
@@ -188,7 +191,7 @@ class StaffStudentGroupRelation(models.Model):
     student_group = models.ForeignKey(StudentGroup)
     academic = models.ForeignKey(AcademicYear,
                                  default=current_academic)
-    active = models.IntegerField(blank=True, null=True, default=2)
+    active = models.IntegerField(blank=True, null=True, default=2) #Shivangi, should not be null or blank
 
     class Meta:
 
