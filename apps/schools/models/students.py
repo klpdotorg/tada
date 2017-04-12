@@ -44,15 +44,11 @@ class StudentGroup(models.Model):
     section = models.CharField(
         max_length=10,
         choices=Alpha_list,
-        blank=True, #Shivangi Check if this should be there!
+        blank=True,
         null=True,
-        default='' #Shivangi, should there be No Section? Or just null?
+        default=''
     )
-    active = models.IntegerField(
-        blank=True, #Shivangi, why blank?
-        null=True, #Shivangi, why nullable?
-        default=2
-    )
+    active = models.IntegerField( default=2)
     group_type = models.CharField(
         max_length=10,
         choices=GROUP_TYPE,
@@ -101,7 +97,7 @@ class StudentGroup(models.Model):
 class Student(models.Model):
     ''' This class gives information regarding the students class , academic year and personnel details'''
 
-    first_name = models.CharField(max_length=50, blank=True, null=True) #Shivangi, should not be blank or null!
+    first_name = models.CharField(max_length=50)
     middle_name = models.CharField(max_length=50, blank=True, null=True)
     last_name = models.CharField(max_length=50, blank=True, null=True)
     uid = models.CharField(max_length=100, blank=True, null=True)
@@ -109,12 +105,12 @@ class Student(models.Model):
     gender = models.CharField(max_length=10, choices=GENDER,
                               default='male')
     mt = models.ForeignKey(MoiType, default='1')
-    active = models.IntegerField(blank=True, null=True, default=2) #Shivangi, should not be blank or null
-    
+    active = models.IntegerField(default=2)
+
     class Meta:
 
         ordering = ['first_name', 'middle_name', 'last_name']
-    
+
     def __unicode__(self):
         return '%s' % self.first_name
 
@@ -125,7 +121,7 @@ class Student(models.Model):
     def get_mother(self):
         return Relations.objects.filter(relation_type='Mother',
                 student_id=self.id)
-    
+
     def get_father(self):
         return Relations.objects.get(relation_type='Father',
                 student_id=self.id)
@@ -135,9 +131,9 @@ class Student(models.Model):
 
 
     def get_name(self):
-        return self.child.first_name #shivangi, self.first_name?
+        return self.first_name
 
-    def get_child(self): #Shivangi, why is this needed?
+    def get_child(self):
         return False
 
     def get_all_academic_years(self):
@@ -167,7 +163,7 @@ class StudentStudentGroupRelation(models.Model):
     student_group = models.ForeignKey(StudentGroup)
     academic = models.ForeignKey(AcademicYear,
                                  default=current_academic)
-    active = models.IntegerField(blank=True, null=True, default=2) #Shivangi, should not be null or blank!
+    active = models.IntegerField(default=2)
 
     class Meta:
 
@@ -191,7 +187,7 @@ class StaffStudentGroupRelation(models.Model):
     student_group = models.ForeignKey(StudentGroup)
     academic = models.ForeignKey(AcademicYear,
                                  default=current_academic)
-    active = models.IntegerField(blank=True, null=True, default=2) #Shivangi, should not be null or blank
+    active = models.IntegerField(default=2)
 
     class Meta:
 

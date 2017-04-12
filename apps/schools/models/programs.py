@@ -16,9 +16,8 @@ class Programme(models.Model):
     start_date = models.DateField(max_length=20,
                                  default=datetime.date.today)
     end_date = models.DateField(max_length=20, default=default_end_date)
-    programme_institution_category = models.ForeignKey(BoundaryType,
-            blank=True, null=True)#shivangi, why null or blank?
-    active = models.IntegerField(blank=True, null=True, default=2)#Shivangi, why null or blank?
+    programme_institution_category = models.ForeignKey(BoundaryType)
+    active = models.IntegerField(default=2)
 
     class Meta:
 

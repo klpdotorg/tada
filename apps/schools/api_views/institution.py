@@ -2,6 +2,7 @@ from rest_framework import status
 from rest_framework import viewsets
 from rest_framework.response import Response
 from rest_framework_extensions.mixins import NestedViewSetMixin
+from django.db.models import F
 
 from guardian.shortcuts import assign_perm, get_users_with_perms
 
@@ -35,6 +36,8 @@ from schools.serializers import (
 
 from schools.models import (
     Assessment,
+    AssessmentStudentGroupAssociation,
+    AssessmentInstitutionAssociation,
     Boundary,
     BoundaryCategory,
     BoundaryType,
@@ -46,6 +49,7 @@ from schools.models import (
     Question,
     Staff,
 )
+import sys
 
 
 class AssessmentListViewSet(viewsets.ReadOnlyModelViewSet):
@@ -113,10 +117,61 @@ class LanguageViewSet(viewsets.ModelViewSet):
     serializer_class = LanguageSerializer
 
 
-class ProgrammeViewSet(NestedViewSetMixin, viewsets.ModelViewSet):
+class ProgrammeViewSet(viewsets.ModelViewSet):
     queryset = Programme.objects.all()
     serializer_class = ProgrammeSerializer
     filter_class = ProgrammeFilter
+    programmeinfo = {}
+
+    def retrieve(self, request, *args, **kwargs):
+        pid = kwargs["pk"]
+        self.programmeinfo = Programme.objects.get(id=pid)
+        if request.GET.get('details'):
+            programmeDetails = {}
+            programmeDetails["info"] = ProgrammeSerializer(self.programmeinfo).data
+            programmeDetails["details"] = self.getDetails(pid)
+            return Response(programmeDetails)
+        else:
+            return Response(ProgrammeSerializer(self.programmeinfo).data)
+
+    def getDetails(self,pid):
+        programmeInfo = {}
+        assessments = Assessment.objects.filter(programme_id=pid)
+        for assessment in assessments:
+            if assessment.type == 1: #institution assessment
+                groups = AssessmentInstitutionAssociation.objects.filter(assessment=assessment.id).annotate(inst_name=F('institution__name'),inst_id=F('institution__id'),admin3_id=F('institution__boundary'),admin3_name=F('institution__boundary__name'),admin2_id=F('institution__boundary__parent'), admin2_name=F('institution__boundary__parent__name'),admin1_id=F('institution__boundary__parent__parent'),admin1_name=F('institution__boundary__parent__parent__name')).values('inst_id','inst_name','admin1_id','admin1_name','admin2_id','admin2_name','admin3_id','admin3_name')
+                for group in groups:
+                    print >>sys.stderr, group
+                    if group["admin1_name"] not in programmeInfo:
+                        programmeInfo[group["admin1_name"]]={"id":group["admin1_id"],"name":
+                                group["admin1_name"],"boundaries":{group["admin2_name"]:{"id":group["admin2_id"],"name":group["admin2_name"],"boundaries":{group["admin3_name"]:{"id":group["admin3_id"],"name":group["admin3_name"],"institutions":{group["inst_name"]:{"id":group["inst_id"],"name":group["inst_name"],"assessments":{assessment.name:{"name":assessment.name,"id":assessment.id}}}}}}}}}
+                    elif group["admin2_name"] not in programmeInfo[group["admin1_name"]]["boundaries"]:
+                     programmeInfo[group["admin1_name"]]["boundaries"][group["admin2_name"]]={"id":group["admin2_id"],"name":group["admin2_name"],"boundaries":{group["admin3_name"]:{"id":group["admin3_id"],"name":group["admin3_name"],"institutions":{group["inst_name"]:{"id":group["inst_id"],"name":group["inst_name"],"assessments":{assessment.name:{"id":assessment.id,"name":assessment.name}}}}}}}
+                    elif group["admin3_name"] not in programmeInfo[group["admin1_name"]]["boundaries"][group["admin2_name"]]["boundaries"]:
+                     programmeInfo[group["admin1_name"]]["boundaries"][group["admin2_name"]]["boundaries"][group["admin3_name"]]={"id":group["admin3_id"],"name":group["admin3_name"],"institutions":{group["inst_name"]:{"id":group["inst_id"],"name":group["inst_name"],"assessments":{assessment.name:{"id":assessment.id,"name":assessment.name}}}}}
+                    elif group["inst_name"] not in programmeInfo[group["admin1_name"]]["boundaries"][group["admin2_name"]]["boundaries"][group["admin3_name"]]["institutions"]:
+                     programmeInfo[group["admin1_name"]]["boundaries"][group["admin2_name"]]["boundaries"][group["admin3_name"]]["institutions"][group["inst_name"]]={"id":group["inst_id"],"name":group["inst_name"],"assessments":{assessment.name:{"name":assessment.name,"assessment_id":assessment.id}}}
+                    else:
+                       programmeInfo[group["admin1_name"]]["boundaries"][group["admin2_name"]]["boundaries"][group["admin3_name"]]["institutions"][group["inst_name"]]["assessments"][assessment.name]={"name":assessment.name,"assessment_id":assessment.id}
+            else:
+                groups = AssessmentStudentGroupAssociation.objects.filter(assessment=assessment.id).annotate(sgid=F('student_group__id'),sgname=F('student_group__name'),inst_name=F('student_group__institution__name'),inst_id=F('student_group__institution__id'),admin3_id=F('student_group__institution__boundary'),admin3_name=F('student_group__institution__boundary__name'),admin2_id=F('student_group__institution__boundary__parent'), admin2_name=F('student_group__institution__boundary__parent__name'),admin1_id=F('student_group__institution__boundary__parent__parent'),admin1_name=F('student_group__institution__boundary__parent__parent__name')).values('sgid','sgname','inst_id','inst_name','admin1_id','admin1_name','admin2_id','admin2_name','admin3_id','admin3_name')
+                for group in groups:
+                    print >>sys.stderr, group
+                    if group["admin1_name"] not in programmeInfo:
+                        programmeInfo[group["admin1_name"]]={"id":group["admin1_id"],"name":
+                                group["admin1_name"],"boundaries":{group["admin2_name"]:{"id":group["admin2_id"],"name":group["admin2_name"],"boundaries":{group["admin3_name"]:{"id":group["admin3_id"],"name":group["admin3_name"],"institutions":{group["inst_name"]:{"id":group["inst_id"],"name":group["inst_name"],"classes":{group["sgname"]:{"id":group["sgid"],"name":group["sgname"],"assessments":{assessment.name:{"name":assessment.name,"id":assessment.id}}}}}}}}}}}
+                    elif group["admin2_name"] not in programmeInfo[group["admin1_name"]]["boundaries"]:
+                     programmeInfo[group["admin1_name"]]["boundaries"][group["admin2_name"]]={"id":group["admin2_id"],"name":group["admin2_name"],"boundaries":{group["admin3_name"]:{"id":group["admin3_id"],"name":group["admin3_name"],"institutions":{group["inst_name"]:{"id":group["inst_id"],"name":group["inst_name"],"classes":{group["sgname"]:{"id":group["sgid"],"name":group["sgname"],"assessments":{assessment.name:{"id":assessment.id,"name":assessment.name}}}}}}}}}
+                    elif group["admin3_name"] not in programmeInfo[group["admin1_name"]]["boundaries"][group["admin2_name"]]["boundaries"]:
+                     programmeInfo[group["admin1_name"]]["boundaries"][group["admin2_name"]]["boundaries"][group["admin3_name"]]={"id":group["admin3_id"],"name":group["admin3_name"],"institutions":{group["inst_name"]:{"id":group["inst_id"],"name":group["inst_name"],"classes":{group["sgname"]:{"id":group["sgid"],"name":group["sgname"],"assessments":{assessment.name:{"id":assessment.id,"name":assessment.name}}}}}}}
+                    elif group["inst_name"] not in programmeInfo[group["admin1_name"]]["boundaries"][group["admin2_name"]]["boundaries"][group["admin3_name"]]["institutions"]:
+                     programmeInfo[group["admin1_name"]]["boundaries"][group["admin2_name"]]["boundaries"][group["admin3_name"]]["institutions"][group["inst_name"]]={"id":group["inst_id"],"name":group["inst_name"],"classes":{group["sgname"]:{"id":group["sgid"],"name":group["sgname"],"assessments":{assessment.name:{"name":assessment.name,"assessment_id":assessment.id}}}}}
+                    elif group["sgname"] not in programmeInfo[group["admin1_name"]]["boundaries"][group["admin2_name"]]["boundaries"][group["admin3_name"]]["institutions"][group["inst_name"]]["classes"]:
+                     programmeInfo[group["admin1_name"]]["boundaries"][group["admin2_name"]]["boundaries"][group["admin3_name"]]["institutions"][group["inst_name"]]["classes"][group["sgname"]]={"id":group["sgid"],"name":group["sgname"],"assessments":{assessment.name:{"name":assessment.name,"assessment_id":assessment.id}}}
+                    else:
+                       programmeInfo[group["admin1_name"]]["boundaries"][group["admin2_name"]]["boundaries"][group["admin3_name"]]["institutions"][group["inst_name"]]["classes"][group["sgname"]]["assessments"][assessment.name]={"name":assessment.name,"assessment_id":assessment.id}
+
+        return programmeInfo
 
 
 class QuestionViewSet(NestedViewSetMixin, viewsets.ModelViewSet):
