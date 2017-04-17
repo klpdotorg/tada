@@ -7,6 +7,7 @@ from django.conf.urls import patterns, url
 from schools.api_views import (
     AssessmentViewSet,
     AnswerStudentViewSet,
+    AnswerStudentGroupViewSet,
     AnswerInstitutionViewSet,
     AssessmentListViewSet,
     BoundaryViewSet,
@@ -97,6 +98,28 @@ nested_router.register(
                 r'institution-answers',
                 AnswerInstitutionViewSet,
                 base_name='answer_institution',
+                parents_query_lookups=['question__assessment__programme', 'question__assessment', 'question']
+            )
+
+## Programmes -> Assessments -> Questions -> AnswerStudentGroup
+nested_router.register(
+    r'programmes',
+    ProgrammeViewSet,
+    base_name='programme'
+    ).register(
+        r'assessments',
+        AssessmentViewSet,
+        base_name='assessment',
+        parents_query_lookups=['programme']
+        ).register(
+            r'questions',
+            QuestionViewSet,
+            base_name='question',
+            parents_query_lookups=['assessment__programme', 'assessment']
+            ).register(
+                r'studentgroup-answers',
+                AnswerStudentGroupViewSet,
+                base_name='answer_studentgroup',
                 parents_query_lookups=['question__assessment__programme', 'question__assessment', 'question']
             )
 
