@@ -83,7 +83,7 @@ class AssessmentSerializer(serializers.ModelSerializer):
     class Meta:
         model = Assessment
         fields = (
-            'id', 'programme', 'name', 'start_date', 'end_date', 'query',
+            'id', 'programme', 'name', 'start_date', 'end_date',
             'active', 'double_entry', 'type',
         )
 
