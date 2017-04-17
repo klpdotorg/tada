@@ -22,10 +22,13 @@ class BoundaryFilter(django_filters.FilterSet):
 
 
 class ProgrammeFilter(django_filters.FilterSet):
+    boundary_type = django_filters.CharFilter(
+        name="programme_institution_category__name"
+    )
 
     class Meta:
         model = Programme
-        fields = ['name', 'active']
+        fields = ['name', 'active', 'boundary_type']
 
 
 class QuestionFilter(django_filters.FilterSet):
