@@ -22,8 +22,8 @@ class BoundaryFilter(django_filters.FilterSet):
 
 
 class ProgrammeFilter(django_filters.FilterSet):
-    boundary_type = django_filters.CharFilter(
-        name="programme_institution_category__name"
+    boundary_type = django_filters.NumberFilter(
+        name="programme_institution_category"
     )
 
     class Meta:
