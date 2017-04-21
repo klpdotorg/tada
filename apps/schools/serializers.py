@@ -5,6 +5,7 @@ from .models import (
     Assessment,
     AnswerInstitution,
     AnswerStudent,
+    AnswerStudentGroup,
     Boundary,
     BoundaryCategory,
     BoundaryType,
@@ -27,16 +28,25 @@ from rest_framework_bulk import (
 )
 
 
-class AnswerInstitutionSerializer(serializers.ModelSerializer):
+class AnswerInstitutionSerializer(BulkSerializerMixin, serializers.ModelSerializer):
 
     class Meta:
         model = AnswerInstitution
+        list_serializer_class = BulkListSerializer
 
 
-class AnswerStudentSerializer(serializers.ModelSerializer):
+class AnswerStudentSerializer(BulkSerializerMixin, serializers.ModelSerializer):
 
     class Meta:
         model = AnswerStudent
+        list_serializer_class = BulkListSerializer
+
+
+class AnswerStudentGroupSerializer(BulkSerializerMixin, serializers.ModelSerializer):
+
+    class Meta:
+        model = AnswerStudentGroup
+        list_serializer_class = BulkListSerializer
 
 
 class BoundarySerializer(serializers.ModelSerializer):

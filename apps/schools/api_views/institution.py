@@ -3,6 +3,7 @@ from rest_framework import viewsets
 from rest_framework.response import Response
 from rest_framework_extensions.mixins import NestedViewSetMixin
 
+from rest_framework_bulk import BulkCreateModelMixin
 from guardian.shortcuts import assign_perm, get_users_with_perms
 
 from django.db.models import F
@@ -57,6 +58,8 @@ from schools.models import (
     Staff,
 )
 
+from schools.mixins import CompensationLogMixin
+
 
 class AssessmentListViewSet(viewsets.ReadOnlyModelViewSet):
     queryset = Assessment.objects.all()
@@ -71,23 +74,32 @@ class AssessmentViewSet(NestedViewSetMixin, viewsets.ModelViewSet):
     filter_class = AssessmentFilter
 
 
-class AnswerInstitutionViewSet(NestedViewSetMixin, viewsets.ModelViewSet):
+class AnswerInstitutionViewSet(
+        NestedViewSetMixin, BulkCreateModelMixin,
+        viewsets.ModelViewSet, CompensationLogMixin
+):
     # permission_classes = (AssessmentPermission,)
     queryset = AnswerInstitution.objects.all()
     serializer_class = AnswerInstitutionSerializer
     # filter_class = AnswerInstitutionFilter
 
 
-class AnswerStudentViewSet(NestedViewSetMixin, viewsets.ModelViewSet):
+class AnswerStudentViewSet(
+        NestedViewSetMixin, BulkCreateModelMixin,
+        viewsets.ModelViewSet, CompensationLogMixin
+):
     # permission_classes = (AssessmentPermission,)
     queryset = AnswerStudent.objects.all()
     serializer_class = AnswerStudentSerializer
     # filter_class = AnswerStudentFilter
 
 
-class AnswerStudentGroupViewSet(NestedViewSetMixin, viewsets.ModelViewSet):
+class AnswerStudentGroupViewSet(
+        NestedViewSetMixin, BulkCreateModelMixin,
+        viewsets.ModelViewSet, CompensationLogMixin
+):
     # permission_classes = (AssessmentPermission,)
-    queryset = AnswerStudentGrouo.objects.all()
+    queryset = AnswerStudentGroup.objects.all()
     serializer_class = AnswerStudentGroupSerializer
     # filter_class = AnswerStudentGroupFilter
 
