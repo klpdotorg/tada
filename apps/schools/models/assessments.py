@@ -9,8 +9,6 @@ from .programs import Programme
 from .students import StudentGroup,Student
 from .institution import Institution, current_academic, default_end_date
 
-from audit_log.models.managers import AuditLog
-
 PRIMARY_FIELD_TYPE = [(0, 'Default'),(1, 'Integer'), (2, 'Char'), (3, 'Date'), (4,
                       'Lookup')]
 QUESTION_TYPE = [(1, 'Marks'), (2, 'Grade')]
@@ -204,8 +202,6 @@ class AnswerInstitution(models.Model):
     last_modified_by = models.ForeignKey(User, blank=True, null=True,
             related_name='last_modified_answer_institution')
     active = models.IntegerField(default=2)
-
-    audit_log = AuditLog()
 
     class Meta:
         unique_together = (('question', 'institution'), )

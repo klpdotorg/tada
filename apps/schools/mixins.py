@@ -47,5 +47,5 @@ class CompensationLogMixin(CreateModelMixin, UpdateModelMixin):
             pass
 
 
-    def calculate_answer_score(self):
+    def calculate_answer_score(self, instance, data):
         pass
