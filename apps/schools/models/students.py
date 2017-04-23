@@ -16,6 +16,7 @@ for typ in range(ord('a'), ord('z') + 1):
     typs = (alph, alph)
     Alpha_list.append(typs)
 
+
 class Relations(models.Model):
     ''' This class stores relation information of the childrens'''
 
@@ -83,16 +84,6 @@ class StudentGroup(models.Model):
     def get_view_url(self):
         return '/studentgroup/%s/view/' % self.id
 
-    def save(self, *args, **kwargs):
-        # custom save method
-        #pdb.set_trace()
-        from django.db import connection
-        connection.features.can_return_id_from_insert = False
-        #print "save"
-
-        #print "name is",self.name, "=================== active is", self.active
-        self.full_clean()
-        super(StudentGroup, self).save(*args, **kwargs)
 
 class Student(models.Model):
     ''' This class gives information regarding the students class , academic year and personnel details'''
@@ -107,13 +98,8 @@ class Student(models.Model):
     mt = models.ForeignKey(MoiType, default='1')
     active = models.IntegerField(default=2)
 
-    class Meta:
-
-        ordering = ['first_name', 'middle_name', 'last_name']
-
     def __unicode__(self):
         return '%s' % self.first_name
-
 
     def get_relations(self):
         return Relations.objects.filter(student_id=self.id)
@@ -128,7 +114,6 @@ class Student(models.Model):
 
     def get_student(self):
         return Student.objects.get(id=self.id)
-
 
     def get_name(self):
         return self.first_name
@@ -145,16 +130,6 @@ class Student(models.Model):
     def getModuleName(self):
         return 'student'
 
-    def save(self, *args, **kwargs):
-        # custom save method
-        #pdb.set_trace()
-        from django.db import connection
-        connection.features.can_return_id_from_insert = False
-        #print "save"
-
-        #print "active is", self.active
-        self.full_clean()
-        super(Student, self).save(*args, **kwargs)
 
 class StudentStudentGroupRelation(models.Model):
     '''This Class stores the Student and Student Group Relation Information'''
@@ -166,19 +141,8 @@ class StudentStudentGroupRelation(models.Model):
     active = models.IntegerField(default=2)
 
     class Meta:
-
         unique_together = (('student', 'student_group', 'academic'), )
 
-    def save(self, *args, **kwargs):
-        # custom save method
-        #pdb.set_trace()
-        from django.db import connection
-        connection.features.can_return_id_from_insert = False
-        #print "save"
-
-        #print "active is", self.active
-        self.full_clean()
-        super(StudentStudentGroupRelation, self).save(*args, **kwargs)
 
 class StaffStudentGroupRelation(models.Model):
     '''This Class stores the Staff and Student Group Relation Information'''
@@ -190,6 +154,5 @@ class StaffStudentGroupRelation(models.Model):
     active = models.IntegerField(default=2)
 
     class Meta:
-
         unique_together = (('staff', 'student_group', 'academic'), )
 

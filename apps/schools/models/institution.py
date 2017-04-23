@@ -123,20 +123,7 @@ class Institution(models.Model):
     def get_edit_url(self):
         return '/institution/%s/update/' % self.id
 
-    def save(self, *args, **kwargs):
-        # custom save method
-        #pdb.set_trace()
-        from django.db import connection
-        connection.features.can_return_id_from_insert = False
-        #print "save"
-
-        #print "name is",self.name, "=================== active is", self.active
-        self.full_clean()
-        super(Institution, self).save(*args, **kwargs)
-
 from django.db.models.signals import post_save, pre_save
-
-
 
 
 class AcademicYear(models.Model):
@@ -168,19 +155,13 @@ class Staff(models.Model):
     staff_type = models.ForeignKey(StaffType, default=1)
     active = models.IntegerField(blank=True, null=True, default=2)
 
-    class Meta:
-
-        ordering = ['first_name', 'middle_name', 'last_name']
-
     def __unicode__(self):
-        return '%s %s %s' % (self.first_name, self.middle_name,
-                             self.last_name)
+        return '%s %s %s' % (self.first_name, self.middle_name, self.last_name)
 
     def getAssigendClasses(self):
-        return StudentGroup.objects.filter(staff_studentgrouprelation__staff__id=self.id,
-                staff_studentgrouprelation__active=2)
-
-
+        return StudentGroup.objects.filter(
+            staff_studentgrouprelation__staff__id=self.id,
+            staff_studentgrouprelation__active=2)
 
 
 def current_academic():

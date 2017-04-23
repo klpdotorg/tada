@@ -27,4 +27,3 @@ from .students import (
     StudentStudentGroupRelation
 )
 from .programs import Programme
-from .audit import CompensationAuditLog

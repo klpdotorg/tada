@@ -17,6 +17,7 @@ QUESTION_TYPE = [(1, 'Marks'), (2, 'Grade')]
 ASSESSMENT_TYPE = [(1, 'Institution'), (2, 'Student Group'), (3,
                    'Student')]
 
+
 class Assessment(models.Model):
     """ This class stores information about Assessment """
 
@@ -50,8 +51,7 @@ class Assessment(models.Model):
         return '/assessment/%s/update/' % self.id
 
     def getChild(self):
-        if Question.objects.filter(assessment__id=self.id,
-                                   active=2).count():
+        if Question.objects.filter(assessment__id=self.id, active=2).count():
             return True
         else:
             return False
@@ -67,19 +67,7 @@ class AssessmentStudentGroupAssociation(models.Model):
     student_group = models.ForeignKey(StudentGroup)
     active = models.IntegerField(default=2)
 
-    def save(self, *args, **kwargs):
-        # custom save method
-        #pdb.set_trace()
-        from django.db import connection
-        connection.features.can_return_id_from_insert = False
-        #print "save"
-
-        #print "Access", self.active
-        self.full_clean()
-        super(Assessment_StudentGroup_Association, self).save(*args, **kwargs)
-
     class Meta:
-
         unique_together = (('assessment', 'student_group'), )
 
 
@@ -91,7 +79,6 @@ class AssessmentInstitutionAssociation(models.Model):
     active = models.IntegerField(default=2)
 
     class Meta:
-
         unique_together = (('assessment', 'institution'), )
 
 
@@ -140,7 +127,6 @@ class Question(models.Model):
         return '/question/%s/update/' % self.id
 
 
-
 class AnswerStudent(models.Model):
     """ This class stores information about student marks and grade """
 
@@ -152,32 +138,10 @@ class AnswerStudent(models.Model):
     answer_grade = models.CharField(max_length=30, blank=True, null=True)
     double_entry = models.IntegerField(blank=True, null=True, default=0)
     status = models.IntegerField(blank=True, null=True)
-    user1 = models.ForeignKey(User, blank=True, null=True,
-                              related_name='user1')
-    user2 = models.ForeignKey(User, blank=True, null=True,
-                              related_name='user2')
-    creation_date = models.DateField(auto_now_add=True,
-                                    blank=True, null=True)
-    last_modified_date = models.DateField(auto_now=True,
-            blank=True, null=True)
-    last_modified_by = models.ForeignKey(User, blank=True, null=True,
-            related_name='last_modified_answer_student')
     active = models.IntegerField(default=2)
 
     class Meta:
         unique_together = (('question', 'student'), )
-        ordering = ['question']
-
-    def save(self, *args, **kwargs):
-        # custom save method
-        #pdb.set_trace()
-        from django.db import connection
-        connection.features.can_return_id_from_insert = False
-        #print "save"
-
-        #print "=================== status is", self.status
-        self.full_clean()
-        super(AnswerStudent, self).save(*args, **kwargs)
 
 
 class AnswerInstitution(models.Model):
@@ -191,31 +155,11 @@ class AnswerInstitution(models.Model):
     answer_grade = models.CharField(max_length=30, blank=True, null=True)
     double_entry = models.IntegerField(blank=True, null=True, default=0)
     status = models.IntegerField(blank=True, null=True)
-    user1 = models.ForeignKey(User, blank=True, null=True,
-                              related_name='user1_answer_institution')
-    user2 = models.ForeignKey(User, blank=True, null=True,
-                              related_name='user2_answer_institution')
-    creation_date = models.DateField(auto_now_add=True,
-                                    blank=True, null=True)
-    last_modified_date = models.DateField(auto_now=True,
-            blank=True, null=True)
-    last_modified_by = models.ForeignKey(User, blank=True, null=True,
-            related_name='last_modified_answer_institution')
     active = models.IntegerField(default=2)
 
     class Meta:
         unique_together = (('question', 'institution'), )
 
-    def save(self, *args, **kwargs):
-        # custom save method
-        #pdb.set_trace()
-        from django.db import connection
-        connection.features.can_return_id_from_insert = False
-        #print "save"
-
-        #print "=================== status is", self.status
-        self.full_clean()
-        super(AnswerInstitution, self).save(*args, **kwargs)
 
 class AnswerStudentGroup(models.Model):
     """ This class stores information about studentgroups marks and grade """
@@ -228,26 +172,7 @@ class AnswerStudentGroup(models.Model):
     answer_grade = models.CharField(max_length=30, blank=True, null=True)
     double_entry = models.IntegerField(blank=True, null=True, default=0)
     status = models.IntegerField(blank=True, null=True)
-    user1 = models.ForeignKey(User, blank=True, null=True,
-                              related_name='ans_sg_user1')
-    user2 = models.ForeignKey(User, blank=True, null=True,
-                              related_name='ans_sg_user2')
-    creation_date = models.DateField(auto_now_add=True,
-                                    blank=True, null=True)
-    last_modified_date = models.DateField(auto_now=True,
-            blank=True, null=True)
-    last_modified_by = models.ForeignKey(User, blank=True, null=True,
-            related_name='last_modified_answer_studentgroup')
     active = models.IntegerField(default=2)
 
     class Meta:
         unique_together = (('question', 'studentgroup'), )
-        ordering = ['question']
-
-    def save(self, *args, **kwargs):
-        # custom save method
-        from django.db import connection
-        connection.features.can_return_id_from_insert = False
-
-        self.full_clean()
-        super(AnswerStudentGroup, self).save(*args, **kwargs)
