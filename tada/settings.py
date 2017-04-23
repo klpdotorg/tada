@@ -47,6 +47,7 @@ INSTALLED_APPS = (
     'rest_framework_docs',
     'schools',
     'tests',
+    'easyaudit',
 )
 
 MIDDLEWARE_CLASSES = (
@@ -59,7 +60,44 @@ MIDDLEWARE_CLASSES = (
     'django.contrib.auth.middleware.SessionAuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'easyaudit.middleware.easyaudit.EasyAuditMiddleware',
 )
+
+DJANGO_EASY_AUDIT_WATCH_LOGIN_EVENTS = False
+DJANGO_EASY_AUDIT_UNREGISTERED_CLASSES_EXTRA = [
+    'admin.LogEntry',
+    'auth.Permission',
+    'auth.Group',
+    'auth.User',
+    'contenttypes.ContentType',
+    'sessions.Session',
+    'guardian.UserObjectPermission',
+    'guardian.GroupObjectPermission',
+    'authtoken.Token',
+    'schools.BoundaryCategory',
+    'schools.BoundaryType',
+    'schools.Boundary',
+    'schools.InstitutionCategory',
+    'schools.MoiType',
+    'schools.InstitutionManagement',
+    'schools.StaffType',
+    'schools.QualificationList',
+    'schools.AcademicYear',
+    'schools.Programme',
+    'schools.Relations',
+    'schools.StudentGroup',
+    'schools.StudentStudentGroupRelation',
+    'schools.StaffStudentGroupRelation',
+    'schools.Assessment',
+    'schools.AssessmentStudentGroupAssociation',
+    'schools.AssessmentInstitutionAssociation',
+    'schools.Question',
+    'tests.User',
+    'tests.Organisation',
+    'tests.Membership',
+    'easyaudit.CRUDEvent',
+    'easyaudit.LoginEvent'
+]
 
 ROOT_URLCONF = 'tada.urls'
 
