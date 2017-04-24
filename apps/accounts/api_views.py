@@ -106,7 +106,7 @@ class PermissionView(APIView):
             assessment = Assessment.objects.get(id=assessment_id)
         except Exception as ex:
             raise APIException(ex)
-        assign_perm('change_assessment', user_to_be_permitted, assessment)
+        assign_perm('crud_answers', user_to_be_permitted, assessment)
 
     def unassign_institution_permissions(self, user_to_be_denied, institution_id):
         try:
@@ -135,7 +135,7 @@ class PermissionView(APIView):
             assessment = Assessment.objects.get(id=assessment_id)
         except Exception as ex:
             raise APIException(ex)
-        remove_perm('change_assessment', user_to_be_denied, assessment)
+        remove_perm('crud_answers', user_to_be_permitted, assessment)
 
     def get(self, request, pk):
         try:
@@ -146,7 +146,7 @@ class PermissionView(APIView):
         response = {}
 
         response['assessments'] = get_objects_for_user(
-            permitted_user, "schools.change_assessment"
+            permitted_user, "crud_answers", klass=Assessment
         ).values_list('id', flat=True)
 
         response['boundaries'] = get_objects_for_user(
@@ -162,7 +162,7 @@ class PermissionView(APIView):
     def post(self, request, pk):
         institution_id = self.request.data.get('institution_id', None)
         boundary_id = self.request.data.get('boundary_id', None)
-        assessment_id = self.request.data.get('assesment_id', None)
+        assessment_id = self.request.data.get('assessment_id', None)
 
         try:
             user_to_be_permitted = User.objects.get(id=pk)

@@ -9,8 +9,8 @@ from guardian.shortcuts import assign_perm, get_users_with_perms
 from django.db.models import F
 
 from accounts.permissions import (
-    AssessmentPermission,
     InstitutionCreateUpdatePermission,
+    WorkUnderAssessmentPermission,
     WorkUnderInstitutionPermission,
 )
 
@@ -68,7 +68,6 @@ class AssessmentListViewSet(viewsets.ReadOnlyModelViewSet):
 
 
 class AssessmentViewSet(NestedViewSetMixin, viewsets.ModelViewSet):
-    permission_classes = (AssessmentPermission,)
     queryset = Assessment.objects.all()
     serializer_class = AssessmentSerializer
     filter_class = AssessmentFilter
@@ -76,9 +75,8 @@ class AssessmentViewSet(NestedViewSetMixin, viewsets.ModelViewSet):
 
 class AnswerInstitutionViewSet(
         NestedViewSetMixin, BulkCreateModelMixin,
-        viewsets.ModelViewSet, CompensationLogMixin
-):
-    # permission_classes = (AssessmentPermission,)
+        viewsets.ModelViewSet, CompensationLogMixin):
+    permission_classes = (WorkUnderAssessmentPermission,)
     queryset = AnswerInstitution.objects.all()
     serializer_class = AnswerInstitutionSerializer
     # filter_class = AnswerInstitutionFilter
@@ -86,9 +84,8 @@ class AnswerInstitutionViewSet(
 
 class AnswerStudentViewSet(
         NestedViewSetMixin, BulkCreateModelMixin,
-        viewsets.ModelViewSet, CompensationLogMixin
-):
-    # permission_classes = (AssessmentPermission,)
+        viewsets.ModelViewSet, CompensationLogMixin):
+    permission_classes = (WorkUnderAssessmentPermission,)
     queryset = AnswerStudent.objects.all()
     serializer_class = AnswerStudentSerializer
     # filter_class = AnswerStudentFilter
@@ -96,9 +93,8 @@ class AnswerStudentViewSet(
 
 class AnswerStudentGroupViewSet(
         NestedViewSetMixin, BulkCreateModelMixin,
-        viewsets.ModelViewSet, CompensationLogMixin
-):
-    # permission_classes = (AssessmentPermission,)
+        viewsets.ModelViewSet, CompensationLogMixin):
+    permission_classes = (WorkUnderAssessmentPermission,)
     queryset = AnswerStudentGroup.objects.all()
     serializer_class = AnswerStudentGroupSerializer
     # filter_class = AnswerStudentGroupFilter

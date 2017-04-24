@@ -39,7 +39,9 @@ class Assessment(models.Model):
 
     class Meta:
         unique_together = (('programme', 'name'), )
-        ordering = ['start_date']
+        permissions = (
+            ('crud_answers', 'CRUD Answers'),
+        )
 
     def __unicode__(self):
         return '%s' % self.name

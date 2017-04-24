@@ -3,7 +3,7 @@ from rest_framework.permissions import BasePermission
 
 from django.contrib.auth.models import Group
 
-from schools.models import Boundary, Institution, StudentGroup
+from schools.models import Boundary, Institution, StudentGroup, Assessment
 
 
 class TadaBasePermission(BasePermission):
@@ -25,14 +25,6 @@ class TadaBasePermission(BasePermission):
             return True
         else:
             return False
-
-
-class AssessmentPermission(TadaBasePermission):
-    def has_object_permission(self, request, view, obj):
-        if self.is_user_permitted(request):
-            return True
-        else:
-            return request.user.has_perm('change_assessment', obj)
 
 
 class HasAssignPermPermission(BasePermission):
@@ -82,6 +74,21 @@ class WorkUnderInstitutionPermission(TadaBasePermission):
             except:
                 return False
         return request.user.has_perm('crud_student_class_staff', institution)
+
+
+class WorkUnderAssessmentPermission(TadaBasePermission):
+    def has_permission(self, request, view):
+        if self.is_user_permitted(request):
+            return True
+        else:
+            assessment_id = view.kwargs.get(
+                'parent_lookup_question__assessment', None
+            )
+            try:
+                assessment = Assessment.objects.get(id=assessment_id)
+            except:
+                return False
+        return request.user.has_perm('crud_answers', assessment)
 
 
 class UserPermission(TadaBasePermission):
