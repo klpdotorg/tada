@@ -114,7 +114,7 @@ class PermissionView(APIView):
         except Exception as ex:
             raise APIException(ex)
         remove_perm('change_institution', user_to_be_denied, institution)
-        remove_perm('crud_student_class_staff', user_to_be_permitted, institution)
+        remove_perm('crud_student_class_staff', user_to_be_denied, institution)
 
     def unassign_boundary_permissions(self, user_to_be_denied, boundary_id):
         try:
@@ -135,7 +135,7 @@ class PermissionView(APIView):
             assessment = Assessment.objects.get(id=assessment_id)
         except Exception as ex:
             raise APIException(ex)
-        remove_perm('crud_answers', user_to_be_permitted, assessment)
+        remove_perm('crud_answers', user_to_be_denied, assessment)
 
     def get(self, request, pk):
         try:
@@ -183,7 +183,7 @@ class PermissionView(APIView):
     def delete(self, request, pk):
         institution_id = self.request.data.get('institution_id', None)
         boundary_id = self.request.data.get('boundary_id', None)
-        assessment_id = self.request.data.get('assesment_id', None)
+        assessment_id = self.request.data.get('assessment_id', None)
 
         try:
             user_to_be_denied = User.objects.get(id=pk)
