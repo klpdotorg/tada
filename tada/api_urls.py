@@ -82,7 +82,7 @@ nested_router.register(
                     'question']
             )
 
-## Programmes -> Assessments -> Questions -> AnswerInstitution
+## Programmes -> Assessments -> Institutions -> AnswerInstitution
 nested_router.register(
     r'programmes',
     ProgrammeViewSet,
@@ -95,7 +95,7 @@ nested_router.register(
         ).register(
             r'institutions',
             InstitutionViewSet,
-            base_name='question',
+            base_name='institution',
             parents_query_lookups=[
                 'assessmentinstitutionassociation__assessment__programme',
                 'assessmentinstitutionassociation__assessment']
@@ -109,7 +109,7 @@ nested_router.register(
                     'institution']
             )
 
-## Programmes -> Assessments -> Questions -> AnswerStudentGroup
+## Programmes -> Assessments -> StudentGroups -> AnswerStudentGroup
 nested_router.register(
     r'programmes',
     ProgrammeViewSet,
@@ -120,18 +120,20 @@ nested_router.register(
         base_name='assessment',
         parents_query_lookups=['programme']
         ).register(
-            r'questions',
-            QuestionViewSet,
-            base_name='question',
-            parents_query_lookups=['assessment__programme', 'assessment']
+            r'studentgroups',
+            StudentGroupViewSet,
+            base_name='studentgroup',
+            parents_query_lookups=[
+                'assessmentstudentgroupassociation__assessment__programme',
+                'assessmentstudentgroupassociation__assessment']
             ).register(
-                r'studentgroup-answers',
+                r'answers',
                 AnswerStudentGroupViewSet,
                 base_name='answer_studentgroup',
                 parents_query_lookups=[
-                    'question__assessment__programme',
-                    'question__assessment',
-                    'question']
+                    'studentgroup__assessmentstudentgroupassociation__assessment__programme',
+                    'studentgroup__assessmentstudentgroupassociation__assessment',
+                    'studentgroup']
             )
 
 ## StudentGroups -> Students -> StudentStudentGroupRelation
