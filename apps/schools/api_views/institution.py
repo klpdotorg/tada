@@ -116,7 +116,7 @@ class BoundaryTypeViewSet(viewsets.ModelViewSet):
     serializer_class = BoundaryTypeSerializer
 
 
-class InstitutionViewSet(viewsets.ModelViewSet):
+class InstitutionViewSet(NestedViewSetMixin, viewsets.ModelViewSet):
     permission_classes = (InstitutionCreateUpdatePermission,)
     queryset = Institution.objects.all()
     serializer_class = InstitutionSerializer
