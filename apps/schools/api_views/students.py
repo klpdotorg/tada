@@ -4,6 +4,7 @@ from rest_framework import status
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import generics,viewsets
+from rest_framework.exceptions import APIException
 from rest_framework_extensions.mixins import NestedViewSetMixin
 
 from rest_framework_bulk import BulkCreateModelMixin
@@ -22,6 +23,7 @@ from schools.serializers import (
 )
 
 from schools.models import (
+    Assessment,
     Student,
     StudentGroup,
     StudentStudentGroupRelation
@@ -38,7 +40,17 @@ class StudentViewSet(NestedViewSetMixin, BulkCreateModelMixin, viewsets.ModelVie
     # from NestedViewSetMixin to implement the .distinct()
     def filter_queryset_by_parents_lookups(self, queryset):
         parents_query_dict = self.get_parents_query_dict()
-        if parents_query_dict:
+        if parents_query_dict.get('assessment', None):
+            try:
+                assessment_id = parents_query_dict.get('assessment')
+                assessment = Assessment.objects.get(id=assessment_id)
+                studentgroups = assessment.studentgroups.all()
+                return queryset.filter(
+                    studentstudentgrouprelation__student_group__in=studentgroups
+                ).distinct('id')
+            except Exception as ex:
+                raise APIException(ex)
+        elif parents_query_dict:
             try:
                 return queryset.filter(
                     **parents_query_dict

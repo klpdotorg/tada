@@ -90,6 +90,26 @@ class AnswerStudentViewSet(
     serializer_class = AnswerStudentSerializer
     # filter_class = AnswerStudentFilter
 
+    def filter_queryset_by_parents_lookups(self, queryset):
+        parents_query_dict = self.get_parents_query_dict()
+        if parents_query_dict.get('student', None):
+            try:
+                student_id = parents_query_dict.get('student')
+                return queryset.filter(
+                    student=student_id
+                ).distinct('id')
+            except Exception as ex:
+                raise APIException(ex)
+        elif parents_query_dict:
+            try:
+                return queryset.filter(
+                    **parents_query_dict
+                ).order_by().distinct('id')
+            except ValueError:
+                raise Http404
+        else:
+            return queryset
+
 
 class AnswerStudentGroupViewSet(
         NestedViewSetMixin, BulkCreateModelMixin,
