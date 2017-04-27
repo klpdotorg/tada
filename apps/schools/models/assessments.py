@@ -36,12 +36,22 @@ class Assessment(models.Model):
         blank=True,
         null=True,
     )
+    studentgroups = models.ManyToManyField(
+        'StudentGroup',
+        through='AssessmentStudentGroupAssociation',
+        blank=True,
+        null=True,
+    )
 
     class Meta:
         unique_together = (('programme', 'name'), )
         permissions = (
             ('crud_answers', 'CRUD Answers'),
         )
+
+    @property
+    def students(self):
+        return self.studentgroups.values_list('students', flat=True)
 
     def __unicode__(self):
         return '%s' % self.name
