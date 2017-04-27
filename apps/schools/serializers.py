@@ -108,8 +108,10 @@ class AssessmentSerializer(serializers.ModelSerializer):
         model = Assessment
         fields = (
             'id', 'programme', 'name', 'start_date', 'end_date',
-            'active', 'double_entry', 'type',
+            'active', 'double_entry', 'type', 'institutions',
+            'studentgroups', 'students',
         )
+        read_only_fields = ('institutions', 'studentgroups', 'students')
 
 
 class ProgrammeSerializer(serializers.ModelSerializer):
