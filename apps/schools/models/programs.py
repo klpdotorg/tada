@@ -16,7 +16,7 @@ class Programme(models.Model):
     start_date = models.DateField(max_length=20,
                                  default=datetime.date.today)
     end_date = models.DateField(max_length=20, default=default_end_date)
-    programme_institution_category = models.ForeignKey(BoundaryType)
+    programme_institution_category = models.ForeignKey(BoundaryType, default=1)
     active = models.IntegerField(default=2)
 
     class Meta:

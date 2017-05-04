@@ -19,7 +19,9 @@ from .models import (
     Staff,
     Student,
     StudentGroup,
-    StudentStudentGroupRelation
+    StudentStudentGroupRelation,
+    AssessmentInstitutionAssociation,
+    AssessmentStudentGroupAssociation
 )
 
 from rest_framework_bulk import (
@@ -113,6 +115,23 @@ class AssessmentSerializer(serializers.ModelSerializer):
         )
         read_only_fields = ('institutions', 'studentgroups', 'students')
 
+class AssessmentInstitutionAssociationSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = AssessmentInstitutionAssociation
+        fiels = (
+                'assessment', 'institution', 'active',
+        )
+
+
+class AssessmentStudentGroupAssociationSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = AssessmentStudentGroupAssociation
+        fiels = (
+                'assessment', 'student_group', 'active',
+        )
+
 
 class ProgrammeSerializer(serializers.ModelSerializer):
 
@@ -131,7 +150,7 @@ class QuestionSerializer(serializers.ModelSerializer):
 
 
 class RelationsSerializer(serializers.ModelSerializer):
-    
+
     class Meta:
         model = Relations
         fields = (
@@ -149,7 +168,7 @@ class RelationsSerializer(serializers.ModelSerializer):
 
 
 class StudentSerializer(BulkSerializerMixin, serializers.ModelSerializer):
-    
+
     relations = RelationsSerializer(many='True')
     class Meta:
         model = Student
@@ -188,12 +207,12 @@ class StudentSerializer(BulkSerializerMixin, serializers.ModelSerializer):
         instance.middle_name = validated_data.get('middle_name',instance.middle_name)
         instance.last_name = validated_data.get('last_name',instance.last_name)
         instance.save()
-        student_id = instance.id 
+        student_id = instance.id
         relations = Relations.objects.filter(student_id=instance.id)
         for item in relations_data:
             relation = Relations.objects.get(id=item['id'])
             #if firstname, lastname and middle name are empty, delete the relation
-            relation.relation_type = item.get('relation_type')       
+            relation.relation_type = item.get('relation_type')
             # If all the names are empty, delete the relation
             first_name = item.get('first_name')
             middle_name = item.get('middle_name')
@@ -227,7 +246,7 @@ class StudentStudentGroupSerializer(serializers.ModelSerializer):
 
 
 class StaffSerializer(serializers.ModelSerializer):
-    
+
     class Meta:
         model = Staff
         fields = (
