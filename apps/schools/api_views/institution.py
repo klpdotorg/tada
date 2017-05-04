@@ -2,7 +2,10 @@ from rest_framework import status
 from rest_framework import viewsets
 from rest_framework.response import Response
 from rest_framework_extensions.mixins import NestedViewSetMixin
+from rest_framework.exceptions import ParseError
 from django.db.models import F
+from django.db.models import Q
+
 
 from guardian.shortcuts import assign_perm, get_users_with_perms
 
@@ -32,6 +35,8 @@ from schools.serializers import (
     ProgrammeSerializer,
     QuestionSerializer,
     StaffSerializer,
+    AssessmentInstitutionAssociationSerializer,
+    AssessmentStudentGroupAssociationSerializer
 )
 
 from schools.models import (
@@ -48,6 +53,7 @@ from schools.models import (
     Programme,
     Question,
     Staff,
+    StudentGroup
 )
 import sys
 
@@ -182,4 +188,72 @@ class StaffViewSet(viewsets.ModelViewSet):
     permission_classes = (WorkUnderInstitutionPermission,)
     queryset = Staff.objects.all()
     serializer_class = StaffSerializer
+
+
+class AssessmentMapViewSet(viewsets.ModelViewSet):
+    assessmentids = []
+    institutionids = []
+    boundaryids = []
+    studentgroups = []
+
+    def get_serializer_class(self):
+        if self.request.GET.get("studentgroup"):
+            return AssessmentStudentGroupAssociationSerializer
+        else:
+            return AssessmentInstitutionAssociationSerializer
+
+    def create(self, request, *args, **kwargs):
+        if not self.request.GET.get('assessmentid'):
+            raise ParseError("Mandatory parameter assessmentid not passed")
+        self.assessmentids = self.request.GET.get('assessmentid').split(",")
+        print>>sys.stderr, self.assessmentids
+        if self.request.GET.get('boundaryid'):
+            self.boundaryids = self.request.GET.get('boundaryid').split(",")
+        if self.request.GET.get('institutionid'):
+            self.institutionids = self.request.GET.get('institutionid').split(",")
+        if self.request.GET.get('studentgroup'):
+            self.studentgroups = self.request.GET.get('studentgroup').split(",")
+            response = self.createAssessmentStudentGroupAssocation()
+        else:
+            response = self.createAssessmentInstitutionAssociation()
+        return response
+
+    def createAssessmentInstitutionAssociation(self):
+        request = []
+        for assessmentid in self.assessmentids:
+            if self.institutionids == []:
+                for boundaryid in self.boundaryids:
+                    self.institutionids = Institution.objects.values_list('id',flat=True).filter(Q(boundary_id=boundaryid) | Q(boundary__parent_id=boundaryid) | Q(boundary__parent__parent_id=boundaryid))
+            for institutionid in self.institutionids:
+                request.append({'assessment':assessmentid, 'institution':institutionid, 'active':2})
+        print>>sys.stderr,request
+        serializer = self.get_serializer(data=request, many=True)
+        serializer.is_valid(raise_exception=True)
+        self.perform_create(serializer)
+        headers = self.get_success_headers(serializer.data)
+        return Response(serializer.data, status=status.HTTP_201_CREATED,
+                                                headers=headers)
+
+
+    def createAssessmentStudentGroupAssocation(self):
+        request = []
+        for assessmentid in self.assessmentids:
+            if self.institutionids == []:
+                for boundaryid in self.boundaryids:
+                    self.institutionids = Institution.objects.values_list('id',flat=True).filter(Q(boundary_id=boundaryid) | Q(boundary__parent_id=boundaryid) | Q(boundary__parent__parent_id=boundaryid))
+            for institutionid in self.institutionids:
+                for studentgroup in self.studentgroups:
+                    studentgroupids = list(StudentGroup.objects.values_list('id', flat=True).filter(institution_id=institutionid, name=studentgroup))
+                    if len(studentgroupids) != 0:
+                        for studentgroupid in studentgroupids:
+                            request.append({'assessment':assessmentid,'student_group':studentgroupid,'active':2})
+
+        serializer = self.get_serializer(data=request, many=True)
+        serializer.is_valid(raise_exception=True)
+        self.perform_create(serializer)
+        headers = self.get_success_headers(serializer.data)
+        return Response(serializer.data, status=status.HTTP_201_CREATED,
+                                                headers=headers)
+
+
 

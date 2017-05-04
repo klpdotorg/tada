@@ -76,7 +76,7 @@ class AssessmentStudentGroupAssociation(models.Model):
 
         #print "Access", self.active
         self.full_clean()
-        super(Assessment_StudentGroup_Association, self).save(*args, **kwargs)
+        super(AssessmentStudentGroupAssociation, self).save(*args, **kwargs)
 
     class Meta:
 
