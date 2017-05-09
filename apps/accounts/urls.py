@@ -3,6 +3,7 @@ from django.contrib import admin
 
 from .api_views import (
     PermissionView,
+    ReportView,
     UserViewSet,
     LoginView,
 )
@@ -30,6 +31,11 @@ urlpatterns = patterns(
         r'^users/(?P<pk>[0-9]+)/$',
         UserViewSet.as_view(RetrieveUpdateDestroyMapper),
         name='users_detail'
+    ),
+    url(
+        r'^users/(?P<pk>[0-9]+)/reports/$',
+        ReportView.as_view(),
+        name='reports_view'
     ),
     url(
         r'^users/(?P<pk>[0-9]+)/permissions/$',

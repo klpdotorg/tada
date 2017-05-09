@@ -12,6 +12,7 @@ from guardian.shortcuts import (
 from django.contrib.auth.models import Group
 from django.contrib.auth import get_user_model
 
+from .reports import Report
 from .utils import ActionViewMixin, login_user
 from .filters import UserFilter
 from .permissions import HasAssignPermPermission, UserPermission
@@ -201,3 +202,16 @@ class PermissionView(APIView):
 
         return Response("Permissions unassigned")
 
+
+class ReportView(APIView):
+    def get(self, request, pk):
+        try:
+            user = User.objects.get(id=pk)
+        except Exception as ex:
+            raise APIException(ex)
+
+        from_date = request.data.get('from', None)
+        to_date = request.data.get('to', None)
+
+        report = Report(user, from_date, to_date)
+        return Response(report.generate())
