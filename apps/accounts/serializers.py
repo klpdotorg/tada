@@ -8,7 +8,7 @@ from django.contrib.auth import authenticate, get_user_model
 
 from guardian.shortcuts import get_objects_for_user
 
-from schools.models import Boundary
+from schools.models import Assessment, Boundary
 
 User = get_user_model()
 
@@ -64,7 +64,7 @@ class UserSerializer(serializers.ModelSerializer):
         response = {}
 
         response['assessments'] = get_objects_for_user(
-            user, "schools.change_assessment"
+            user, "crud_answers", klass=Assessment
         ).values_list('id', flat=True)
 
         response['boundaries'] = get_objects_for_user(

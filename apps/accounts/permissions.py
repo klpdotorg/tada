@@ -82,11 +82,11 @@ class WorkUnderAssessmentPermission(TadaBasePermission):
             return True
         else:
             assessment_id = view.kwargs.get(
-                'parent_lookup_question__assessment', None
+                'parent_lookup_student__studentgroup__asssessment', None
             )
             try:
                 assessment = Assessment.objects.get(id=assessment_id)
-            except:
+            except Exception as ex:
                 return False
         return request.user.has_perm('crud_answers', assessment)
 
