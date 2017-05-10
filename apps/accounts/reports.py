@@ -89,29 +89,32 @@ class Report(object):
             content_type__in=answers_ctypes,
             event_type=CRUDEvent.CREATE
         ).values_list('object_id', flat=True)
+
         answers = self.fetch_user_answers_for_assessment(
             questions, answer_ids_created_by_user)
 
-        for answer in answers:
-            try:
-                updated_answer = CRUDEvent.objects.get(
-                    object_id=answer.id,
-                    event_type=CRUDEvent.UPDATE
-                )
-            except:
-                # Double entry not done.
-                continue
+        for updated_answer in answers:
+            original_answer = CRUDEvent.objects.get(
+                object_id=updated_answer.id,
+                event_type=CRUDEvent.CREATE
+            )
 
-            updated_answer = self.get_answer_json(updated_answer)
+            original_answer = self.get_answer_json(original_answer)
             
             # If question type is Marks
-            if answer.question.question_type == 1:
-                if int(answer.answer_score) == int(updated_answer['fields']['answer_score']):
+            if updated_answer.question.question_type == 1:
+                if (
+                        int(original_answer['fields']['answer_score']) ==
+                        int(updated_answer.answer_score)
+                ):
                     report_dict['Correct'] += 1
                 else:
                     report_dict['Incorrect'] += 1
             else: # If question type is Grade
-                if answer.answer_grade == updated_answer['fields']['answer_grade']:
+                if (
+                        original_answer['fields']['answer_grade'] ==
+                        updated_answer.answer_grade
+                ):
                     report_dict['Correct'] += 1
                 else:
                     report_dict['Incorrect'] += 1
@@ -167,12 +170,6 @@ class Report(object):
     def generate(self):
         user = self.user
         
-        report_dict = {
-            'Correct':0,
-            'Incorrect':0,
-            'Verified':0,
-            'Rectified':0,
-        }
         response = {}
 
         crud_events = CRUDEvent.objects.filter(user=user)
@@ -259,10 +256,21 @@ class Report(object):
         authorized_assessment_ids = get_objects_for_user(
             user, "crud_answers", klass=Assessment
         ).values_list('id', flat=True)
+        authorized_assessments = Assessment.objects.filter(
+            id__in=authorized_assessment_ids
+        )
 
-        for assessment in Assessment.objects.filter(id__in=authorized_assessment_ids):
+        for assessment in authorized_assessments:
+            report_dict = {
+                'Correct':0,
+                'Incorrect':0,
+                'Verified':0,
+                'Rectified':0,
+            }
+
             programme_name = assessment.programme.name.strip()
             programme_id = assessment.programme.id
+
             if not programme_name in response: 
                 response[programme_name] = {
                     'id':programme_id,
@@ -275,15 +283,14 @@ class Report(object):
             report_dict = self.get_verified_and_rectifieds(
                 report_dict, questions, crud_events
             )
-
             assessment_dict = {
                 'id':assessment.id,
                 'name':assessment.name,
                 'type':ASSESSMENT_TYPE[assessment.type],
                 'number_of_questions':questions.count(),
-                user.username:report_dict
+                'report':report_dict,
+                'user':user.username
             }
-
             response[assessment.programme.name.strip()]['assessments'].append(assessment_dict)
 
         response['preschool'] = {
