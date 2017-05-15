@@ -7,6 +7,7 @@ from guardian.shortcuts import (
     remove_perm
 )
 
+from django.contrib.auth import get_user_model
 from django.contrib.contenttypes.models import ContentType
 
 from schools.models import (
@@ -18,6 +19,7 @@ from schools.models import (
     BoundaryCategory,
     BoundaryType,
     Institution,
+    Programme,
     Staff,
     Student,
     StudentGroup,
@@ -29,9 +31,10 @@ ASSESSMENT_TYPE = {
     3 : 'Student'
 }
 
+User = get_user_model()
+
 class Report(object):
-    def __init__(self, user, from_date, to_date):
-        self.user = user
+    def __init__(self, from_date, to_date):
         self.from_date = from_date
         self.to_date = to_date
 
@@ -167,10 +170,45 @@ class Report(object):
             answer.object_json_repr.replace('null', 'None')
         )[0]
 
+    def get_assessment_report(self, assessment, crud_events):
+        report = {
+            'Correct':0,
+            'Incorrect':0,
+            'Verified':0,
+            'Rectified':0,
+        }
+
+        questions = assessment.question_set.all()
+        report = self.get_correct_and_incorrects(
+            report, questions, crud_events
+        )
+        report = self.get_verified_and_rectifieds(
+            report, questions, crud_events
+        )
+
+        return {
+            'id':assessment.id,
+            'name':assessment.name,
+            'type':ASSESSMENT_TYPE[assessment.type],
+            'number_of_questions':questions.count(),
+            'report':report,
+        }
+
     def generate(self):
-        user = self.user
-        
         response = {}
+        users = CRUDEvent.objects.only('user').values_list(
+            'user', flat=True
+        ).order_by().distinct('user')
+        users = User.objects.filter(id__in=users, is_superuser=False)
+        for user in users:
+            response[user.username] = self.generate_for_user(user)
+
+        return response
+
+    def generate_for_user(self, user):
+        user_response = {}
+        user_response['id'] = user.id
+        user_response['programmes'] = []
 
         crud_events = CRUDEvent.objects.filter(user=user)
 
@@ -257,43 +295,29 @@ class Report(object):
             user, "crud_answers", klass=Assessment
         ).values_list('id', flat=True)
         authorized_assessments = Assessment.objects.filter(
-            id__in=authorized_assessment_ids
-        )
+            id__in=authorized_assessment_ids)
+        authorized_programme_ids = authorized_assessments.values_list(
+            'programme', flat=True).distinct('programme')
+        authorized_programmes = Programme.objects.filter(
+            id__in=authorized_programme_ids)
 
-        for assessment in authorized_assessments:
-            report_dict = {
-                'Correct':0,
-                'Incorrect':0,
-                'Verified':0,
-                'Rectified':0,
-            }
+        for programme in authorized_programmes:
+            programme_json = {}
+            programme_json['id'] = programme.id
+            programme_json['name'] = programme.name
+            programme_json['assessments'] = []
 
-            programme_name = assessment.programme.name.strip()
-            programme_id = assessment.programme.id
+            assessments = programme.assessment_set.filter(
+                id__in=authorized_assessments)
 
-            if not programme_name in response: 
-                response[programme_name] = {
-                    'id':programme_id,
-                    'assessments':[]
-                }
-            questions = assessment.question_set.all()
-            report_dict = self.get_correct_and_incorrects(
-                report_dict, questions, crud_events
-            )
-            report_dict = self.get_verified_and_rectifieds(
-                report_dict, questions, crud_events
-            )
-            assessment_dict = {
-                'id':assessment.id,
-                'name':assessment.name,
-                'type':ASSESSMENT_TYPE[assessment.type],
-                'number_of_questions':questions.count(),
-                'report':report_dict,
-                'user':user.username
-            }
-            response[assessment.programme.name.strip()]['assessments'].append(assessment_dict)
+            for assessment in authorized_assessments:
+                assessment_report = self.get_assessment_report(
+                    assessment, crud_events)
+                programme_json['assessments'].append(assessment_report)
 
-        response['preschool'] = {
+            user_response['programmes'].append(programme_json)
+
+        user_response['preschool'] = {
             'students': {
                 'created':pre_students_created,
                 'updated':pre_students_updated,
@@ -310,7 +334,7 @@ class Report(object):
                 'deleted':pre_staffs_deleted,
             },
         }
-        response['primaryschool'] = {
+        user_response['primaryschool'] = {
             'students': {
                 'created':primary_students_created,
                 'updated':primary_students_updated,
@@ -328,4 +352,4 @@ class Report(object):
             },
         }
 
-        return response
+        return user_response
