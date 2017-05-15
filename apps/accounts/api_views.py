@@ -1,3 +1,5 @@
+import json
+
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.exceptions import APIException
@@ -204,16 +206,13 @@ class PermissionView(APIView):
 
 
 class ReportView(APIView):
-    def get(self, request, pk):
-        try:
-            user = User.objects.get(id=pk)
-        except Exception as ex:
-            raise APIException(ex)
-
+    def get(self, request):
         from_date = request.data.get('from', None)
         to_date = request.data.get('to', None)
 
-        report = Report(user, from_date, to_date)
+        report = Report(from_date, to_date)
         generated_report = report.generate()
-        send_email(generated_report)
+        send_email(
+            json.dumps(generated_report, indent=4)
+        )
         return Response(generated_report)
