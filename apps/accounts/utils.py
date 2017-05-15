@@ -1,7 +1,20 @@
 from django.contrib.auth import user_logged_in
 
 from rest_framework import authtoken
+from django.core.mail import EmailMultiAlternatives
 
+def send_email(
+        text_content,
+        to_emails=['dev@klp.org.in',],
+        from_email='tada@klp.org.in',
+        subject='Tada Report'):
+    try:
+        msg = EmailMultiAlternatives(subject, text_content, from_email, to_emails)
+    except Exception as ex:
+        print ex
+        return
+
+    msg.send()
 
 def login_user(request, user):
     token, _ = authtoken.models.Token.objects.get_or_create(user=user)
@@ -14,3 +27,4 @@ class ActionViewMixin(object):
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         return self._action(serializer)
+

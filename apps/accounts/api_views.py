@@ -13,8 +13,8 @@ from django.contrib.auth.models import Group
 from django.contrib.auth import get_user_model
 
 from .reports import Report
-from .utils import ActionViewMixin, login_user
 from .filters import UserFilter
+from .utils import ActionViewMixin, login_user, send_email
 from .permissions import HasAssignPermPermission, UserPermission
 from .serializers import (
     GroupSerializer,
@@ -214,4 +214,6 @@ class ReportView(APIView):
         to_date = request.data.get('to', None)
 
         report = Report(user, from_date, to_date)
-        return Response(report.generate())
+        generated_report = report.generate()
+        send_email(generated_report)
+        return Response(generated_report)
