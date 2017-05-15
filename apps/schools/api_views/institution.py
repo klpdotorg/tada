@@ -383,18 +383,18 @@ class AssessmentStudentGroupAssociationViewSet(viewsets.ModelViewSet):
     serializer_class = AssessmentStudentGroupAssociationSerializer
 
     def create(self, request, *args, **kwargs):
-        if not self.request.GET.get('assessmentid'):
+        if not self.request.data.get('assessmentid'):
             raise ParseError("Mandatory parameter assessmentid not passed")
-        self.assessmentids = self.request.GET.get('assessmentid').split(",")
-        if self.request.GET.get('boundaryid'):
-            self.boundaryids = self.request.GET.get('boundaryid').split(",")
-        if self.request.GET.get('institutionid'):
-            self.institutionids = self.request.GET.get('institutionid').split(",")
+        self.assessmentids = self.request.data.get('assessmentid').split(",")
+        if self.request.data.get('boundaryid'):
+            self.boundaryids = self.request.data.get('boundaryid').split(",")
+        if self.request.data.get('institutionid'):
+            self.institutionids = self.request.data.get('institutionid').split(",")
         if self.institutionids == [] and self.boundaryids == []:
             raise ParseError("Mandatory parameter institution or boundary not passed")
-        if not self.request.GET.get('studentgroup'):
+        if not self.request.data.get('studentgroup'):
             raise ParseError("Mandatory parameter studentgroup not passed")
-        self.studentgroups = self.request.GET.get('studentgroup').split(",")
+        self.studentgroups = self.request.data.get('studentgroup').split(",")
         response = self.createAssessmentStudentGroupAssocation()
 
         return response
@@ -421,6 +421,7 @@ class AssessmentStudentGroupAssociationViewSet(viewsets.ModelViewSet):
         serializer = self.get_serializer(data=request, many=True)
         serializer.is_valid(raise_exception=True)
         self.perform_create(serializer)
+
         headers = self.get_success_headers(serializer.data)
         return Response(serializer.data, status=status.HTTP_201_CREATED,
                         headers=headers)
@@ -434,13 +435,13 @@ class AssessmentInstitutionAssociationViewSet(viewsets.ModelViewSet):
     serializer_class = AssessmentInstitutionAssociationSerializer
 
     def create(self, request, *args, **kwargs):
-        if not self.request.GET.get('assessmentid'):
+        if not self.request.data.get('assessmentid'):
             raise ParseError("Mandatory parameter assessmentid not passed")
-        self.assessmentids = self.request.GET.get('assessmentid').split(",")
-        if self.request.GET.get('boundaryid'):
-            self.boundaryids = self.request.GET.get('boundaryid').split(",")
-        if self.request.GET.get('institutionid'):
-            self.institutionids = self.request.GET.get('institutionid').split(",")
+        self.assessmentids = self.request.data.get('assessmentid').split(",")
+        if self.request.data.get('boundaryid'):
+            self.boundaryids = self.request.data.get('boundaryid').split(",")
+        if self.request.data.get('institutionid'):
+            self.institutionids = self.request.data.get('institutionid').split(",")
         if self.institutionids == [] and self.boundaryids == []:
             raise ParseError("Mandatory parameter institution or boundary not passed")
         response = self.createAssessmentInstitutionAssociation()
