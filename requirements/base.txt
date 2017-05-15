@@ -1,3 +1,4 @@
+arrow==0.10.0
 Django==1.8.9
 django-appconf==1.0.1
 django-compressor==1.4
