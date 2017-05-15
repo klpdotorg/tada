@@ -28,14 +28,14 @@ urlpatterns = patterns(
         name='users_list_create'
     ),
     url(
+        r'^users/reports/$',
+        ReportView.as_view(),
+        name='reports_view'
+    ),
+    url(
         r'^users/(?P<pk>[0-9]+)/$',
         UserViewSet.as_view(RetrieveUpdateDestroyMapper),
         name='users_detail'
-    ),
-    url(
-        r'^users/(?P<pk>[0-9]+)/reports/$',
-        ReportView.as_view(),
-        name='reports_view'
     ),
     url(
         r'^users/(?P<pk>[0-9]+)/permissions/$',
