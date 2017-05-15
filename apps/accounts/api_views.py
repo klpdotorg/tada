@@ -210,6 +210,7 @@ class ReportView(APIView):
     def get(self, request):
         from_date = request.query_params.get('from', None)
         to_date = request.query_params.get('to', None)
+        to_email = request.query_params.get('to_email', None)
 
         if from_date:
             try:
@@ -226,6 +227,7 @@ class ReportView(APIView):
         report = Report(from_date, to_date)
         generated_report = report.generate()
         send_email(
-            json.dumps(generated_report, indent=4)
+            json.dumps(generated_report, indent=4),
+            to_emails=to_email
         )
         return Response(generated_report)
