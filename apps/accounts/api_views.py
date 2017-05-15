@@ -1,4 +1,5 @@
 import json
+import arrow
 
 from rest_framework.views import APIView
 from rest_framework.response import Response
@@ -207,8 +208,20 @@ class PermissionView(APIView):
 
 class ReportView(APIView):
     def get(self, request):
-        from_date = request.data.get('from', None)
-        to_date = request.data.get('to', None)
+        from_date = request.query_params.get('from', None)
+        to_date = request.query_params.get('to', None)
+
+        if from_date:
+            try:
+                from_date = arrow.get(from_date, "YYYY-MM-DD").datetime
+            except Exception as ex:
+                raise APIException(ex)
+
+        if to_date:
+            try:
+                to_date = arrow.get(to_date, "YYYY-MM-DD").datetime
+            except Exception as ex:
+                raise APIException(ex)
 
         report = Report(from_date, to_date)
         generated_report = report.generate()

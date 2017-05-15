@@ -7,6 +7,7 @@ from guardian.shortcuts import (
     remove_perm
 )
 
+from django.db.models import Q
 from django.contrib.auth import get_user_model
 from django.contrib.contenttypes.models import ContentType
 
@@ -196,30 +197,30 @@ class Report(object):
 
     def generate(self):
         response = {}
-        users = CRUDEvent.objects.only('user').values_list(
-            'user', flat=True
-        ).order_by().distinct('user')
-        users = User.objects.filter(id__in=users, is_superuser=False)
+
+        crud_events = CRUDEvent.objects.all()
+
+        if self.from_date:
+            crud_events = CRUDEvent.objects.filter(datetime__gte=self.from_date)
+
+        if self.to_date:
+            crud_events = CRUDEvent.objects.filter(datetime__lte=self.to_date)
+
+        user_ids = crud_events.only('user').values_list(
+            'user', flat=True).order_by().distinct('user')
+
+        users = User.objects.filter(id__in=user_ids, is_superuser=False)
         for user in users:
-            response[user.username] = self.generate_for_user(user)
+            response[user.username] = self.generate_for_user(user, crud_events)
 
         return response
 
-    def generate_for_user(self, user):
+    def generate_for_user(self, user, crud_events):
         user_response = {}
         user_response['id'] = user.id
         user_response['programmes'] = []
 
-        crud_events = CRUDEvent.objects.filter(user=user)
-
-        from_date = self.from_date
-        to_date = self.to_date
-
-        if from_date:
-            crud_events = crud_events.filter(datetime__gte=from_date)
-
-        if to_date:
-            crud_events = crud_events.filter(datetime__lte=to_date)
+        crud_events = crud_events.filter(user=user)
 
         # Get all the related ContentTypes.
         (ctype_student, ctype_institution, ctype_staff, ctype_answer_institution,
@@ -310,7 +311,7 @@ class Report(object):
             assessments = programme.assessment_set.filter(
                 id__in=authorized_assessments)
 
-            for assessment in authorized_assessments:
+            for assessment in assessments:
                 assessment_report = self.get_assessment_report(
                     assessment, crud_events)
                 programme_json['assessments'].append(assessment_report)
