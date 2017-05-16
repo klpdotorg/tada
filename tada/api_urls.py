@@ -63,6 +63,23 @@ nested_router.register(
             parents_query_lookups=['studentgroups__institution', 'studentgroups']
         )
 
+## Programmes -> Assessments -> Questions
+nested_router.register(
+    r'programmes',
+    ProgrammeViewSet,
+    base_name='programme'
+    ).register(
+        r'assessments',
+        AssessmentViewSet,
+        base_name='assessment',
+        parents_query_lookups=['programme']
+        ).register(
+            r'questions',
+            QuestionViewSet,
+            base_name='question',
+            parents_query_lookups=['assessment__programme', 'assessment']
+        )
+
 ## Programmes -> Assessments -> Students -> AnswerStudent
 nested_router.register(
     r'programmes',
