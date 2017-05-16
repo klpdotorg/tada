@@ -6,30 +6,19 @@ from rest_framework.response import Response
 from rest_framework.exceptions import APIException
 from rest_framework import status, generics, viewsets, permissions
 
-from guardian.shortcuts import (
-    assign_perm,
-    get_objects_for_user,
-    remove_perm
-)
-
 from django.contrib.auth.models import Group
 from django.contrib.auth import get_user_model
 
 from .reports import Report
 from .filters import UserFilter
-from .utils import ActionViewMixin, login_user, send_email
+from .utils import login_user, send_email
+from .mixins import ActionViewMixin, PermissionMixin
 from .permissions import HasAssignPermPermission, UserPermission
 from .serializers import (
     GroupSerializer,
     UserSerializer,
     LoginSerializer,
     TokenSerializer,
-)
-from schools.models import (
-    Assessment,
-    Boundary,
-    BoundaryCategory,
-    Institution,
 )
 
 User = get_user_model()
@@ -80,66 +69,8 @@ class GroupViewSet(viewsets.ModelViewSet):
     serializer_class = GroupSerializer
 
 
-class PermissionView(APIView):
+class PermissionView(APIView, PermissionMixin):
     permission_classes = (HasAssignPermPermission,)
-
-    def assign_institution_permissions(self, user_to_be_permitted, institution_id):
-        try:
-            institution = Institution.objects.get(id=institution_id)
-        except Exception as ex:
-            raise APIException(ex)
-        assign_perm('change_institution', user_to_be_permitted, institution)
-        assign_perm('crud_student_class_staff', user_to_be_permitted, institution)
-
-    def assign_boundary_permissions(self, user_to_be_permitted, boundary_id):
-        try:
-            boundary = Boundary.objects.get(id=boundary_id)
-        except Exception as ex:
-            raise APIException(ex)
-
-        institutions_under_boundary = boundary.get_institutions()
-        for institution in institutions_under_boundary:
-            self.assign_institution_permissions(user_to_be_permitted, institution.id)
-
-        child_clusters = boundary.get_clusters()
-        for cluster in child_clusters:
-            assign_perm('add_institution', user_to_be_permitted, cluster)
-
-    def assign_assessment_permissions(self, user_to_be_permitted, assessment_id):
-        try:
-            assessment = Assessment.objects.get(id=assessment_id)
-        except Exception as ex:
-            raise APIException(ex)
-        assign_perm('crud_answers', user_to_be_permitted, assessment)
-
-    def unassign_institution_permissions(self, user_to_be_denied, institution_id):
-        try:
-            institution = Institution.objects.get(id=institution_id)
-        except Exception as ex:
-            raise APIException(ex)
-        remove_perm('change_institution', user_to_be_denied, institution)
-        remove_perm('crud_student_class_staff', user_to_be_denied, institution)
-
-    def unassign_boundary_permissions(self, user_to_be_denied, boundary_id):
-        try:
-            boundary = Boundary.objects.get(id=boundary_id)
-        except Exception as ex:
-            raise APIException(ex)
-
-        institutions_under_boundary = boundary.get_institutions()
-        for institution in institutions_under_boundary:
-            self.unassign_institution_permissions(user_to_be_denied, institution.id)
-
-        child_clusters = boundary.get_clusters()
-        for cluster in child_clusters:
-            remove_perm('add_institution', user_to_be_denied, cluster)
-
-    def unassign_assessment_permissions(self, user_to_be_denied, assessment_id):
-        try:
-            assessment = Assessment.objects.get(id=assessment_id)
-        except Exception as ex:
-            raise APIException(ex)
-        remove_perm('crud_answers', user_to_be_denied, assessment)
 
     def get(self, request, pk):
         try:
@@ -149,17 +80,17 @@ class PermissionView(APIView):
 
         response = {}
 
-        response['assessments'] = get_objects_for_user(
-            permitted_user, "crud_answers", klass=Assessment
-        ).values_list('id', flat=True)
+        response['assessments'] = self.get_permitted_entities(
+            permitted_user, permission="crud_answers", klass="assessment"
+        )
 
-        response['boundaries'] = get_objects_for_user(
-            permitted_user, "add_institution", klass=Boundary
-        ).values_list('id', flat=True)
+        response['boundaries'] = self.get_permitted_entities(
+            permitted_user, permission="add_institution", klass="boundary"
+        )
 
-        response['institutions'] = get_objects_for_user(
-            permitted_user, "schools.change_institution"
-        ).values_list('id', flat=True)
+        response['institutions'] = self.get_permitted_entities(
+            permitted_user, permission="schools.change_institution"
+        )
 
         return Response(response)
 
