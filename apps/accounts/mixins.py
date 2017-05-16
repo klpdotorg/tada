@@ -10,6 +10,8 @@ from schools.models import (
     Institution,
 )
 
+from rest_framework.exceptions import APIException
+
 
 class ActionViewMixin(object):
     def post(self, request):
