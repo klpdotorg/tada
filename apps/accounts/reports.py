@@ -1,4 +1,6 @@
 import ast
+import arrow
+
 from itertools import chain
 from easyaudit.models import CRUDEvent
 from guardian.shortcuts import (
@@ -202,9 +204,18 @@ class Report(object):
 
         if self.from_date:
             crud_events = CRUDEvent.objects.filter(datetime__gte=self.from_date)
+            response['start_date'] = self.from_date
+        else:
+            response['start_date'] = crud_events.earliest('datetime').datetime
 
         if self.to_date:
             crud_events = CRUDEvent.objects.filter(datetime__lte=self.to_date)
+            response['end_date'] = self.to_date
+        else:
+            response['end_date'] = crud_events.latest('datetime').datetime
+
+        response['start_date'] = arrow.get(response['start_date']).format('YYYY-MM-DD')
+        response['end_date'] = arrow.get(response['end_date']).format('YYYY-MM-DD')
 
         user_ids = crud_events.only('user').values_list(
             'user', flat=True).order_by().distinct('user')
