@@ -268,11 +268,11 @@ class ProgrammeViewSet(NestedViewSetMixin, viewsets.ModelViewSet):
                             "name": group["inst_name"],
                             "assessments": {assessment.id: {
                                 "name": assessment.name,
-                                "assessment_id": assessment.id}}}
+                                "id": assessment.id}}}
                     else:
                         programmeInfo[group["admin1_id"]]["boundaries"][group["admin2_id"]]["boundaries"][group["admin3_id"]]["institutions"][group["inst_id"]]["assessments"][assessment.id] = {
                             "name": assessment.name,
-                            "assessment_id": assessment.id}
+                            "id": assessment.id}
             else:
                 groups = AssessmentStudentGroupAssociation.objects.filter(
                     assessment=assessment.id).annotate(
@@ -346,18 +346,18 @@ class ProgrammeViewSet(NestedViewSetMixin, viewsets.ModelViewSet):
                                 "name": group["sgname"],
                                 "assessments": {assessment.id: {
                                     "name": assessment.name,
-                                    "assessment_id": assessment.id}}}}}
+                                    "id": assessment.id}}}}}
                     elif group["sgid"] not in programmeInfo[group["admin1_id"]]["boundaries"][group["admin2_id"]]["boundaries"][group["admin3_id"]]["institutions"][group["inst_id"]]["classes"]:
                         programmeInfo[group["admin1_id"]]["boundaries"][group["admin2_id"]]["boundaries"][group["admin3_id"]]["institutions"][group["inst_id"]]["classes"][group["sgid"]] = {
                             "id": group["sgid"],
                             "name": group["sgname"],
                             "assessments": {assessment.id: {
                                 "name": assessment.name,
-                                "assessment_id": assessment.id}}}
+                                "id": assessment.id}}}
                     else:
                         programmeInfo[group["admin1_id"]]["boundaries"][group["admin2_id"]]["boundaries"][group["admin3_id"]]["institutions"][group["inst_id"]]["classes"][group["sgid"]]["assessments"][assessment.id] = {
                             "name": assessment.name,
-                            "assessment_id": assessment.id}
+                            "id": assessment.id}
 
         return programmeInfo
 
