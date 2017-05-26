@@ -3,7 +3,6 @@ from rest_framework import viewsets
 from rest_framework.response import Response
 from rest_framework_extensions.mixins import NestedViewSetMixin
 from rest_framework.exceptions import ParseError
-from rest_framework_bulk import BulkCreateModelMixin
 from django.db.models import F
 from django.db.models import Q
 from django.contrib.auth.models import User
@@ -71,7 +70,10 @@ from schools.models import (
     StudentGroup,
 )
 
-from schools.mixins import CompensationLogMixin
+from schools.mixins import (
+    BulkAnswerCreateModelMixin,
+    CompensationLogMixin
+)
 
 
 class AssessmentListViewSet(viewsets.ReadOnlyModelViewSet):
@@ -87,7 +89,7 @@ class AssessmentViewSet(NestedViewSetMixin, viewsets.ModelViewSet):
 
 
 class AnswerInstitutionViewSet(
-        NestedViewSetMixin, BulkCreateModelMixin,
+        NestedViewSetMixin, BulkAnswerCreateModelMixin,
         viewsets.ModelViewSet, CompensationLogMixin):
     permission_classes = (WorkUnderAssessmentPermission,)
     queryset = AnswerInstitution.objects.all()
@@ -96,7 +98,7 @@ class AnswerInstitutionViewSet(
 
 
 class AnswerStudentViewSet(
-        NestedViewSetMixin, BulkCreateModelMixin,
+        NestedViewSetMixin, BulkAnswerCreateModelMixin,
         viewsets.ModelViewSet, CompensationLogMixin):
     permission_classes = (WorkUnderAssessmentPermission,)
     queryset = AnswerStudent.objects.all()
@@ -125,7 +127,7 @@ class AnswerStudentViewSet(
 
 
 class AnswerStudentGroupViewSet(
-        NestedViewSetMixin, BulkCreateModelMixin,
+        NestedViewSetMixin, BulkAnswerCreateModelMixin,
         viewsets.ModelViewSet, CompensationLogMixin):
     permission_classes = (WorkUnderAssessmentPermission,)
     queryset = AnswerStudentGroup.objects.all()
