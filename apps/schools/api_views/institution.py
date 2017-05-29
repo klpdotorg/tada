@@ -3,8 +3,10 @@ from rest_framework import viewsets
 from rest_framework.response import Response
 from rest_framework_extensions.mixins import NestedViewSetMixin
 from rest_framework.exceptions import ParseError
+
 from django.db.models import F
 from django.db.models import Q
+from django.http import Http404
 from django.contrib.auth.models import User
 
 from guardian.shortcuts import (
@@ -12,10 +14,6 @@ from guardian.shortcuts import (
     get_users_with_perms,
     get_objects_for_user,
 )
-
-
-from django.db.models import F
-from django.db.models import Q
 
 from accounts.permissions import (
     InstitutionCreateUpdatePermission,
@@ -96,6 +94,29 @@ class AnswerInstitutionViewSet(
     serializer_class = AnswerInstitutionSerializer
     # filter_class = AnswerInstitutionFilter
 
+    def filter_queryset_by_parents_lookups(self, queryset):
+        parents_query_dict = self.get_parents_query_dict()
+        if parents_query_dict.get('institution', None):
+            try:
+                institution_id = parents_query_dict.get('institution')
+                assessment_id = parents_query_dict.get(
+                    'institution__assessmentinstitutionassociation__assessment')
+                return queryset.filter(
+                    institution=institution_id,
+                    question__assessment=assessment_id
+                ).distinct('id')
+            except Exception as ex:
+                raise APIException(ex)
+        elif parents_query_dict:
+            try:
+                return queryset.filter(
+                    **parents_query_dict
+                ).order_by().distinct('id')
+            except ValueError:
+                raise Http404
+        else:
+            return queryset
+
 
 class AnswerStudentViewSet(
         NestedViewSetMixin, BulkAnswerCreateModelMixin,
@@ -110,8 +131,11 @@ class AnswerStudentViewSet(
         if parents_query_dict.get('student', None):
             try:
                 student_id = parents_query_dict.get('student')
+                assessment_id = parents_query_dict.get(
+                    'student__studentgroup__asssessment')
                 return queryset.filter(
-                    student=student_id
+                    student=student_id,
+                    question__assessment=assessment_id
                 ).distinct('id')
             except Exception as ex:
                 raise APIException(ex)
@@ -133,6 +157,30 @@ class AnswerStudentGroupViewSet(
     queryset = AnswerStudentGroup.objects.all()
     serializer_class = AnswerStudentGroupSerializer
     # filter_class = AnswerStudentGroupFilter
+
+    def filter_queryset_by_parents_lookups(self, queryset):
+        parents_query_dict = self.get_parents_query_dict()
+        if parents_query_dict.get('studentgroup', None):
+            try:
+                studentgroup_id = parents_query_dict.get('studentgroup')
+                assessment_id = parents_query_dict.get(
+                    'studentgroup__assessmentstudentgroupassociation__assessment'
+                )
+                return queryset.filter(
+                    studentgroup=studentgroup_id,
+                    question__assessment=assessment_id
+                ).distinct('id')
+            except Exception as ex:
+                raise APIException(ex)
+        elif parents_query_dict:
+            try:
+                return queryset.filter(
+                    **parents_query_dict
+                ).order_by().distinct('id')
+            except ValueError:
+                raise Http404
+        else:
+            return queryset
 
 
 class BoundaryViewSet(viewsets.ModelViewSet):
