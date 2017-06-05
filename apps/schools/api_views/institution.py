@@ -256,7 +256,11 @@ class ProgrammeViewSet(NestedViewSetMixin, viewsets.ModelViewSet):
         programmeInfo = {}
         permitted_user = request.user
         assessments = get_objects_for_user(
-            permitted_user, "crud_answers", klass=Assessment).filter(programme_id=pid)
+            permitted_user, "crud_answers", klass=Assessment
+        ).filter(
+            programme_id=pid,
+            active=2
+        )
         #assessments = Assessment.objects.filter(programme_id=pid)
         for assessment in assessments:
             if assessment.type == 1:  # institution assessment
