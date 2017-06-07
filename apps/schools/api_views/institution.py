@@ -7,7 +7,7 @@ from rest_framework.exceptions import ParseError
 from django.db.models import F
 from django.db.models import Q
 from django.http import Http404
-from django.contrib.auth.models import User
+from django.contrib.auth.models import User, Group
 
 from guardian.shortcuts import (
     assign_perm,
@@ -255,13 +255,19 @@ class ProgrammeViewSet(NestedViewSetMixin, viewsets.ModelViewSet):
     def getDetails(self, request, pid):
         programmeInfo = {}
         permitted_user = request.user
-        assessments = get_objects_for_user(
-            permitted_user, "crud_answers", klass=Assessment
-        ).filter(
-            programme_id=pid,
-            active=2
-        )
-        #assessments = Assessment.objects.filter(programme_id=pid)
+        tada_admin = Group.objects.get(name="tada_admin")
+        if (
+                permitted_user.is_superuser or
+                permitted_user.groups.filter(id=tada_admin.id).exists()
+        ):
+            assessments = Assessment.objects.filter(programme_id=pid, active=2)
+        else:
+            assessments = get_objects_for_user(
+                permitted_user, "crud_answers", klass=Assessment
+            ).filter(
+                programme_id=pid,
+                active=2
+            )
         for assessment in assessments:
             if assessment.type == 1:  # institution assessment
                 groups = AssessmentInstitutionAssociation.objects.filter(
