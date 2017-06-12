@@ -3,6 +3,8 @@ from rest_framework.response import Response
 from rest_framework.exceptions import APIException
 from rest_framework.mixins import CreateModelMixin, UpdateModelMixin
 
+from easyaudit.models import CRUDEvent
+
 from schools.models import Question
 
 
@@ -11,7 +13,16 @@ class CompensationLogMixin(CreateModelMixin, UpdateModelMixin):
         serializer.save(double_entry=1)
 
     def perform_update(self, serializer):
-        serializer.save(double_entry=2)
+        user_who_created = CRUDEvent.objects.get(
+            object_id=serializer.instance.id,
+            event_type=CRUDEvent.CREATE
+        ).user
+        user_who_is_updating = self.request.user
+        if user_who_is_updating == user_who_created:
+            double_entry = 1
+        else:
+            double_entry = 2
+        serializer.save(double_entry=double_entry)
 
 
 class BulkAnswerCreateModelMixin(CreateModelMixin):
