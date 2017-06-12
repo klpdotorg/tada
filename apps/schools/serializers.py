@@ -1,6 +1,8 @@
 from rest_framework import serializers
 from rest_framework.exceptions import ValidationError
 
+from easyaudit.models import CRUDEvent
+
 from .models import (
     Assessment,
     AnswerInstitution,
@@ -39,9 +41,39 @@ class AnswerInstitutionSerializer(BulkSerializerMixin, serializers.ModelSerializ
 
 class AnswerStudentSerializer(BulkSerializerMixin, serializers.ModelSerializer):
 
+    history = serializers.SerializerMethodField()
+
     class Meta:
         model = AnswerStudent
         list_serializer_class = BulkListSerializer
+        fields = (
+            'id', 'question', 'student', 'answer_score', 'answer_grade',
+            'double_entry', 'status', 'active', 'history'
+        )
+
+
+    def get_history(self, obj):
+        history = {}
+
+        if CRUDEvent.objects.filter(
+                object_id=obj.id, event_type=CRUDEvent.CREATE).exists():
+            history['created_by'] = CRUDEvent.objects.filter(
+                object_id=obj.id,
+                event_type=CRUDEvent.CREATE
+            ).latest('id').user.id
+        else:
+            history['created_by'] = None
+
+        if CRUDEvent.objects.filter(
+                object_id=obj.id, event_type=CRUDEvent.UPDATE).exists():
+            history['updated_by'] = CRUDEvent.objects.filter(
+                object_id=obj.id,
+                event_type=CRUDEvent.UPDATE
+            ).latest('id').user.id
+        else:
+            history['updated_by'] = None
+
+        return history
 
 
 class AnswerStudentGroupSerializer(BulkSerializerMixin, serializers.ModelSerializer):
