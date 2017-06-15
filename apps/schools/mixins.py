@@ -25,18 +25,7 @@ class CompensationLogMixin(CreateModelMixin, UpdateModelMixin):
         serializer.save(double_entry=double_entry)
 
 
-class BulkAnswerCreateModelMixin(CreateModelMixin):
-    """
-    This is borrowed and overriden from:
-    https://github.com/miki725/django-rest-framework-bulk/blob/master/rest_framework_bulk/drf3/mixins.py
-
-    Either create a single or many model instances in bulk by using the
-    Serializers ``many=True`` ability from Django REST >= 2.2.5.
-    .. note::
-        This mixin uses the same method to create model instances
-        as ``CreateModelMixin`` because both non-bulk and bulk
-        requests will use ``POST`` request method.
-    """
+class AnswerCastMixin():
     def _cast_answer_type(self, data):
         if not data.get('answer'):
             raise APIException("'answer' field required")
@@ -60,6 +49,31 @@ class BulkAnswerCreateModelMixin(CreateModelMixin):
         else:
             processed_data = self._cast_answer_type(request_data)
         return processed_data
+
+
+class AnswerUpdateModelMixin(UpdateModelMixin, AnswerCastMixin):
+    def update(self, request, *args, **kwargs):
+        partial = kwargs.pop('partial', False)
+        instance = self.get_object()
+        data = self._cast_answer_types(request.data)
+        serializer = self.get_serializer(instance, data=data, partial=partial)
+        serializer.is_valid(raise_exception=True)
+        self.perform_update(serializer)
+        return Response(serializer.data)
+
+
+class BulkAnswerCreateModelMixin(CreateModelMixin, AnswerCastMixin):
+    """
+    This is borrowed and overriden from:
+    https://github.com/miki725/django-rest-framework-bulk/blob/master/rest_framework_bulk/drf3/mixins.py
+
+    Either create a single or many model instances in bulk by using the
+    Serializers ``many=True`` ability from Django REST >= 2.2.5.
+    .. note::
+        This mixin uses the same method to create model instances
+        as ``CreateModelMixin`` because both non-bulk and bulk
+        requests will use ``POST`` request method.
+    """
 
     def create(self, request, *args, **kwargs):
         bulk = isinstance(request.data, list)

@@ -70,6 +70,7 @@ from schools.models import (
 
 from schools.mixins import (
     BulkAnswerCreateModelMixin,
+    AnswerUpdateModelMixin,
     CompensationLogMixin
 )
 
@@ -88,7 +89,8 @@ class AssessmentViewSet(NestedViewSetMixin, viewsets.ModelViewSet):
 
 class AnswerInstitutionViewSet(
         NestedViewSetMixin, BulkAnswerCreateModelMixin,
-        viewsets.ModelViewSet, CompensationLogMixin):
+        viewsets.ModelViewSet, CompensationLogMixin,
+        AnswerUpdateModelMixin):
     permission_classes = (WorkUnderAssessmentPermission,)
     queryset = AnswerInstitution.objects.all()
     serializer_class = AnswerInstitutionSerializer
@@ -120,7 +122,8 @@ class AnswerInstitutionViewSet(
 
 class AnswerStudentViewSet(
         NestedViewSetMixin, BulkAnswerCreateModelMixin,
-        viewsets.ModelViewSet, CompensationLogMixin):
+        viewsets.ModelViewSet, CompensationLogMixin,
+        AnswerUpdateModelMixin):
     permission_classes = (WorkUnderAssessmentPermission,)
     queryset = AnswerStudent.objects.all()
     serializer_class = AnswerStudentSerializer
@@ -152,7 +155,8 @@ class AnswerStudentViewSet(
 
 class AnswerStudentGroupViewSet(
         NestedViewSetMixin, BulkAnswerCreateModelMixin,
-        viewsets.ModelViewSet, CompensationLogMixin):
+        viewsets.ModelViewSet, CompensationLogMixin,
+        AnswerUpdateModelMixin):
     permission_classes = (WorkUnderAssessmentPermission,)
     queryset = AnswerStudentGroup.objects.all()
     serializer_class = AnswerStudentGroupSerializer
