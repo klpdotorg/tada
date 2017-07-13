@@ -1,4 +1,5 @@
 from .boundary import BoundaryCategory, BoundaryType, Boundary
+
 from .institution import (
     InstitutionCategory,
     MoiType,
@@ -11,6 +12,7 @@ from .institution import (
     current_academic,
     default_end_date
 )
+
 from .assessments import (
     Assessment,
     AssessmentStudentGroupAssociation,
@@ -20,10 +22,14 @@ from .assessments import (
     AnswerInstitution,
     AnswerStudentGroup
 )
+
 from .students import (
     Relations,
     StudentGroup,
     Student, 
     StudentStudentGroupRelation
 )
+
 from .programs import Programme
+
+from .teachers import Teacher

@@ -23,7 +23,8 @@ from .models import (
     StudentGroup,
     StudentStudentGroupRelation,
     AssessmentInstitutionAssociation,
-    AssessmentStudentGroupAssociation
+    AssessmentStudentGroupAssociation,
+    Teacher
 )
 
 from rest_framework_bulk import (
