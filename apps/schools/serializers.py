@@ -296,5 +296,5 @@ class TeacherSerializer(serializers.ModelSerializer):
             'id', 'institution', 'first_name', 'middle_name', 'last_name',
             'gender', 'qualification', 'total_work_experience_years',
             'total_work_experience_months', 'subject',
-            'contact_no', 'address', 'area', 'pincode', ' active',
+            'contact_no', 'address', 'area', 'pincode', 'active',
         )

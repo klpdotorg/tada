@@ -24,7 +24,8 @@ from schools.api_views import (
     StudentGroupViewSet,
     StudentStudentGroupViewSet,
     AssessmentStudentGroupAssociationViewSet,
-    AssessmentInstitutionAssociationViewSet
+    AssessmentInstitutionAssociationViewSet,
+    TeacherViewSet
 )
 
 bulkrouter = BulkRouter()
@@ -39,6 +40,7 @@ router.register(r'institutioncategories', InstitutionCategoryViewSet, base_name=
 router.register(r'institutionmanagements', InstitutionManagementViewSet, base_name='institutiomanagement')
 router.register(r'languages', LanguageViewSet, base_name='language')
 router.register(r'staff', StaffViewSet, base_name='staff')
+router.register(r'teacher', TeacherViewSet, base_name='teacher')
 
 router.register(r'assessmentinstitutionmap', AssessmentInstitutionAssociationViewSet, base_name='assessmentinstitutionmap')
 
