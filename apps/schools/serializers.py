@@ -287,3 +287,14 @@ class StaffSerializer(serializers.ModelSerializer):
             'id','first_name', 'middle_name', 'last_name', 'institution',
             'doj', 'gender', 'mt', 'qualification', 'active'
         )
+
+
+class TeacherSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Teacher
+        fields = (
+            'id', 'institution', 'first_name', 'middle_name', 'last_name',
+            'gender', 'qualification', 'total_work_experience_years',
+            'total_work_experience_months', 'subject',
+            'contact_no', 'address', 'area', 'pincode', ' active',
+        )
