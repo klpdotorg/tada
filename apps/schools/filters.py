@@ -7,7 +7,8 @@ from schools.models import (
     Programme,
     Question,
     Student,
-    StudentGroup
+    StudentGroup,
+    Teacher
 )
 
 
@@ -67,3 +68,10 @@ class StudentGroupFilter(django_filters.FilterSet):
     class Meta:
         model = StudentGroup
         fields = ['name', 'section', 'active', 'group_type']
+
+
+class TeacherFilter(django_filters.FilterSet):
+
+    class Meta:
+        model = Teacher
+        fields = ['institution']
