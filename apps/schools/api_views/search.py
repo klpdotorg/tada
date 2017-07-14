@@ -12,8 +12,10 @@ class SearchKLPViewSet(viewsets.ViewSet):
 
     def list(self, request):
         klp_id = request.GET.get('klp_id', 0)
-        institutions = Institution.objects.filter(id__contains=klp_id)[:3]
-        students = Student.objects.filter(id__contains=klp_id)[:3]
+        institutions = Institution.objects.filter(
+            id__contains=klp_id, active=2)[:3]
+        students = Student.objects.filter(
+            id__contains=klp_id, active=2)[:3]
         return Response({
             'institutions': InstitutionSerializer(
                 institutions, many=True).data,
