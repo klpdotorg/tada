@@ -110,13 +110,22 @@ class BoundaryCategorySerializer(serializers.ModelSerializer):
 
 class InstitutionSerializer(serializers.ModelSerializer):
 
+    boundary_details = serializers.SerializerMethodField()
+
     class Meta:
         model = Institution
         fields = (
             'id', 'boundary', 'dise_code', 'name', 'cat', 'institution_gender',
             'languages', 'mgmt', 'address', 'area', 'pincode', 'landmark',
-            'active'
+            'active', 'boundary_details'
         )
+
+    def get_boundary_details(self, obj):
+        return {
+            'cluster': obj.boundary.id,
+            'block': obj.boundary.parent.id,
+            'district': obj.boundary.parent.parent.id
+        }
 
 
 class InstitutionCategorySerializer(serializers.ModelSerializer):
